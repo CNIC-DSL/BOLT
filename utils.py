@@ -255,6 +255,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
     save_result_file = f"results/{args_json['task']}/{method}/results.csv"
     if os.path.exists(save_result_file):
         save_result_df = pd.read_csv(save_result_file)
+        save_result_df = save_result_df[~save_result_df['args'].isna()]
         save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
 
         ### 识别去重机制
