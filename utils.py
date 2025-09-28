@@ -19,13 +19,22 @@ SUMMARY_CSV: Path = None
 SEEN_JSON: Path = None
 LOG_DIR: Path = None
 
-def compare_common_keys(dict1: dict, dict2: dict) -> bool:
+def safe_equal(a, b):
+    # 尝试把两个值都转成 float
+    try:
+        return float(a) == float(b)
+    except (ValueError, TypeError):
+        # 转换失败时，直接比较原值
+        return a.lower() == b.lower()
+
+
+def compare_common_keys(dict1: dict, dict2: dict, common_keys) -> bool:
     """
     比较两个字典在共有 key 上的 value 是否一致。
     - 对 int/float 支持跨类型比较（会尝试强制转换）。
     - 如果无法转换则返回 False。
     """
-    common_keys = set(dict1.keys()) & set(dict2.keys())
+    common_keys = set(dict1.keys()) & set(dict2.keys()) & set(common_keys)
     for key in common_keys:
         v1, v2 = dict1[key], dict2[key]
 
@@ -33,15 +42,15 @@ def compare_common_keys(dict1: dict, dict2: dict) -> bool:
         if isinstance(v1, (int, float)) or isinstance(v2, (int, float)):
             try:
                 if float(v1) != float(v2):
-                    # print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
+                    print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
                     return False
             except (ValueError, TypeError):
-                # print(f"无法转换: key={key}, dict1={v1}, dict2={v2}")
+                print(f"无法转换: key={key}, dict1={v1}, dict2={v2}")
                 return False
         else:
             # 普通比较
             if v1 != v2:
-                # print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
+                print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
                 return False
     return True
 
@@ -254,9 +263,6 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
     import pandas as pd
     save_result_file = f"results/{args_json['task']}/{method}/results.csv"
     if os.path.exists(save_result_file):
-        save_result_df = pd.read_csv(save_result_file)
-        save_result_df = save_result_df[~save_result_df['args'].isna()]
-        save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
 
         ### 识别去重机制
         with open(args_json['config'], "r", encoding="utf-8") as f:
@@ -268,10 +274,25 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         base_cfg = {k: v for k, v in configs.items() if k != "dataset_specific_configs"}
         run_args = {**base_cfg, **ds_cfg, **args_json}
 
-        for items in save_result_df['args']:
-            if compare_common_keys(run_args, items):
-                print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
-                return None
+
+        save_result_df = pd.read_csv(save_result_file)
+        save_result_df = save_result_df[~save_result_df['args'].isna()]
+        save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
+        save_result_df['fold_idx'] = save_result_df['args'].apply(lambda x: int(x['fold_idx']))
+        save_result_df['num_train_epochs'] = save_result_df['args'].apply(lambda x: int(x['num_train_epochs']))
+        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'num_train_epochs']
+        for col in filter_list:
+            if len(save_result_df) == 0:
+                break
+            save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
+        
+        if len(save_result_df) > 0:
+            print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
+            return None
+            for items in save_result_df['args']:
+                if compare_common_keys(run_args, items):
+                    print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
+                    return None
 
     print(f"[RUN ] {dataset} | {method} | kr={known} lr={labeled} fold={fold_idx} seed={seed} cf={c_factor} | gpu={gpu_id}")
 
