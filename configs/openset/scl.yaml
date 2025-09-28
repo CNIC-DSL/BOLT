@@ -64,3 +64,4 @@ patience: 10             # <-- 新增, Early Stopping 的耐心步数
 
 # --- 输出目录设置 ---
 output_dir: "./outputs/openset/scl"
+save_results_path: "results/openset/scl"

@@ -19,30 +19,30 @@ SUMMARY_CSV: Path = None
 SEEN_JSON: Path = None
 LOG_DIR: Path = None
 
-def compare_common_keys(dict1: dict, dict2: dict, common_keys) -> bool:
+def compare_common_keys(dict1: dict, dict2: dict) -> bool:
     """
     比较两个字典在共有 key 上的 value 是否一致。
     - 对 int/float 支持跨类型比较（会尝试强制转换）。
     - 如果无法转换则返回 False。
     """
+    common_keys = set(dict1.keys()) & set(dict2.keys())
     for key in common_keys:
-        if key in dict1 and key in dict2:
-            v1, v2 = dict1[key], dict2[key]
+        v1, v2 = dict1[key], dict2[key]
 
-            # 如果其中一个是数字类型，尝试把另一个转成 float 比较
-            if isinstance(v1, (int, float)) or isinstance(v2, (int, float)):
-                try:
-                    if float(v1) != float(v2):
-                        print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
-                        return False
-                except (ValueError, TypeError):
-                    print(f"无法转换: key={key}, dict1={v1}, dict2={v2}")
+        # 如果其中一个是数字类型，尝试把另一个转成 float 比较
+        if isinstance(v1, (int, float)) or isinstance(v2, (int, float)):
+            try:
+                if float(v1) != float(v2):
+                    # print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
                     return False
-            else:
-                # 普通比较
-                if v1.lower() != v2.lower():
-                    print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
-                    return False
+            except (ValueError, TypeError):
+                # print(f"无法转换: key={key}, dict1={v1}, dict2={v2}")
+                return False
+        else:
+            # 普通比较
+            if v1 != v2:
+                # print(f"不同值: key={key}, dict1={v1}, dict2={v2}")
+                return False
     return True
 
 def set_paths(results_dir: str, logs_dir: str, result_file: str):
@@ -253,47 +253,24 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
     
     import pandas as pd
     save_result_file = f"results/{args_json['task']}/{method}/results.csv"
-    save_result_df = pd.read_csv(save_result_file)
-    save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
-    save_result_df = save_result_df[~save_result_df['args'].isna()]
-    save_result_df['fold_idx'] = save_result_df['args'].apply(lambda x: x['fold_idx'])
+    if os.path.exists(save_result_file):
+        save_result_df = pd.read_csv(save_result_file)
+        save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
 
-    ### 识别去重机制
-    with open(args_json['config'], "r", encoding="utf-8") as f:
-        configs = yaml.safe_load(f)
-    dataset_name = args_json["dataset"]
-    ds_cfg = {}
-    if "dataset_specific_configs" in configs:
-        ds_cfg = configs["dataset_specific_configs"].get(dataset_name, {})
-    base_cfg = {k: v for k, v in configs.items() if k != "dataset_specific_configs"}
-    run_args = {**base_cfg, **ds_cfg, **args_json}
+        ### 识别去重机制
+        with open(args_json['config'], "r", encoding="utf-8") as f:
+            configs = yaml.safe_load(f)
+        dataset_name = args_json["dataset"]
+        ds_cfg = {}
+        if "dataset_specific_configs" in configs:
+            ds_cfg = configs["dataset_specific_configs"].get(dataset_name, {})
+        base_cfg = {k: v for k, v in configs.items() if k != "dataset_specific_configs"}
+        run_args = {**base_cfg, **ds_cfg, **args_json}
 
-
-    common_cols = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx']
-
-    for col in common_cols:
-        if len(save_result_df) == 0:
-            break
-        def compare(a, b):
-            if pd.isna(a) or pd.isna(b):
-                return False
-            if isinstance(a, (int, float)) or isinstance(b, (int, float)):
-                try:
-                    return float(a) == float(b)
-                except (ValueError, TypeError):
-                    return False
-            if isinstance(a, str) and isinstance(b, str):
-                return a.lower() == b.lower()
-            return str(a).lower() == str(b).lower()
-        save_result_df = save_result_df[
-            save_result_df[col].apply(lambda x: compare(x, run_args[col]))
-        ]
-
-    common_keys = ['num_pretrain_epochs', 'train_batch_size', 'pretrain_batch_size', 'max_seq_length', 'seed', 'lr', 'warmup_proportion', 'lr_pre', 'num_train_epochs', 'backbone']
-    for items in save_result_df['args']:
-        if compare_common_keys(run_args, items, common_keys):
-            print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
-            return None
+        for items in save_result_df['args']:
+            if compare_common_keys(run_args, items):
+                print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
+                return None
 
     print(f"[RUN ] {dataset} | {method} | kr={known} lr={labeled} fold={fold_idx} seed={seed} cf={c_factor} | gpu={gpu_id}")
 

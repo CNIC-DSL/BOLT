@@ -153,7 +153,7 @@ def main():
     else:
         train_step = train_step_plain.TrainStep()
     trainer = SimpleTrainer(
-        supcont_pre_epoches=other_args.supcont_pre_epoches,
+        num_train_epochs=training_args.num_train_epochs,
         clip=other_args.clip,
         model_path_=os.path.join(model_output_root, model_file_name),  # 保存模型
         model=model,

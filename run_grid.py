@@ -20,7 +20,7 @@ from utils import (
 
 def main():
     ap = argparse.ArgumentParser(description="Run grid experiments (YAML-only).")
-    ap.add_argument("--config", type=str, default="configs/grid_gcd.yaml", help="YAML config path")
+    ap.add_argument("--config", type=str, default="configs/grid.yaml", help="YAML config path")
     args = ap.parse_args()
 
     cfg_path = Path(args.config)

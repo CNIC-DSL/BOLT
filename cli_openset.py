@@ -36,10 +36,12 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     """
     # 额外自定义 flags（例如某些模型特有参数），允许用户从外部传入列表
     extra = list(args_json.get("extra_flags", []))
+    # model_name_or_path = "./pretrained_models/bert-base-chinese" if args_json["dataset"] in ['ecdt', 'thucnews'] else "./pretrained_models/bert-base-uncased"
     return [
         "--config", str(args_json["config"]),
         "--seed", str(args_json["seed"]),
         "--gpu_id", str(args_json["gpu_id"]),
+        # "--model_name_or_path", model_name_or_path,
         *extra,
     ]
 
@@ -244,7 +246,7 @@ def cli_scl(args_json: Dict[str, Any], stage: int) -> List[str]:
         "--cont_loss",
         "--sup_cont",
         *_common_flags(args_json),
-        *_epoch_flags(args_json, is_pretrain=False),x
+        *_epoch_flags(args_json, is_pretrain=False)
     ]
 
 

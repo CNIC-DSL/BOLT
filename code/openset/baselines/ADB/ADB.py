@@ -176,6 +176,15 @@ class ModelManager:
         results_csv_path = os.path.join(args.save_results_path, 'results.csv')
         os.makedirs(os.path.dirname(results_csv_path), exist_ok=True)
         df_new_row = pd.DataFrame([results])
+        df_new_row.columns = ['K-F1', 'N-F1', 'F1', 'ACC', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'seed', 'args']
+
+        df_new_row['method'] = 'ADB'
+        cols = ['method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor','seed','ACC','F1','K-F1','N-F1','args']
+        for col in cols:
+            if col in df_new_row:
+                continue
+            df_new_row[col] = getattr(args, col)
+        df_new_row = df_new_row[cols]
 
         if not os.path.exists(results_csv_path):
             df_new_row.to_csv(results_csv_path, index=False)

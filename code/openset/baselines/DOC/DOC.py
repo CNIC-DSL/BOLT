@@ -143,11 +143,14 @@ parser.add_argument('--dataset', type=str, default='banking')
 parser.add_argument('--data_dir', type=str, default='./data')
 parser.add_argument('--known_cls_ratio', type=float, default=0.25)
 parser.add_argument('--labeled_ratio', type=float, default=1.0)
+parser.add_argument('--cluster_num_factor', type=float, default=1.0)
 parser.add_argument('--fold_idx', type=int, default=0)
 parser.add_argument('--fold_num', type=int, default=5)
 parser.add_argument('--num_train_epochs', type=int, default=20)
+parser.add_argument('--num_pretrain_epochs', type=int, default=20)
 parser.add_argument('--train_batch_size', type=int, default=128)
 parser.add_argument('--output_dir', type=str, default='./outputs/openset/doc')
+parser.add_argument('--save_results_path', type=str, default='./outputs/openset/doc')
 
 args = parser.parse_args()
 
@@ -178,7 +181,7 @@ metric_dir = os.path.join(args.output_dir, 'metrics')
 os.makedirs(ckpt_dir, exist_ok=True)
 os.makedirs(metric_dir, exist_ok=True)
 args.ckpt_file = os.path.join(ckpt_dir, 'model.h5')
-results_csv_path = os.path.join(metric_dir, 'results.csv')
+results_csv_path = os.path.join(args.save_results_path, 'results.csv')
 
 # 设置GPU
 os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
@@ -296,11 +299,22 @@ final_results['K-F1'] = sum(metrics[str(i)]['f1-score'] for i in known_labels) /
 final_results['N-F1'] = metrics[ood_label_str]['f1-score'] if ood_label_str in metrics else 0.0
 final_results['args'] = json.dumps(vars(args), ensure_ascii=False)
 
+df_to_save = pd.DataFrame([final_results])
+
+df_to_save['method'] = 'DOC'
+cols = ['method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor','seed','ACC','F1','K-F1','N-F1','args']
+for col in cols:
+    if col in df_to_save:
+        continue
+    df_to_save[col] = getattr(args, col)
+df_to_save = df_to_save[cols]
+
+os.makedirs(os.path.dirname(results_csv_path), exist_ok=True)
+
 if not os.path.exists(results_csv_path):
-    pd.DataFrame([final_results]).to_csv(results_csv_path, index=False)
+    df_to_save.to_csv(results_csv_path, index=False)
 else:
-    pd.concat([pd.read_csv(results_csv_path), pd.DataFrame([final_results])], ignore_index=True).to_csv(results_csv_path, index=False)
+    pd.concat([pd.read_csv(results_csv_path), df_to_save], ignore_index=True).to_csv(results_csv_path, index=False)
 
 print(f"\nResults have been saved to: {results_csv_path}")
-print(pd.DataFrame([final_results]))
 

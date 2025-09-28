@@ -42,8 +42,8 @@ def init_model():
     parser.add_argument("--method", type=str, default=None, help="which method to use")
     parser.add_argument('--seed', type=int, default=0, help="random seed for initialization")
     parser.add_argument("--gpu_id", type=str, default='0', help="Select the GPU id")
-    parser.add_argument("--lr", default=2e-5, type=float,
-                        help="The learning rate of BERT.")    
+    parser.add_argument("--lr", default=2e-5, type=float,help="The learning rate of BERT.")    
+    parser.add_argument("--cluster_num_factor", default=1.0, type=float,help="The learning rate of BERT.")    
     parser.add_argument("--num_train_epochs", default=10, type=float,
                         help="Total number of training epochs to perform.") 
     parser.add_argument("--train_batch_size", default=128, type=int,

@@ -92,7 +92,7 @@ def main(args):
     early_stop = EarlyStopping(monitor='val_loss', patience=20, mode='auto') 
     
     model = BiLSTM_LMCL(max_seq_len=None, max_features=MAX_FEATURES, embedding_dim=300, output_dim=n_class_seen, embedding_matrix=embedding_matrix, learning_rate=args.learning_rate)
-    model.fit(X_train_seen, y_train_onehot, epochs=args.n_epochs, batch_size=args.train_batch_size, validation_data=(X_valid_seen, y_valid_onehot), shuffle=True, verbose=1, callbacks=[checkpoint, early_stop])
+    model.fit(X_train_seen, y_train_onehot, epochs=args.num_train_epochs, batch_size=args.train_batch_size, validation_data=(X_valid_seen, y_valid_onehot), shuffle=True, verbose=1, callbacks=[checkpoint, early_stop])
 
     # 7. 评估
     print("Evaluating model...")
@@ -126,13 +126,13 @@ def main(args):
     final_results['K-F1'] = sum(known_f1_scores) / len(known_f1_scores) if known_f1_scores else 0.0
     final_results['N-F1'] = report['unseen']['f1-score'] if 'unseen' in report else 0.0
 
-    metric_dir = args.save_result
+    metric_dir = args.save_results_path
     os.makedirs(metric_dir, exist_ok=True)
     results_path = os.path.join(metric_dir, 'results.csv')
 
     df_to_save = pd.DataFrame([final_results])
 
-    df_to_save['method'] = 'deepunk'
+    df_to_save['method'] = 'DeepUnk'
     cols = ['method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor','seed','ACC','F1','K-F1','N-F1','args']
     for col in cols:
         if col in df_to_save:
@@ -158,7 +158,8 @@ if __name__ == '__main__':
     parser.add_argument("--dataset", type=str, default="banking")
     parser.add_argument("--known_cls_ratio", type=float, default=0.25)
     parser.add_argument("--cluster_num_factor", type=float, default=1.0)
-    parser.add_argument("--n_epochs", type=int, default=8)
+    parser.add_argument("--num_train_epochs", type=int, default=8)
+    parser.add_argument("--num_pretrain_epochs", type=int, default=8)
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--gpu_id", type=str, default="0")
     parser.add_argument("--learning_rate", type=float, default=0.001)
@@ -169,6 +170,8 @@ if __name__ == '__main__':
     parser.add_argument("--fold_num", type=int, default=5)
     parser.add_argument("--embedding_file", type=str, default="./pretrained_models/glove.6B.300d.txt")
     parser.add_argument("--output_dir", type=str, default="./outputs/openset/deepunk")
+    parser.add_argument("--model_name_or_path", type=str, default=".")
+    parser.add_argument("--save_results_path", type=str, default="./results/openset/deepunk")
 
     args = parser.parse_args()
 

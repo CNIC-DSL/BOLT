@@ -127,6 +127,8 @@ def define_parser():
                         help="whether to backpropagate contractive loss or not.")
     parser.add_argument("--norm_coef", type=float, default=0.1,
                         help="coefficients of the normalized adversarial vectors")
+    parser.add_argument("--cluster_num_factor", type=float, default=1.0,
+                        help="coefficients of the normalized adversarial vectors")
     parser.add_argument("--n_plus_1", action="store_true",
                         help="treat out of distribution examples as the N+1 th class")
     parser.add_argument("--augment", action="store_true",
@@ -144,9 +146,9 @@ def define_parser():
     parser.add_argument("--sup_cont", action="store_true",
                     help="whether to add supervised contrastive loss")
     # training hyperparameters
-    parser.add_argument("--ind_pre_epoches", type=int, default=10,
+    parser.add_argument("--num_train_epochs", type=int, default=10,
                         help="Max epoches when in-domain pre-training.")
-    parser.add_argument("--supcont_pre_epoches", type=int, default=100,
+    parser.add_argument("--num_pretrain_epochs", type=int, default=100,
                         help="Max epoches when in-domain supervised contrastive pre-training.")
     parser.add_argument("--aug_pre_epoches", type=int, default=100,
                         help="Max epoches when adversarial contrastive training.")
@@ -161,6 +163,7 @@ def define_parser():
     parser.add_argument("--weight_decay", type=float, default=0.0001,
                         help="weight_decay")
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
+    parser.add_argument('--save_results_path', type=str, default='results/openset/scl', help='gradient clipping')
     # args = parser.parse_args()
     return parser
 
@@ -412,7 +415,7 @@ def main(args):
         patience_counter = 0 # <--- 新增：初始化耐心计数器
 
         if args.sup_cont:
-            for epoch in range(1,args.supcont_pre_epoches+1):
+            for epoch in range(1,args.num_pretrain_epochs+1):
                 global_step = 0
                 losses = []
                 train_loader = DataLoader(train_data_raw, BATCH_SIZE, use_bert=USE_BERT, raw_text=train_seen_text)
@@ -437,7 +440,7 @@ def main(args):
                     epoch, loss=sum(losses)/global_step))
                 torch.save(model, filepath)
 
-        for epoch in range(1,args.ind_pre_epoches+1):
+        for epoch in range(1,args.num_train_epochs+1):
             global_step = 0
             losses = []
             train_loader = DataLoader(train_data_raw, BATCH_SIZE, use_bert=USE_BERT, raw_text=train_seen_text)
@@ -809,18 +812,26 @@ def main(args):
 
                 # --- 步骤2：将“单行”结果追加保存到主 results.csv 文件 ---
                 # 定义标准化的 metrics 输出目录和文件路径
-                metric_dir = os.path.join(args.output_dir, 'metrics')
-                os.makedirs(metric_dir, exist_ok=True)
-                results_path = os.path.join(metric_dir, 'results.csv')
+                # metric_dir = os.path.join(args.output_dir, 'metrics')
+                os.makedirs(args.save_results_path, exist_ok=True)
+                results_path = os.path.join(args.save_results_path, 'results.csv')
+
+                df_to_save = pd.DataFrame([final_results])
+                df_to_save['method'] = 'SCL'
+                cols = ['method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor','seed','ACC','F1','K-F1','N-F1','args']
+                for col in cols:
+                    if col in df_to_save:
+                        continue
+                    df_to_save[col] = getattr(args, col)
+                df_to_save = df_to_save[cols]
 
                 if not os.path.exists(results_path):
                     # 如果文件不存在，直接创建并写入（包含表头）
-                    df_to_save = pd.DataFrame([final_results])
                     df_to_save.to_csv(results_path, index=False)
                 else:
                     # 如果文件存在，则读取->追加->写回
                     existing_df = pd.read_csv(results_path)
-                    new_row_df = pd.DataFrame([final_results])
+                    new_row_df = df_to_save
                     updated_df = pd.concat([existing_df, new_row_df], ignore_index=True)
                     updated_df.to_csv(results_path, index=False)
 

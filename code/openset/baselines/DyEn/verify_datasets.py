@@ -66,10 +66,10 @@ def main():
         adv_args = f'{other_args.adv_k}{other_args.adv_lr}{other_args.adv_init_mag}'
 
         if other_args.scale == other_args.scale_ood:
-            model_output_root = f'./model_output/{data_args.data}_{data_args.known_ratio}/ad{adv_args}_lr{training_args.learning_rate:.1e}__epoch{other_args.supcont_pre_epoches}__loss{other_args.loss_type}' \
+            model_output_root = f'./model_output/{data_args.data}_{data_args.known_ratio}/ad{adv_args}_lr{training_args.learning_rate:.1e}__epoch{training_args.num_train_epochs}__loss{other_args.loss_type}' \
                                 f'__batchsize{training_args.per_device_train_batch_size}__lambda{other_args.diversity_loss_weight}__scale{other_args.scale}/'
         else:
-            model_output_root = f'./model_output/{data_args.data}_{data_args.known_ratio}/ad{adv_args}_lr{training_args.learning_rate:.1e}__epoch{other_args.supcont_pre_epoches}__loss{other_args.loss_type}' \
+            model_output_root = f'./model_output/{data_args.data}_{data_args.known_ratio}/ad{adv_args}_lr{training_args.learning_rate:.1e}__epoch{training_args.num_train_epochs}__loss{other_args.loss_type}' \
                                 f'__batchsize{training_args.per_device_train_batch_size}__lambda{other_args.diversity_loss_weight}__scale{other_args.scale}{other_args.scale_ood}/'
         if not os.path.exists(model_output_root):
             os.makedirs(model_output_root)
@@ -172,7 +172,7 @@ def main():
     else:
         train_step = train_step_plain.TrainStep()
     trainer = SimpleTrainer(
-        supcont_pre_epoches=other_args.supcont_pre_epoches,
+        num_train_epochs=training_args.num_train_epochs,
         clip=other_args.clip,
         model_path_=os.path.join(model_output_root, model_file_name),  # 保存模型
         model=model,

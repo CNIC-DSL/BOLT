@@ -69,10 +69,10 @@ class OtherArguments:
         default=None,
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
     )
-    supcont_pre_epoches: Optional[int] = field(
-        default=None,
-        metadata={"help": "训练几个 epoch"}
-    )
+    # num_train_epochs: Optional[int] = field(
+    #     default=None,
+    #     metadata={"help": "训练几个 epoch"}
+    # )
     loss_type: Optional[str] = field(
         default=None,
         metadata={"help": "损失函数形式"}
@@ -126,9 +126,16 @@ class OtherArguments:
         init=False
     )
 
+    save_results_path: str = field(
+        default="./results/openset/dyen",
+    )
+
     clip: float = field(
         default=0.25,
         init=False
+    )
+    cluster_num_factor: float = field(
+        default=1.0,
     )
 
     # TODO: 可能未来支持?

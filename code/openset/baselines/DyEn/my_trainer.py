@@ -15,8 +15,8 @@ import utils
 
 
 class SimpleTrainer(Trainer):
-    def __init__(self, supcont_pre_epoches: int, clip: float, train_step, model_path_: Optional[str] = None, **kwargs):
-        self.supcont_pre_epoches = supcont_pre_epoches
+    def __init__(self, num_train_epochs: int, clip: float, train_step, model_path_: Optional[str] = None, **kwargs):
+        self.num_train_epochs = num_train_epochs
         self.clip = clip
         self.model_path_ = model_path_
         self.train_step = train_step
@@ -68,17 +68,15 @@ class SimpleTrainer(Trainer):
         valid_loader = self.get_eval_dataloader()
         # 每一个epoch中有多少个step可以根据len(DataLoader)计算：total_steps = len(DataLoader) * epoch
         num_update_steps_per_epoch = len(train_dataloader) // self.args.gradient_accumulation_steps
-        max_steps = math.ceil(self.supcont_pre_epoches * num_update_steps_per_epoch)
+        max_steps = math.ceil(self.num_train_epochs * num_update_steps_per_epoch)
         self.args.warmup_steps = max_steps * 0.1
         self.create_optimizer_and_scheduler(num_training_steps=max_steps)
 
         best_f1 = 0
         model_best_param_dict = None
-
-        sup_con_num_train_epochs = self.supcont_pre_epoches
         wait = 5
 
-        for epoch in range(sup_con_num_train_epochs):
+        for epoch in range(int(self.num_train_epochs)):
 
             with Progress(
                     TextColumn("[progress.description]{task.description}"),

@@ -93,7 +93,7 @@ from transformers.trainer_utils import (
 
 import pandas as pd
 from utils import *
-from training_args import TrainingArguments
+from training_args import TrainingArguments, DataTrainingArguments, ModelArguments
 from transformers.utils import logging
 
 # Evaluation
@@ -223,6 +223,8 @@ class Evaluation:
     def __init__(self,
                  model: Union[PreTrainedModel, torch.nn.Module] = None,
                  args: TrainingArguments = None,
+                 data_args: DataTrainingArguments = None,
+                 model_args: ModelArguments = None,
                  data_collator: Optional[DataCollator] = None,
                  train_dataset: Optional[Dataset] = None,
                  eval_dataset: Optional[Dataset] = None,
@@ -239,6 +241,8 @@ class Evaluation:
             logger.info("No 'TrainingArgumenets' passed, using the current path as 'output_dir'" )
             args = TrainingArguments("tmp_trainer")
         self.args = args
+        self.data_args = data_args
+        self.model_args = model_args
         set_seed(self.args.seed)
 
         self.number_labels = number_labels
@@ -684,19 +688,27 @@ class Evaluation:
 
                 # --- 步骤2：将“单行”结果追加保存到主 results.csv 文件 ---
                 # 定义标准化的 metrics 输出目录和文件路径
-                metric_dir = os.path.join(self.args.output_dir, 'metrics')
-                os.makedirs(metric_dir, exist_ok=True) # 关键：确保目录存在，解决OSError
-                results_path = os.path.join(metric_dir, 'results.csv')
+                # metric_dir = os.path.join(self.args.output_dir, 'metrics')
+                os.makedirs(self.data_args.save_results_path, exist_ok=True) # 关键：确保目录存在，解决OSError
+                results_path = os.path.join(self.data_args.save_results_path, 'results.csv')
+
+                df_to_save = pd.DataFrame([final_results])
+                df_to_save['method'] = 'KnnCon'
+                cols = ["method","dataset","known_cls_ratio","labeled_ratio","cluster_num_factor",
+                        "seed","ACC","F1","K-F1","N-F1","args"]
+                val = lambda c: next((getattr(src, c) for src in (self.data_args, self.model_args, self.args) if hasattr(src, c)), None)
+                for c in cols:
+                    df_to_save[c] = df_to_save.get(c, val(c))
+                df_to_save = df_to_save[cols]
 
                 if not os.path.exists(results_path):
                     # 如果文件不存在，直接创建并写入（包含表头）
-                    df_to_save = pd.DataFrame([final_results])
                     df_to_save.to_csv(results_path, index=False)
                 else:
                     # 如果文件存在，则读取->追加->写回
                     existing_df = pd.read_csv(results_path)
-                    new_row_df = pd.DataFrame([final_results])
-                    updated_df = pd.concat([existing_df, new_row_df], ignore_index=True)
+                    # new_row_df = pd.DataFrame([final_results])
+                    updated_df = pd.concat([existing_df, df_to_save], ignore_index=True)
                     updated_df.to_csv(results_path, index=False)
 
                 print(f"\nResults have been saved to: {results_path}")

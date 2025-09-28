@@ -498,10 +498,8 @@ class SimpleTrainer:
         train_dataloader = self.get_train_dataloader()
         valid_loader = self.get_eval_dataloader()
         num_update_steps_per_epoch = len(train_dataloader) // self.args.gradient_accumulation_steps
-        max_steps = math.ceil(self.args.supcont_pre_epoches * num_update_steps_per_epoch)
+        max_steps = math.ceil(self.args.num_train_epochs * num_update_steps_per_epoch)
         self.args.warmup_steps = max_steps * 0.1
-        sup_con_num_train_epochs = self.args.supcont_pre_epoches
-
         self.create_optimizer_and_scheduler(num_training_steps=max_steps)
 
         #tr_loss = torch.tensor(0.0).to(self.args.device)
@@ -512,7 +510,7 @@ class SimpleTrainer:
         best_f1 = 0
         global_step = 0
         model_best_param_dict = None
-        for epoch in range(sup_con_num_train_epochs):
+        for epoch in range(int(self.args.num_train_epochs)):
             epoch_iterator = tqdm(train_dataloader, initial=global_step, desc="Iter (sup_loss)")
             model.train()
             for step, inputs in enumerate(epoch_iterator):

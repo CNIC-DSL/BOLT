@@ -196,7 +196,7 @@ def main():
     else:
         train_step = train_step_plain.TrainStep()
     trainer = SimpleTrainer(
-        supcont_pre_epoches=other_args.supcont_pre_epoches,
+        num_train_epochs=training_args.num_train_epochs,
         clip=other_args.clip,
         model_path_=os.path.join(model_output_root, model_file_name),  # 保存模型
         model=model,
@@ -294,29 +294,52 @@ def main():
             final_results['K-F1'] = sum(known_f1_scores) / len(known_f1_scores) if known_f1_scores else 0.0
             final_results['N-F1'] = report['oos']['f1-score'] if 'oos' in report else 0.0
             # final_results['args'] = json.dumps(vars(training_args), ensure_ascii=False)
-            def safe_args_to_json(args_obj):
+            def safe_args_to_json(*args_objs):
                 safe_dict = {}
-                for k, v in vars(args_obj).items():
-                    try:
-                        json.dumps(v)  # 测试能不能序列化
-                        safe_dict[k] = v
-                    except (TypeError, OverflowError):
-                        # 不能序列化的直接跳过
-                        safe_dict[k] = str(v)  # 或者写 None，看你要不要记录
+                for args_obj in args_objs:
+                    if args_obj is None:
+                        continue
+                    for k, v in vars(args_obj).items():
+                        try:
+                            json.dumps(v)  # 测试能不能序列化
+                            safe_dict[k] = v
+                        except (TypeError, OverflowError):
+                            safe_dict[k] = str(v)  # 无法直接序列化就转字符串
                 return json.dumps(safe_dict, ensure_ascii=False)
-            final_results['args'] = safe_args_to_json(training_args)
 
-            metric_dir = os.path.join(training_args.output_dir, 'metrics')
-            os.makedirs(metric_dir, exist_ok=True)
-            results_path = os.path.join(metric_dir, 'results.csv')
+            # 用法：把两个 args 一起传进去
+            final_results['args'] = safe_args_to_json(other_args, training_args, data_args)
+
+            # metric_dir = os.path.join(training_args.output_dir, 'metrics')
+            os.makedirs(other_args.save_results_path, exist_ok=True)
+            results_path = os.path.join(other_args.save_results_path, 'results.csv')
+
+            df_to_save = pd.DataFrame([final_results])
+
+            # merged_args = merge_args_dicts(other_args, training_args, cfg)
+
+            df_to_save["method"] = "DyEn"
+
+            # 需要的列
+            cols = ["method","dataset","known_cls_ratio","labeled_ratio","cluster_num_factor",
+                    "seed","ACC","F1","K-F1","N-F1","args"]
+
+            # 从 other_args / training_args 取值的最小函数（优先 other_args）
+            val = lambda c: next((getattr(src, c) for src in (other_args, training_args, data_args) if hasattr(src, c)), None)
+
+            # 若列已存在则保留原列；否则用 val(c) 创建并广播
+            for c in cols:
+                df_to_save[c] = df_to_save.get(c, val(c))
+
+            # 调整列顺序
+            df_to_save = df_to_save[cols]
 
             if not os.path.exists(results_path):
-                df_to_save = pd.DataFrame([final_results])
                 df_to_save.to_csv(results_path, index=False)
             else:
                 existing_df = pd.read_csv(results_path)
-                new_row_df = pd.DataFrame([final_results])
-                updated_df = pd.concat([existing_df, new_row_df], ignore_index=True)
+                # new_row_df = pd.DataFrame([final_results])
+                updated_df = pd.concat([existing_df, df_to_save], ignore_index=True)
                 updated_df.to_csv(results_path, index=False)
             
             print(f"Saved results for {method_name} to {results_path}")

@@ -38,6 +38,8 @@ adv_max_norm: 0.0
 
 # --- 输出目录设置 ---
 output_dir: "./outputs/openset/dyen"
+save_results_path: "results/openset/dyen"
+
 overwrite_output_dir: true
 do_train: true
 do_eval: true
