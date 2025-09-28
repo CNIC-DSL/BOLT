@@ -10,6 +10,8 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm_gui
 from tqdm import tqdm
+import nltk
+nltk.data.path.append("/data/code/bolt/pretrained_models/nltk_data")
 from nltk.tokenize import word_tokenize
 
 from sklearn.preprocessing import LabelEncoder

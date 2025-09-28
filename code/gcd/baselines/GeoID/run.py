@@ -462,7 +462,7 @@ class CLNNModelManager:
             os.makedirs(args.save_results_path)
 
         var = [args.dataset, args.method, args.known_cls_ratio, args.labeled_ratio, args.topk, args.view_strategy, args.seed]
-        names = ['dataset', 'method', 'known_cls_ratio', 'labeled_ratio', 'topk', 'view_strategy', 'seed']
+        names = ['dataset', 'method', 'known_cls_ratio', 'labeled_ratio', 'seed']
         vars_dict = {k:v for k,v in zip(names, var)}
         results = dict(self.test_results,**vars_dict)
         results['args'] = json.dumps(vars(args), ensure_ascii=False)
