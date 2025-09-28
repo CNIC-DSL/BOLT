@@ -16,6 +16,8 @@ def _common_env(args_json:Dict[str,Any]) -> List[str]:
         "--config", str(args_json["config"]),
         "--dataset", args_json["dataset"],
         "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        "--labeled_ratio", str(args_json["labeled_ratio"]),
+        "--fold_idx", str(args_json["fold_idx"]),
         "--seed", str(args_json["seed"]),
     ]
 
@@ -46,8 +48,6 @@ def cli_loop(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/LOOP/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         "--pretrain_dir", pre,
         "--save_model_path", save,
@@ -62,8 +62,6 @@ def cli_glean(args_json:Dict[str,Any], stage:int) -> List[str]:
     cli = [
         sys.executable, "code/gcd/baselines/Glean/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         *_epoch_flags(args_json, is_pretrain=False),   # ★ 新增
         "--save_premodel",
@@ -85,9 +83,6 @@ def cli_geoid(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/GeoID/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
-        "--seed", str(args_json["seed"]),
         *_epoch_flags(args_json, is_pretrain=False),   # ★ 新增
         "--report_pretrain",
     ]
@@ -96,8 +91,6 @@ def cli_dpn(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/DPN/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         *_epoch_flags(args_json, is_pretrain=True),   # ★ 新增
         "--freeze_bert_parameters",
@@ -109,8 +102,6 @@ def cli_deepaligned(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/DeepAligned-Clustering/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         "--freeze_bert_parameters",
         *_epoch_flags(args_json, is_pretrain=True),    # ★ 新增
@@ -126,8 +117,6 @@ def cli_alup(args_json:Dict[str,Any], stage:int) -> List[str]:
         return [
             sys.executable, "code/gcd/baselines/ALUP/run.py",
             *_common_env(args_json),
-            "--labeled_ratio", str(args_json["labeled_ratio"]),
-            "--fold_idx", str(args_json["fold_idx"]),
             "--gpu_id", str(args_json["gpu_id"]),
             "--do_pretrain_and_contrastive",
             *_epoch_flags(args_json, is_pretrain=True),    # ★ 新增
@@ -137,8 +126,6 @@ def cli_alup(args_json:Dict[str,Any], stage:int) -> List[str]:
         return [
             sys.executable, "code/gcd/baselines/ALUP/run.py",
             *_common_env(args_json),
-            "--labeled_ratio", str(args_json["labeled_ratio"]),
-            "--fold_idx", str(args_json["fold_idx"]),
             "--gpu_id", str(args_json["gpu_id"]),
             "--do_al_finetune",
             *_epoch_flags(args_json, is_pretrain=False),   # ★ 新增
@@ -152,8 +139,6 @@ def cli_sdc_pre(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/SDC/pretrain.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         "--pretrain_dir", pre,
         *_epoch_flags(args_json, is_pretrain=True),        # ★ 新增
@@ -167,8 +152,6 @@ def cli_sdc_run(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/baselines/SDC/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         "--pretrain_dir", pre,
         "--train_dir", train,
@@ -181,8 +164,6 @@ def cli_plm_pre(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/plm_gcd/pretrain.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         *_epoch_flags(args_json, is_pretrain=False),       # ★ 新增
     ]
@@ -191,8 +172,6 @@ def cli_plm_run(args_json:Dict[str,Any], stage:int) -> List[str]:
     return [
         sys.executable, "code/gcd/plm_gcd/run.py",
         *_common_env(args_json),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
         "--gpu_id", str(args_json["gpu_id"]),
         *_epoch_flags(args_json, is_pretrain=False),       # ★ 新增
     ]
@@ -204,10 +183,6 @@ def cli_simple_openset(entry:str) -> CliBuilder:
             sys.executable, entry,
             "--config", str(args_json["config"]),
             "--dataset", args_json["dataset"],
-            "--known_cls_ratio", str(args_json["known_cls_ratio"]),
-            "--labeled_ratio", str(args_json["labeled_ratio"]),
-            "--fold_idx", str(args_json["fold_idx"]),
-            "--seed", str(args_json["seed"]),
             "--gpu_id", str(args_json["gpu_id"]),
             *_epoch_flags(args_json, is_pretrain=False),    # ★ 新增
         ]

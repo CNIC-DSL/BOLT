@@ -34,7 +34,7 @@ es_patience: 10
 es_min_delta: 0.0
 
 # --- 算法专属参数 ---
-method: "CLNN" 
+method: "GeoID" 
 cluster_num_factor: 1.0
 cluster_temperature: 1.0
 feat_dim: 512

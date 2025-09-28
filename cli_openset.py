@@ -26,9 +26,6 @@ def _epoch_flags(args_json:Dict[str,Any], is_pretrain: bool) -> List[str]:
     else:
         return ["--num_train_epochs", str(args_json["num_train_epochs"])]
     
-
-
-
 def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     """
     OpenSet 通用：config / dataset(or dataset_name) / seed / gpu_id / known ratio(rate)
@@ -41,7 +38,10 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
         "--config", str(args_json["config"]),
         "--seed", str(args_json["seed"]),
         "--gpu_id", str(args_json["gpu_id"]),
-        # "--model_name_or_path", model_name_or_path,
+        "--dataset", args_json["dataset"],
+        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        "--labeled_ratio", str(args_json["labeled_ratio"]),
+        "--fold_idx", str(args_json["fold_idx"]),
         *extra,
     ]
 
@@ -59,9 +59,7 @@ def cli_ab(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/AB/code/run.py",
-        "--dataset", args_json["dataset"],
         "--emb_name", emb_name,
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -78,8 +76,6 @@ def cli_adb(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/ADB/ADB.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -98,8 +94,6 @@ def cli_clap_stage1(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/CLAP/finetune/run_kccl.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -120,8 +114,8 @@ def cli_clap_stage2(args_json: Dict[str, Any], stage: int) -> List[str]:
     pretrain_dir = args_json.get("finetuned_model_path", out_dir)
     return [
         sys.executable, "code/openset/baselines/CLAP/boundary_adjustment/run_adbes.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         "--output_dir", out_dir,
         "--pretrain_dir", pretrain_dir,
         *_common_flags(args_json),
@@ -140,8 +134,8 @@ def cli_deepunk(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/DeepUnk/experiment.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -158,8 +152,8 @@ def cli_doc(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/DOC/DOC.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -176,8 +170,8 @@ def cli_dyen(args_json: Dict[str, Any], stage: int) -> List[str]:
     )
     return [
         sys.executable, "code/openset/baselines/DyEn/run_main.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
@@ -190,8 +184,8 @@ def cli_knncon(args_json: Dict[str, Any], stage: int) -> List[str]:
     """
     return [
         sys.executable, "code/openset/baselines/KnnCon/run_main.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
     ]
@@ -241,8 +235,8 @@ def cli_scl(args_json: Dict[str, Any], stage: int) -> List[str]:
     """
     return [
         sys.executable, "code/openset/baselines/SCL/train.py",
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        
+        
         "--cont_loss",
         "--sup_cont",
         *_common_flags(args_json),
