@@ -15,7 +15,7 @@ datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, thucne
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
-  fold_idxs: [3]
+  fold_idxs: [0,1,2,3]
   seeds: [2025]
   cluster_num_factor: [1.0]   # 需要多值就加上 [0.8, 1.0, 1.2]
 
