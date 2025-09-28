@@ -18,7 +18,7 @@ class NeighborsDataset(Dataset):
         self.query_index = query_index
         if num_neighbors is not None:
             self.indices = self.indices[:, :num_neighbors+1]
-        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         self.pred = pred
         self.count = 0
         self.di = {} # 这是用于缓存LLM查询结果的字典，避免重复调用

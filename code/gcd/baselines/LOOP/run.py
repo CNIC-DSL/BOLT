@@ -52,7 +52,7 @@ class LoopModelManager:
         
         self.optimizer, self.scheduler = self.get_optimizer(args)
         
-        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         self.generator = view_generator(self.tokenizer, args.rtr_prob, args.seed)
 
     def get_neighbor_dataset(self, args, data, indices, query_index, pred):
@@ -488,9 +488,9 @@ if __name__ == '__main__':
             apply_config_updates(args, dataset_configs, parser)
 
     # args.bert_model = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
-    # args.tokenizer = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.tokenizer
+    # args.bert_model = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
     args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
-    args.tokenizer = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.tokenizer
+    # args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
 
 
     data = Data(args)

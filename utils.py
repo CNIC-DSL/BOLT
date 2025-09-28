@@ -283,6 +283,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'num_train_epochs']
         for col in filter_list:
             if len(save_result_df) == 0:
+                print(f"[Not Exist] seen matched: {col}: args: {args_json[col]}")
                 break
             save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
         
