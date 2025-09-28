@@ -31,8 +31,6 @@ def create_parser():
     parser.add_argument("--model_path", default=None, type=str)
     parser.add_argument("--early_stop_patience", type=int, default=3, help="Patience for early stopping.")
     parser.add_argument("--early_stop_delta", type=float, default=0.0, help="Minimum change to qualify as an improvement for early stopping.")
-    
-    
     return parser
 
 def finalize_config(args):
