@@ -45,7 +45,7 @@ class Manager:
         self.optimizer, self.scheduler = self.get_optimizer(args)
 
         
-        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         self.generator = view_generator(self.tokenizer, args.rtr_prob, args.seed)
         self.sinkhorn = SinkhornKnopp(args)
 
@@ -493,8 +493,8 @@ if __name__ == '__main__':
 
     # args.bert_model = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
     # args.tokenizer = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.tokenizer
-    args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
-    args.tokenizer = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.tokenizer
+    # args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
+    # args.tokenizer = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.tokenizer
 
     os.environ["CUDA_VISIBLE_DEVICES"] = str(args.gpu_id).strip()
     data = Data(args)

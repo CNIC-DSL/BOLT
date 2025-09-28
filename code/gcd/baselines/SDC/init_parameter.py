@@ -20,8 +20,8 @@ def init_model():
     parser.add_argument("--bert_model", default="pretrained_models/bert-base-uncased", type=str,
                         help="The path or name for the pre-trained bert model.")
 
-    parser.add_argument("--tokenizer", default="pretrained_models/bert-base-uncased", type=str,
-                        help="The path or name for the tokenizer")
+    # parser.add_argument("--tokenizer", default="pretrained_models/bert-base-uncased", type=str,
+    #                     help="The path or name for the tokenizer")
 
     parser.add_argument("--max_seq_length", default=None, type=int,
                         help="The maximum total input sequence length after tokenization. Sequences longer "
