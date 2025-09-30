@@ -285,7 +285,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
             save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
             if len(save_result_df) == 0:
                 cur_values = list(save_result_df[col].unique())
-                print(f"[Not Exist] seen matched: {col}: args: {args_json[col]}; the current list: {cur_values}")
+                print(f"[Not Exist]  {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed} | seen matched: {col}: args: {args_json[col]}; the current list: {cur_values}")
                 break
 
         if len(save_result_df) > 0:

@@ -17,14 +17,14 @@ datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, 
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
-  fold_idxs: [0,1,2]
+  fold_idxs: [3,4]
   seeds: [2025]
   cluster_num_factor: [1.0]   # 需要多值就加上 [0.8, 1.0, 1.2]
 
 # 运行参数
 run:
-  gpus: [0,1,2,3]      # 留空则不设置 CUDA_VISIBLE_DEVICES
-  max_workers: 4    # 并行线程数
+  gpus: [0,1,2,3,4,5,6,7]      # 留空则不设置 CUDA_VISIBLE_DEVICES
+  max_workers: 8    # 并行线程数
   num_pretrain_epochs: 100
   num_train_epochs: 50
 
