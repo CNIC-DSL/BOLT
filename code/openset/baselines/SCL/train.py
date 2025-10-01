@@ -11,6 +11,7 @@ import pandas as pd
 from tqdm import tqdm_gui
 from tqdm import tqdm
 import nltk
+import math
 nltk.data.path.append("/data/code/bolt/pretrained_models/nltk_data")
 from nltk.tokenize import word_tokenize
 
@@ -324,54 +325,65 @@ def main(args):
     CUDA = args.cuda
 
     class DataLoader(object):
-        def __init__(self, data, batch_size, mode='train', use_bert=False, raw_text=None):
+        def __init__(self, data, batch_size, mode='train', use_bert=False, raw_text=None, drop_last=True):
             self.use_bert = use_bert
-            if self.use_bert:
-                self.inp = list(raw_text)
-            else:
-                self.inp = data[0]
-            self.tgt = data[1]
-            self.batch_size = batch_size
-            self.n_samples = len(data[0])
-            self.n_batches = self.n_samples // self.batch_size
             self.mode = mode
-            self._shuffle_indices()
+            self.batch_size = int(batch_size)
+            self.drop_last = drop_last
 
-        def _shuffle_indices(self):
+            # inputs / targets
+            self.inp = list(raw_text) if self.use_bert else data[0]
+            self.tgt = data[1]
+
+            self.n_samples = len(self.inp)
+            self._reset_epoch_indices()
+
+        def _reset_epoch_indices(self):
+            # train/val 打乱；test 固定顺序
             if self.mode == 'test':
-                self.indices = np.arange(self.n_samples)
+                self.indices = np.arange(self.n_samples, dtype=np.int64)
             else:
-                self.indices = np.random.permutation(self.n_samples)
+                self.indices = np.random.permutation(self.n_samples).astype(np.int64)
             self.index = 0
-            self.batch_index = 0
-
-        def _create_batch(self):
-            batch = []
-            n = 0
-            while n < self.batch_size:
-                _index = self.indices[self.index]
-                batch.append((self.inp[_index],self.tgt[_index]))
-                self.index += 1
-                n += 1
-            self.batch_index += 1
-            seq, label = tuple(zip(*batch))
-            if not self.use_bert:
-                seq = torch.LongTensor(seq)
-            if self.mode not in ['test','augment']:
-                label = torch.FloatTensor(label)
-            elif self.mode == 'augment':
-                label = torch.LongTensor(label)
-
-            return seq, label
 
         def __len__(self):
-            return self.n_batches
+            if self.drop_last:
+                return self.n_samples // self.batch_size
+            else:
+                return math.ceil(self.n_samples / self.batch_size)
 
         def __iter__(self):
-            for _ in range(self.n_batches):
-                if self.batch_index == self.n_batches:
-                    raise StopIteration()
-                yield self._create_batch()
+            # 每次新迭代都从当前 indices 的开头走起
+            self.index = 0
+            for _ in range(len(self)):
+                start = self.index
+                end = start + self.batch_size
+                if end > self.n_samples:
+                    if self.drop_last:
+                        # 安全起见，直接结束
+                        break
+                    end = self.n_samples
+
+                batch_idx = self.indices[start:end]
+                self.index = end
+
+                # 取样本
+                seq = [self.inp[i] for i in batch_idx]
+                label = [self.tgt[i] for i in batch_idx]
+
+                # 组装张量/保持原始
+                if not self.use_bert:
+                    # 非 BERT：假定 seq 是 idx 序列或定长向量
+                    seq = torch.as_tensor(seq, dtype=torch.long)
+                # 标签类型：train/val 用 float（多标签/回归兼容）；test 保持原始或根据需要转型
+                if self.mode not in ['test', 'augment']:
+                    label = torch.as_tensor(label, dtype=torch.float32)
+                elif self.mode == 'augment':
+                    label = torch.as_tensor(label, dtype=torch.long)
+                # test 模式保持 list/ndarray，或按你需要转成 tensor：
+                # else: label = torch.as_tensor(label, dtype=torch.long)
+
+                yield seq, label
 
     if args.mode in ["train", "both"]:
         # GPU setting
@@ -512,7 +524,7 @@ def main(args):
     if args.mode in ["test", "both", "find_threshold"]:
 
         if args.n_plus_1:
-            test_loader = DataLoader(test_data_4np1, BATCH_SIZE, use_bert=USE_BERT)
+            test_loader = DataLoader(test_data_4np1, BATCH_SIZE, use_bert=USE_BERT, drop_last=False)
             torch.no_grad()
             model.eval()
             predict = []
@@ -545,7 +557,7 @@ def main(args):
             train_loader = DataLoader(train_data_raw, BATCH_SIZE, 'test', use_bert=USE_BERT, raw_text=train_seen_text)
             valid_loader = DataLoader(valid_data_raw, BATCH_SIZE, use_bert=USE_BERT, raw_text=valid_seen_text)
             valid_ood_loader = DataLoader(valid_data_ood, BATCH_SIZE, 'test', use_bert=USE_BERT, raw_text=valid_unseen_text)
-            test_loader = DataLoader(test_data, BATCH_SIZE, 'test', use_bert=USE_BERT, raw_text=test_text)
+            test_loader = DataLoader(test_data, BATCH_SIZE, 'test', use_bert=USE_BERT, raw_text=test_text, drop_last=False)
             torch.no_grad()
             model.eval()
             predict = []

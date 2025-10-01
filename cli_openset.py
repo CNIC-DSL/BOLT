@@ -21,10 +21,7 @@ def _maybe(v, flag: str) -> List[str]:
 
 def _epoch_flags(args_json:Dict[str,Any], is_pretrain: bool) -> List[str]:
     """根据阶段返回统一的 epoch 参数"""
-    if is_pretrain:
-        return ["--num_pretrain_epochs", str(args_json["num_pretrain_epochs"]), "--num_train_epochs", str(args_json["num_train_epochs"])]
-    else:
-        return ["--num_train_epochs", str(args_json["num_train_epochs"])]
+    return ["--num_pretrain_epochs", str(args_json["num_pretrain_epochs"]), "--num_train_epochs", str(args_json["num_train_epochs"])]
     
 def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     """
@@ -248,8 +245,6 @@ def cli_scl(args_json: Dict[str, Any], stage: int) -> List[str]:
     """
     return [
         sys.executable, "code/openset/baselines/SCL/train.py",
-        
-        
         "--cont_loss",
         "--sup_cont",
         *_common_flags(args_json),
