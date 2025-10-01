@@ -12,12 +12,12 @@ def create_parser():
     parser = argparse.ArgumentParser()
     
     # --- 基础参数定义 ---
-    parser.add_argument("--dataset_name", default="stackoverflow", type=str)
+    parser.add_argument("--dataset", default="stackoverflow", type=str)
     parser.add_argument("--data_dir", default="./data", type=str)
     parser.add_argument("--reg_loss", default="npo", type=str, choices=['normal', 'vos', 'npo'])
-    parser.add_argument("--rate", default=0.25, type=float)
+    parser.add_argument("--known_cls_ratio", default=0.25, type=float)
     parser.add_argument("--labeled_ratio", default=1.0, type=float)
-    parser.add_argument("--n_epochs", default=20, type=int)
+    parser.add_argument("--num_train_epochs", default=20, type=int)
     parser.add_argument("--seed", default=0, type=int)
     parser.add_argument("--fold_idx", default=0, type=int)
     parser.add_argument("--fold_num", default=5, type=int)
@@ -38,10 +38,10 @@ def finalize_config(args):
     接收已经解析完毕的args对象，完成派生路径的计算和日志的设置。
     """
     # --- 派生参数计算 (动态生成路径) ---
-    args.data_identity = f"{args.dataset_name}_{args.labeled_ratio}_{args.rate}_{args.fold_num}_{args.fold_idx}"
+    args.data_identity = f"{args.dataset}_{args.labeled_ratio}_{args.known_cls_ratio}_{args.fold_num}_{args.fold_idx}"
     run_identity = f"{args.data_identity}{args.backbone}_{args.seed}"
     
-    base_path = os.path.join(args.output_dir, args.reg_loss, args.dataset_name, str(args.labeled_ratio), run_identity)
+    base_path = os.path.join(args.output_dir, args.reg_loss, args.dataset, str(args.labeled_ratio), run_identity)
 
     args.metric_dir = os.path.join(base_path, "metrics")
     args.log_dir = os.path.join(base_path, "logs")
@@ -54,7 +54,7 @@ def finalize_config(args):
     os.makedirs(args.log_dir, exist_ok=True)
     os.makedirs(args.case_path, exist_ok=True)
 
-    args.metric_file = f"{args.metric_dir}/epoch_{args.n_epochs}_seed_{args.seed}.csv"
+    args.metric_file = f"{args.metric_dir}/epoch_{args.num_train_epochs}_seed_{args.seed}.csv"
 
     # --- model_path 备用逻辑 ---
     if args.model_path is None:
@@ -68,7 +68,7 @@ def finalize_config(args):
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler(f"{args.log_dir}/epoch_{args.n_epochs}_seed_{args.seed}.log", mode="w"),
+            logging.FileHandler(f"{args.log_dir}/epoch_{args.num_train_epochs}_seed_{args.seed}.log", mode="w"),
             logging.StreamHandler()
         ],
         force=True

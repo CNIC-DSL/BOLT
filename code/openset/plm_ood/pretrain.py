@@ -73,14 +73,14 @@ def run_pretraining(args):
     # 设置训练参数
     training_args = TrainingArguments(
         output_dir=args.checkpoint_path,
-        eval_strategy="epoch",
-        logging_strategy="steps",
+        eval_stknown_cls_ratiogy="epoch",
+        logging_stknown_cls_ratiogy="steps",
         logging_steps=20,
         per_device_train_batch_size=args.train_batch_size,
         per_device_eval_batch_size=args.eval_batch_size,
-        num_train_epochs=args.n_epochs,
+        num_train_epochs=args.num_train_epochs,
         weight_decay=0.01,
-        save_strategy='epoch',
+        save_stknown_cls_ratiogy='epoch',
         save_total_limit=1,
         # —— 为早停配套的设置 ——
         load_best_model_at_end=True,       # 训练结束回滚到最佳模型

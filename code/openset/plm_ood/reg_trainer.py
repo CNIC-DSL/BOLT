@@ -57,7 +57,7 @@ class RegTrainer(Trainer):
             The loss of the model along with its output if return_outputs was set to True
 
         Subclass and override for custom behavior. If you are not using `num_items_in_batch` when computing your loss,
-        make sure to overwrite `self.model_accepts_loss_kwargs` to `False`. Otherwise, the loss calculationg might be slightly inacurate when performing gradient accumulation.
+        make sure to overwrite `self.model_accepts_loss_kwargs` to `False`. Otherwise, the loss calculationg might be slightly inacuknown_cls_ratio when performing gradient accumulation.
         """
         if (self.label_smoother is not None or self.compute_loss_func is not None) and "labels" in inputs:
             labels = inputs.pop("labels")

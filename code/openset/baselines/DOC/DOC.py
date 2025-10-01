@@ -23,11 +23,13 @@ parser.add_argument('--known_cls_ratio', type=float, default=0.25)
 parser.add_argument('--labeled_ratio', type=float, default=1.0)
 parser.add_argument('--fold_idx', type=int, default=0)
 parser.add_argument('--fold_num', type=int, default=5)
+parser.add_argument('--cluster_num_factor', type=float, default=1)
 # -- 模型与训练设置
 parser.add_argument('--num_train_epochs', type=int, default=20)
 parser.add_argument('--train_batch_size', type=int, default=128)
 # -- 输出目录设置
 parser.add_argument('--output_dir', type=str, default='./outputs/openset/doc')
+parser.add_argument('--save_results_path', type=str, default='./outputs/openset/doc')
 
 # --- 核心改造：配置注入逻辑 ---
 args = parser.parse_args()
@@ -79,6 +81,7 @@ if args.config:
 
 # 2. --- 路径构建 (SOP 标准化) ---
 # 使用新的标准参数名构建路径
+args.output_dir = f"{args.output_dir}/{args.dataset}_{args.labeled_ratio}_{args.known_cls_ratio}_{args.fold_idx}_{args.seed}"
 ckpt_dir = os.path.join(args.output_dir, 'ckpt')
 metric_dir = os.path.join(args.output_dir, 'metrics')
 os.makedirs(ckpt_dir, exist_ok=True)
@@ -128,31 +131,6 @@ def load_and_process_data(args):
 # =================== 以下是完整的、修改后的 DOC.py ==================
 # ==================================================================
 
-import argparse
-import os
-import pandas as pd
-import yaml
-import sys
-
-# 1. --- 参数定义与配置注入 (SOP 标准化改造) ---
-parser = argparse.ArgumentParser()
-parser.add_argument('--config', type=str, default=None, help="Path to the YAML config file.")
-parser.add_argument('--seed', type=int, default=0)
-parser.add_argument('--gpu_id', type=str, default='0')
-parser.add_argument('--dataset', type=str, default='banking')
-parser.add_argument('--data_dir', type=str, default='./data')
-parser.add_argument('--known_cls_ratio', type=float, default=0.25)
-parser.add_argument('--labeled_ratio', type=float, default=1.0)
-parser.add_argument('--cluster_num_factor', type=float, default=1.0)
-parser.add_argument('--fold_idx', type=int, default=0)
-parser.add_argument('--fold_num', type=int, default=5)
-parser.add_argument('--num_train_epochs', type=int, default=20)
-parser.add_argument('--num_pretrain_epochs', type=int, default=20)
-parser.add_argument('--train_batch_size', type=int, default=128)
-parser.add_argument('--output_dir', type=str, default='./outputs/openset/doc')
-parser.add_argument('--save_results_path', type=str, default='./outputs/openset/doc')
-
-args = parser.parse_args()
 
 def apply_config_updates(args, config_dict, parser):
     type_map = {action.dest: action.type for action in parser._actions}
@@ -264,10 +242,9 @@ print(model.summary())
 checkpointer = ModelCheckpoint(filepath=args.ckpt_file, verbose=1, save_best_only=True)
 early_stopping = EarlyStopping(monitor='val_loss', patience=5)
 
-if not os.path.exists(args.ckpt_file):
-    model.fit(seen_train_X, cate_seen_train_y, epochs=args.num_train_epochs, batch_size=args.train_batch_size, callbacks=[checkpointer, early_stopping], validation_data=(seen_dev_X, cate_seen_dev_y))
+model.fit(seen_train_X, cate_seen_train_y, epochs=args.num_train_epochs, batch_size=args.train_batch_size, callbacks=[checkpointer, early_stopping], validation_data=(seen_dev_X, cate_seen_dev_y))
 
-model.load_weights(args.ckpt_file)
+# model.load_weights(args.ckpt_file)
 seen_train_X_pred = model.predict(seen_train_X)
 
 from scipy.stats import norm as dist_model

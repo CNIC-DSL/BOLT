@@ -19,30 +19,30 @@ def load_and_prepare_datasets(args):
     Returns:
         一个包含所有数据对象的字典。
     """
-    known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.rate}.list', header=None)[0].tolist()
+    known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
     
     # 将标签数量更新到 args 对象中，以便其他模块使用
     args.num_labels = len(known_label_list)
 
     ## origin data
-    origin_train_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/origin_data/train.tsv', sep='\t')
-    origin_eval_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/origin_data/dev.tsv', sep='\t')
-    origin_test_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/origin_data/test.tsv', sep='\t')
+    origin_train_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/origin_data/train.tsv', sep='\t')
+    origin_eval_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/origin_data/dev.tsv', sep='\t')
+    origin_test_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/origin_data/test.tsv', sep='\t')
 
     ## id train data
-    train_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/labeled_data/{args.labeled_ratio}/train.tsv', sep='\t')
+    train_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/labeled_data/{args.labeled_ratio}/train.tsv', sep='\t')
     train_data['text'] =  origin_train_data['text']
     train_data = train_data[(train_data['label'].isin(known_label_list)) & (train_data['labeled'])].drop('labeled',  axis=1)
     ### (train_data['labeled'])].drop('labeled',  axis=1):
     # 在已经满足了前面所有条件的数据行中，再进一步筛选出‘labeled’列为 True 的那些行，然后在筛选完成后，把‘labeled’这一列从结果中删除掉。 
 
     ## id eval data
-    eval_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/labeled_data/{args.labeled_ratio}/dev.tsv', sep='\t')
+    eval_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/labeled_data/{args.labeled_ratio}/dev.tsv', sep='\t')
     eval_data['text'] =  origin_eval_data['text']
     data_in_eval = eval_data[(eval_data['label'].isin(known_label_list)) & (eval_data['labeled'])].drop('labeled',  axis=1)
 
     ## all test data
-    test_data = pd.read_csv(f'{args.data_dir}/{args.dataset_name}/origin_data/test.tsv', sep='\t')
+    test_data = pd.read_csv(f'{args.data_dir}/{args.dataset}/origin_data/test.tsv', sep='\t')
     data_in_test = test_data[test_data['label'].isin(known_label_list)]
     data_out_test = test_data[~test_data['label'].isin(known_label_list)]
     data_out_test['label'] = 'ood'
