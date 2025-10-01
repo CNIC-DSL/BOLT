@@ -2,9 +2,6 @@
 
 import os
 os.environ["WANDB_DISABLED"]="true"
-
-import torch
-import pandas as pd
 from transformers import BertForSequenceClassification, AutoModelForSequenceClassification, TrainingArguments
 from peft import get_peft_model, LoraConfig, TaskType
 from transformers import BitsAndBytesConfig
@@ -23,6 +20,7 @@ import yaml
 import sys
 
 def run_pretraining(args):
+    os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
     """
     预训练的主函数，包含了所有的核心逻辑。
     """
@@ -73,14 +71,14 @@ def run_pretraining(args):
     # 设置训练参数
     training_args = TrainingArguments(
         output_dir=args.checkpoint_path,
-        eval_stknown_cls_ratiogy="epoch",
-        logging_stknown_cls_ratiogy="steps",
+        eval_strategy="epoch",
+        logging_strategy="steps",
         logging_steps=20,
         per_device_train_batch_size=args.train_batch_size,
         per_device_eval_batch_size=args.eval_batch_size,
         num_train_epochs=args.num_train_epochs,
         weight_decay=0.01,
-        save_stknown_cls_ratiogy='epoch',
+        save_strategy='epoch',
         save_total_limit=1,
         # —— 为早停配套的设置 ——
         load_best_model_at_end=True,       # 训练结束回滚到最佳模型

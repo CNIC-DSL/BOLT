@@ -143,11 +143,36 @@ def run_ood_evaluation(args):
             np.save(args.case_path + f'/{detector_name}_golds.npy', golds)
             np.save(args.case_path + f'/{detector_name}_features.npy', features)
 
-    df = pd.DataFrame(results)
-    mean_scores = df.groupby(["Detector"]).mean() * 100
-    mean_scores['args'] = json.dumps(vars(args), ensure_ascii=False)
-    logging.info(mean_scores.sort_values("AUROC").to_csv(float_format="%.2f"))
-    mean_scores.to_csv(args.metric_file, sep='\t')
+    # df = pd.DataFrame(results)
+    # mean_scores = df.groupby(["Detector"]).mean() * 100
+    # mean_scores['args'] = json.dumps(vars(args), ensure_ascii=False)
+    # logging.info(mean_scores.sort_values("AUROC").to_csv(float_format="%.2f"))
+    # mean_scores.to_csv(args.metric_file, sep='\t')
+
+
+    df_to_save = pd.DataFrame(results)
+    df_to_save['method'] = 'PLM_OOD'
+    df_to_save['K-F1'] = df_to_save['K-f1']
+    df_to_save['N-F1'] = df_to_save['N-f1']
+    df_to_save['F1'] = df_to_save['f1-score']
+    df_to_save['ACC'] = df_to_save['accuracy']
+    def func(args, detecor):
+        args['Detecor'] = detecor
+        return json.dumps(args)
+
+    df_to_save['args'] = df_to_save['Detector'].apply(lambda x: func(vars(args), x))
+    cols = ['method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor','seed','ACC','F1','K-F1','N-F1','args']
+    for col in cols:
+        if col in df_to_save:
+            continue
+        df_to_save[col] = getattr(args, col)
+    df_to_save = df_to_save[cols]
+
+    os.makedirs(os.path.dirname(args.metric_file), exist_ok=True)
+    if not os.path.exists(args.metric_file):
+        df_to_save.to_csv(args.metric_file, index=False)
+    else:
+        pd.concat([pd.read_csv(args.metric_file), df_to_save], ignore_index=True).to_csv(args.metric_file, index=False)
 
 def apply_config_updates(args, config_dict, parser):
     """

@@ -26,6 +26,9 @@ def create_parser():
     parser.add_argument("--output_dir", default="outputs", type=str)
     parser.add_argument("--backbone", default="Meta-Llama-3.1-8B-Instruct", type=str)
     parser.add_argument("--lr", default=5e-5, type=float)
+    parser.add_argument("--cluster_num_factor", default=1.0, type=float)
+    parser.add_argument("--save_results_path", default="results/openset/plm_ood", type=str)
+    parser.add_argument("--gpu_id", default="0", type=str)
     parser.add_argument("--train_batch_size", default=16, type=int)
     parser.add_argument("--eval_batch_size", default=32, type=int)
     parser.add_argument("--model_path", default=None, type=str)
@@ -43,18 +46,17 @@ def finalize_config(args):
     
     base_path = os.path.join(args.output_dir, args.reg_loss, args.dataset, str(args.labeled_ratio), run_identity)
 
-    args.metric_dir = os.path.join(base_path, "metrics")
     args.log_dir = os.path.join(base_path, "logs")
     args.checkpoint_path = base_path
     args.case_path = os.path.join(base_path, "case_study")
     args.vector_path = os.path.join(base_path, "case_study")
 
     # 创建目录
-    os.makedirs(args.metric_dir, exist_ok=True)
+    os.makedirs(args.save_results_path, exist_ok=True)
     os.makedirs(args.log_dir, exist_ok=True)
     os.makedirs(args.case_path, exist_ok=True)
 
-    args.metric_file = f"{args.metric_dir}/epoch_{args.num_train_epochs}_seed_{args.seed}.csv"
+    args.metric_file = f"{args.save_results_path}/results.csv"
 
     # --- model_path 备用逻辑 ---
     if args.model_path is None:

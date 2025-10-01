@@ -194,11 +194,11 @@ def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float
                    fold_idx:int, seed:int, c_factor:float, gpu_id: Optional[int],
                    per_method_cfg: Optional[str], output_base: str,
                    # ★ 新增
-                   num_pretrain_epochs: int, num_train_epochs: int) -> Dict[str, Any]:
+                   num_pretrain_epochs: int, num_train_epochs: int, method_specs:dict) -> Dict[str, Any]:
     m_upper = method.upper()
     out_base = output_base or f"./outputs/{task}/{method}"
     subname = f"{dataset}_{known}_{labeled}_fold{fold_idx}_{seed}"
-    return {
+    args_json = {
         "task": task,
         "config": per_method_cfg or "",
         "dataset": dataset,
@@ -219,6 +219,11 @@ def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float
         "num_pretrain_epochs": int(num_pretrain_epochs),
         "num_train_epochs": int(num_train_epochs),
     }
+    if method in method_specs:
+        for i, v in method_specs[method].items():
+            args_json[i] = v
+
+    return args_json
 
 def run_stage(cli:List[str], args_json:Dict[str,Any], gpu_id: Optional[int], dry_run: bool, log_file: Path) -> int:
     env = os.environ.copy()
@@ -240,7 +245,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
               gpu_id: Optional[int],
               # ★ 新增形参
               num_pretrain_epochs: int, num_train_epochs: int,
-              dry_run: bool, only_collect: bool) -> Optional[dict]:
+              dry_run: bool, only_collect: bool,method_specs:dict) -> Optional[dict]:
     from cli_gcd import METHOD_REGISTRY_GCD  # 避免循环导入
     from cli_openset import METHOD_REGISTRY_OPENSET  # 避免循环导入
     if method in METHOD_REGISTRY_GCD:
@@ -258,6 +263,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         # ★ 传入
         num_pretrain_epochs=num_pretrain_epochs,
         num_train_epochs=num_train_epochs,
+        method_specs=method_specs
     )
     
     import pandas as pd
@@ -280,7 +286,8 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
         save_result_df['fold_idx'] = save_result_df['args'].apply(lambda x: int(x['fold_idx']))
         save_result_df['num_train_epochs'] = save_result_df['args'].apply(lambda x: int(x['num_train_epochs']))
-        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'num_train_epochs']
+        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'num_train_epochs', 'backbone', 'reg_loss']
+        filter_list = set(list(save_result_df.columns)) & set(filter_list)
         for col in filter_list:
             save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
             if len(save_result_df) == 0:

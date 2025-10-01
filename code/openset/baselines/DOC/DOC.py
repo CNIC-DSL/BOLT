@@ -81,7 +81,6 @@ if args.config:
 
 # 2. --- 路径构建 (SOP 标准化) ---
 # 使用新的标准参数名构建路径
-args.output_dir = f"{args.output_dir}/{args.dataset}_{args.labeled_ratio}_{args.known_cls_ratio}_{args.fold_idx}_{args.seed}"
 ckpt_dir = os.path.join(args.output_dir, 'ckpt')
 metric_dir = os.path.join(args.output_dir, 'metrics')
 os.makedirs(ckpt_dir, exist_ok=True)
@@ -161,8 +160,6 @@ os.makedirs(metric_dir, exist_ok=True)
 args.ckpt_file = os.path.join(ckpt_dir, 'model.h5')
 results_csv_path = os.path.join(args.save_results_path, 'results.csv')
 
-# 设置GPU
-os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu_id
 import json
 import numpy as np
 from keras import preprocessing

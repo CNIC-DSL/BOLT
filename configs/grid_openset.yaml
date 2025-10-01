@@ -4,8 +4,8 @@ maps:
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
-methods: [plm_openset]
-# methods: [plm_gcd]
+methods: [scl, ab, adb, dyen, knncon]
+# methods: [scl]
 
 result_file: summary_openset
 
@@ -23,8 +23,8 @@ grid:
 
 # 运行参数
 run:
-  gpus: [0,1,2,3]      # 留空则不设置 CUDA_VISIBLE_DEVICES
-  max_workers: 4    # 并行线程数
+  gpus: [0,1,2,3,4,5,6,7]      # 留空则不设置 CUDA_VISIBLE_DEVICES
+  max_workers: 8    # 并行线程数
   num_pretrain_epochs: 100
   num_train_epochs: 50
 
@@ -49,9 +49,6 @@ extra_args:
 
 # 按方法分别追加/覆盖 extra_args（可选）
 per_method_extra:
-  alup:
-    num_train_epochs: 1
-    pretrain_batch_size: 16
-    train_batch_size: 32
-  dpn:
-    temperature: 0.1
+  plm_ood:
+    reg_loss: normal
+    # backbone: pretrained_models/bert-base-uncased

@@ -40,9 +40,12 @@ def main():
         run = y["run"]                       # 运行参数（gpus, max_workers, dry_run, only_collect）
         paths = y["paths"]                   # 路径（results_dir, logs_dir）
         result_file = y["result_file"]                   # 路径（results_dir, logs_dir）
+        method_specs = y['per_method_extra']
     except KeyError as e:
         print(f"[ERR] YAML 缺少必要字段：{e}")
         sys.exit(1)
+
+    
 
     knowns = grid["known_cls_ratio"]
     labeleds = grid["labeled_ratio"]
@@ -103,13 +106,13 @@ def main():
                     for kr in knowns:
                         for d in datasets:
                             for m in final_methods:
-                                combos.append((m, d, kr, lr, fi, sd, cf))
+                                combos.append((m, d, kr, lr, fi, sd, cf, method_specs))
 
     print(f"[INFO] 组合数={len(combos)} | methods={final_methods} | datasets={datasets}")
 
     def worker(task):
         """从池中领取 GPU -> 执行 -> 归还；可选 OOM 重试"""
-        m, d, kr, lr, fi, sd, cf = task
+        m, d, kr, lr, fi, sd, cf, method_specs = task
         tries = 0
         while True:
             gpu_id = gpu_pool.get()  # 阻塞，直到有空闲 GPU
@@ -120,7 +123,7 @@ def main():
                     gpu_id=gpu_id,
                     num_pretrain_epochs=num_pretrain_epochs,
                     num_train_epochs=num_train_epochs,
-                    dry_run=dry_run, only_collect=only_collect
+                    dry_run=dry_run, only_collect=only_collect, method_specs=method_specs
                 )
             except RuntimeError as e:
                 msg = str(e)

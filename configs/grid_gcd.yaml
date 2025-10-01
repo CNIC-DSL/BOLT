@@ -4,7 +4,7 @@ maps:
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
-methods: [tan, dpn, alup, deepaligned, geoid, loop, plm_gcd, sdc, glean]
+methods: [tan, dpn, alup, deepaligned, geoid, loop, plm_gcd, sdc]
 # methods: [plm_gcd]
 result_file: summary_gcd
 
