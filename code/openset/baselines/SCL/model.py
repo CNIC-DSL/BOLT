@@ -46,7 +46,7 @@ def PGD_contrastive(model, inputs, eps=8. / 255., alpha=2. / 255., iters=10):
 
 
 class BiLSTM(nn.Module):
-    def __init__(self, embedding_matrix, BATCH_SIZE, HIDDEN_DIM, CON_DIM, NUM_LAYERS, n_class_seen, DO_NORM, ALPHA, BETA, OOD_LOSS, ADV, CONT_LOSS, norm_coef, cl_mode=1, lmcl=True, use_cuda=True, use_bert=False, sup_cont=False):
+    def __init__(self, embedding_matrix, BATCH_SIZE, HIDDEN_DIM, CON_DIM, NUM_LAYERS, n_class_seen, DO_NORM, ALPHA, BETA, OOD_LOSS, ADV, CONT_LOSS, norm_coef, cl_mode=1, lmcl=True, use_cuda=True, use_bert=False, sup_cont=False, bert_model=None):
         super(BiLSTM, self).__init__()
         self.bsz = BATCH_SIZE
         self.hidden_dim = HIDDEN_DIM
@@ -65,8 +65,8 @@ class BiLSTM(nn.Module):
         self.use_cuda = 'cuda' if use_cuda else 'cpu'
         if self.use_bert:
             print('Loading Bert...')
-            self.bert_model = BertModel.from_pretrained('bert-base-uncased').to(self.use_cuda)
-            self.bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
+            self.bert_model = BertModel.from_pretrained(bert_model).to(self.use_cuda)
+            self.bert_tokenizer = BertTokenizer.from_pretrained(bert_model)
             self.rnn = nn.GRU(input_size=768, hidden_size=self.hidden_dim,
                               num_layers=self.num_layers,
                               batch_first=True, bidirectional=True).to(self.use_cuda)

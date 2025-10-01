@@ -170,6 +170,7 @@ if __name__ == '__main__':
     parser.add_argument("--fold_num", type=int, default=5)
     parser.add_argument("--embedding_file", type=str, default="./pretrained_models/glove.6B.300d.txt")
     parser.add_argument("--output_dir", type=str, default="./outputs/openset/deepunk")
+    # parser.add_argument("--bert_model", type=str, default=None)
     parser.add_argument("--model_name_or_path", type=str, default=".")
     parser.add_argument("--save_results_path", type=str, default="./results/openset/deepunk")
 

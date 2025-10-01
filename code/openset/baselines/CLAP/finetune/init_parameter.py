@@ -7,7 +7,7 @@ def init_model():
     parser.add_argument("--lang", default='english', type=str,
                         help="The input data dir. Should contain the .csv files (or other data files) for the task.")
 
-    parser.add_argument("--bert_base_model",
+    parser.add_argument("--bert_model",
                         default="../pretrained_model/bert-base-uncased",
                         type=str, help="The path for the pre-trained bert models.")
 

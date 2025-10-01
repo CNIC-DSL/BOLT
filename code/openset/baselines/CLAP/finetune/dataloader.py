@@ -135,7 +135,7 @@ class Data:
         return examples
 
     def get_loader(self, examples, args, mode='train', neg_gen_examples=None):
-        tokenizer = BertTokenizer.from_pretrained(args.bert_base_model, do_lower_case=True)
+        tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=True)
 
         if mode == 'k_positive' and neg_gen_examples is not None:
             examples += neg_gen_examples

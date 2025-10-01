@@ -117,7 +117,7 @@ def main():
     num_all_labels = len(label_list)
 
     tokenizer: transformers.PreTrainedTokenizerBase = AutoTokenizer.from_pretrained(
-        other_args.model_name_or_path,
+        other_args.bert_model,
         cache_dir=other_args.cache_dir,
         # local_files_only=True,
         use_fast=True,
@@ -129,13 +129,13 @@ def main():
     # 得到 model（这里暂不支持加载已经训练好的）
 
     pertained_config: BertConfig = AutoConfig.from_pretrained(
-        other_args.model_name_or_path,
+        other_args.bert_model,
         finetuning_task=None,
         # local_files_only=True,
         cache_dir=other_args.cache_dir,
     )
 
-    # model = pjmodel.BertForSequenceClassificationWithPabee.from_pretrained(other_args.model_name_or_path, num_ind_labels=num_all_labels-1)
+    # model = pjmodel.BertForSequenceClassificationWithPabee.from_pretrained(other_args.bert_model, num_ind_labels=num_all_labels-1)
     model = BertForSequenceClassificationWithPabee(pertained_config=pertained_config, other_args=other_args, num_ind_labels=num_all_labels-1)
 
     #####################################################################################

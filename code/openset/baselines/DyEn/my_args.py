@@ -65,7 +65,7 @@ class OtherArguments:
     模型的训练参数、其他超参等 可以从 json 里面设置，其余的均为自动生成或者写死
     """
     # --- 将所有打算从 YAML 加载的必需参数，全部改为 Optional 并设置 default=None ---
-    model_name_or_path: Optional[str] = field(
+    bert_model: Optional[str] = field(
         default=None,
         metadata={"help": "Path to pretrained model or model identifier from huggingface.co/models"}
     )

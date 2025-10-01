@@ -53,7 +53,7 @@ class BertForSequenceClassificationWithPabee(nn.Module):
         super().__init__()
         self.num_ind_labels = num_ind_labels
 
-        self.bert: BertModel = BertModel.from_pretrained(other_args.model_name_or_path, config=pertained_config)
+        self.bert: BertModel = BertModel.from_pretrained(other_args.bert_model, config=pertained_config)
 
         # 每层后面一个分类器
         self.classifiers = nn.ModuleList(

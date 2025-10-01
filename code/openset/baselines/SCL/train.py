@@ -166,6 +166,7 @@ def define_parser():
                         help="weight_decay")
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--save_results_path', type=str, default='results/openset/scl', help='gradient clipping')
+    parser.add_argument('--bert_model', type=str, default='./pretrained_models/bert-base-uncased', help='gradient clipping')
     # args = parser.parse_args()
     return parser
 
@@ -404,7 +405,7 @@ def main(args):
             embedding_matrix = None
 
         filepath = os.path.join(output_dir, 'model_best.pkl')
-        model = BiLSTM(embedding_matrix, BATCH_SIZE, HIDDEN_DIM, CON_DIM, NUM_LAYERS, n_class_seen, DO_NORM, ALPHA, BETA, OOD_LOSS, ADV, CONT_LOSS, NORM_COEF, CL_MODE, LMCL, use_bert=USE_BERT, sup_cont=SUP_CONT, use_cuda=CUDA)
+        model = BiLSTM(embedding_matrix, BATCH_SIZE, HIDDEN_DIM, CON_DIM, NUM_LAYERS, n_class_seen, DO_NORM, ALPHA, BETA, OOD_LOSS, ADV, CONT_LOSS, NORM_COEF, CL_MODE, LMCL, use_bert=USE_BERT, sup_cont=SUP_CONT, use_cuda=CUDA, bert_model=args.bert_model)
         optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, model.parameters()), lr=args.learning_rate,
                                     weight_decay=args.weight_decay)
         if args.cuda:

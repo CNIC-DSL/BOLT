@@ -10,9 +10,9 @@ from sklearn.metrics import classification_report
 class PretrainModelManager:
     def __init__(self, args, data):
         self.num_labels = data.num_labels
-        self.tokenizer = BertTokenizer.from_pretrained(args.bert_base_model, do_lower_case=True)  
+        self.tokenizer = BertTokenizer.from_pretrained(args.bert_model, do_lower_case=True)  
         
-        self.model = BertForModel.from_pretrained(args.bert_base_model, cache_dir="", num_labels=self.num_labels, model_type=args.model_type)
+        self.model = BertForModel.from_pretrained(args.bert_model, cache_dir="", num_labels=self.num_labels, model_type=args.model_type)
 
         if args.freeze_bert_parameters:
             for name, param in self.model.bert.named_parameters():

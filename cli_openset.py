@@ -34,18 +34,33 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     # 额外自定义 flags（例如某些模型特有参数），允许用户从外部传入列表
     extra = list(args_json.get("extra_flags", []))
     output_dir = f"outputs/openset/{args_json['method']}/{args_json['dataset']}_{args_json['labeled_ratio']}_{args_json['known_cls_ratio']}_{args_json['fold_idx']}_{args_json['seed']}"
-    # model_name_or_path = "./pretrained_models/bert-base-chinese" if args_json["dataset"] in ['ecdt', 'thucnews'] else "./pretrained_models/bert-base-uncased"
-    return [
-        "--config", str(args_json["config"]),
-        "--seed", str(args_json["seed"]),
-        "--gpu_id", str(args_json["gpu_id"]),
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--fold_idx", str(args_json["fold_idx"]),
-        "--output_dir", str(output_dir),
-        *extra,
-    ]
+    bert_model = "./pretrained_models/bert-base-chinese" if args_json["dataset"] in ['ecdt', 'thucnews'] else "./pretrained_models/bert-base-uncased"
+    if args_json['method'] in ['ab', 'deepunk', 'doc', 'plm_ood']:
+        return [
+            "--config", str(args_json["config"]),
+            "--seed", str(args_json["seed"]),
+            "--gpu_id", str(args_json["gpu_id"]),
+            "--dataset", args_json["dataset"],
+            "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+            "--labeled_ratio", str(args_json["labeled_ratio"]),
+            "--fold_idx", str(args_json["fold_idx"]),
+            "--output_dir", str(output_dir),
+            *extra,
+        ]
+    else:
+        return [
+            "--config", str(args_json["config"]),
+            "--seed", str(args_json["seed"]),
+            "--gpu_id", str(args_json["gpu_id"]),
+            "--dataset", args_json["dataset"],
+            "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+            "--labeled_ratio", str(args_json["labeled_ratio"]),
+            "--fold_idx", str(args_json["fold_idx"]),
+            "--output_dir", str(output_dir),
+            "--bert_model", bert_model,
+            *extra,
+        ]
+
 
 
 # ----------------------------- 各方法 CLI 构造 -----------------------------

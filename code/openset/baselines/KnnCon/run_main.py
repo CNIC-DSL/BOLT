@@ -274,13 +274,13 @@ def main():
 
     if training_args.load_trained_model: # False
         config = AutoConfig.from_pretrained(
-            model_args.model_name_or_path,
+            model_args.bert_model,
             num_labels=num_labels,
             finetuning_task=data_args.task_name,
             cache_dir=model_args.cache_dir,
         )
 
-        config.model_name = model_args.model_name_or_path
+        config.model_name = model_args.bert_model
         config.negative_num = training_args.negative_num
         config.positive_num = training_args.positive_num
         config.queue_size = training_args.queue_size
@@ -290,7 +290,7 @@ def main():
         config.multi_head_num = training_args.multi_head_num
         config.num_labels = num_labels
         tokenizer = AutoTokenizer.from_pretrained(
-            model_args.model_name_or_path
+            model_args.bert_model
         )
         if training_args.load_model_pattern == "original_model":
             model = AutoModelForSequenceClassification.from_pretrained(
@@ -307,13 +307,13 @@ def main():
             logger.warning("your model should in list [original_model moco roberta_moco knn_bert knn_roberta]")
     else: # True
         config = AutoConfig.from_pretrained(
-            model_args.config_name if model_args.config_name else model_args.model_name_or_path,
+            model_args.config_name if model_args.config_name else model_args.bert_model,
             num_labels=num_labels,
             finetuning_task=data_args.task_name,
             cache_dir=model_args.cache_dir,
         )
 
-        config.model_name = model_args.model_name_or_path
+        config.model_name = model_args.bert_model
         config.negative_num = training_args.negative_num
         config.positive_num = training_args.positive_num
         # config.m = fitlog_args.m
@@ -333,7 +333,7 @@ def main():
         config.device = training_args.device
         config.T = training_args.temperature
         tokenizer = AutoTokenizer.from_pretrained(
-            model_args.tokenizer_name if model_args.tokenizer_name else model_args.model_name_or_path,
+            model_args.tokenizer_name if model_args.tokenizer_name else model_args.bert_model,
             cache_dir=model_args.cache_dir,
             use_fast=model_args.use_fast_tokenizer,
         )
@@ -435,11 +435,11 @@ def main():
     if training_args.do_train:
         if training_args.load_model_pattern == 'knn_bert':
             trainer.train_mocoknn(
-                model_path=model_args.model_name_or_path if os.path.isdir(model_args.model_name_or_path) else None
+                model_path=model_args.bert_model if os.path.isdir(model_args.bert_model) else None
             )
         else:
             trainer.train_origin(
-                model_path=model_args.model_name_or_path if os.path.isdir(model_args.model_name_or_path) else None
+                model_path=model_args.bert_model if os.path.isdir(model_args.bert_model) else None
             )
         #trainer.save_model()  # Saves the tokenizer too for easy upload
         #fitlog.finish()
@@ -468,7 +468,7 @@ def main():
             number_labels=num_labels,
             data_collator=data_collator
         )
-        evaler.evaluation(model_path=model_args.model_name_or_path)
+        evaler.evaluation(model_path=model_args.bert_model)
 
     return None
 
