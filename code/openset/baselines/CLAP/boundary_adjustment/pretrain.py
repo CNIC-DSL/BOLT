@@ -8,8 +8,8 @@ class PretrainModelManager:
 
     def __init__(self, args, data):
         self.trained = False
-        if os.path.exists(os.path.join(args.pretrain_dir, WEIGHTS_NAME)):
-            self.model = BertForModel.from_pretrained(args.pretrain_dir, num_labels=data.num_labels, cosine=args.cosine, norm_output=args.do_bert_output_norm)
+        if os.path.exists(os.path.join(args.output_dir, WEIGHTS_NAME)):
+            self.model = BertForModel.from_pretrained(args.output_dir, num_labels=data.num_labels, cosine=args.cosine, norm_output=args.do_bert_output_norm)
             self.trained = True
         else:
             self.model = BertForModel.from_pretrained(args.bert_model, cache_dir="", num_labels=data.num_labels, cosine=args.cosine, norm_output=args.do_bert_output_norm)
@@ -114,12 +114,12 @@ class PretrainModelManager:
 
     def save_model(self, args):
 
-        if not os.path.exists(args.pretrain_dir):
-            os.makedirs(args.pretrain_dir)
+        if not os.path.exists(args.output_dir):
+            os.makedirs(args.output_dir)
         self.save_model = self.model.module if hasattr(self.model, 'module') else self.model
 
-        model_file = os.path.join(args.pretrain_dir, WEIGHTS_NAME)
-        model_config_file = os.path.join(args.pretrain_dir, CONFIG_NAME)
+        model_file = os.path.join(args.output_dir, WEIGHTS_NAME)
+        model_config_file = os.path.join(args.output_dir, CONFIG_NAME)
         torch.save(self.save_model.state_dict(), model_file)
         with open(model_config_file, "w") as f:
             f.write(self.save_model.config.to_json_string())

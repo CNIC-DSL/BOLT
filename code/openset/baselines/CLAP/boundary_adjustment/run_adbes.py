@@ -177,7 +177,7 @@ def main(args):
     # 加载数据
     data = Data(args)
 
-    pretrained_model = BertForModel.from_pretrained(args.pretrain_dir + '/finetuned_model', num_labels=data.num_labels, cosine=args.cosine)
+    pretrained_model = BertForModel.from_pretrained(args.output_dir + '/finetuned_model', num_labels=data.num_labels, cosine=args.cosine)
 
     # 初始化模型管理器
     manager = ModelManager(args, data, pretrained_model)

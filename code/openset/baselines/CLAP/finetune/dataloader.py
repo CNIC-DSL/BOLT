@@ -199,7 +199,12 @@ class TextDataset(torch.utils.data.Dataset):
     def generate_postive_sample(self, label, self_index):
         if self.k > 0:
             index_list = [ind for ind in self.label2sid[label] if ind != self_index]
-            return np.random.choice(index_list, size=min(self.k, len(index_list)), replace=False)
+            if len(index_list) == 0:
+                index_list = [self_index]
+            if self.k <= len(index_list):
+                return np.random.choice(index_list, size=self.k, replace=False)
+            else:
+                return np.random.choice(index_list, size=self.k, replace=True)
         else:
             return None
 
@@ -225,6 +230,7 @@ class TextDataset(torch.utils.data.Dataset):
         input_mask = self.input_mask[sids]
         segment_ids = self.segment_ids[sids]
         label_ids = self.label_ids[sids]
+        assert input_ids.shape[0] % (1 + self.k + self.n) == 0
         return {"input_ids": input_ids, "input_mask": input_mask, "segment_ids": segment_ids, "label_ids": label_ids}
 
     def __len__(self):

@@ -12,9 +12,6 @@ def init_model():
     
     parser.add_argument("--save_results_path", type=str, default='outputs', help="the path to save results")
     
-    parser.add_argument("--pretrain_dir", default='models', type=str, 
-                        help="The output directory where the model predictions and checkpoints will be written.") 
-    
     parser.add_argument("--bert_model", default="../pretrained_model/bert-base-uncased", type=str, help="The path for the pre-trained bert model.")
     
     parser.add_argument("--max_seq_length", default=None, type=int,

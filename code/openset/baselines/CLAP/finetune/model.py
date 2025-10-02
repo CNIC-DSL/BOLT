@@ -67,6 +67,21 @@ def kccl_loss(pooled_output, labels, k, temperature, neg_num=1, weight=None, met
     #    这样 pooled_output 总是从 2D -> 3D
     pooled_output = pooled_output.view(-1, 1 + k + neg_num, H)
 
+
+    # B, H = pooled_output.shape
+    # g = 1 + k + neg_num  # 每组的样本数：anchor 1 + pos k + neg neg_num
+    # # 裁掉尾巴，确保可以整除
+    # rem = B % g
+    # if rem:
+    #     pooled_output = pooled_output[:-rem]
+    #     labels = labels[:-rem]
+    #     B = pooled_output.shape[0]
+    # # 重塑为 [num_groups, g, H]
+    # num_groups = B // g
+    # pooled_output = pooled_output.view(num_groups, g, H)
+    # labels = labels.view(num_groups, g)
+
+
     # 2. 修改 if 语句块内的逻辑，现在它只负责切分数据
     if neg_method in [3, 6]:
         labels = labels.view(-1, 1 + k + neg_num)                   

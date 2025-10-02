@@ -105,13 +105,8 @@ def cli_clap_stage1(args_json: Dict[str, Any], stage: int) -> List[str]:
     入口：code/openset/baselines/CLAP/finetune/run_kccl.py
     需要：--config --dataset --seed --known_cls_ratio --gpu_id --output_dir
     """
-    out_dir = args_json.get(
-        "output_dir",
-        f'./outputs/openset/clap/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["seed"]}'
-    )
     return [
         sys.executable, "code/openset/baselines/CLAP/finetune/run_kccl.py",
-        "--output_dir", out_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
     ]
@@ -123,18 +118,8 @@ def cli_clap_stage2(args_json: Dict[str, Any], stage: int) -> List[str]:
     入口：code/openset/baselines/CLAP/boundary_adjustment/run_adbes.py
     需要承接 stage1 的输出：--pretrain_dir / --output_dir
     """
-    out_dir = args_json.get(
-        "output_dir",
-        f'./outputs/openset/clap/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["seed"]}'
-    )
-    # 若 stage1 另行指定了 finetuned 模型保存目录，可通过 args_json["finetuned_model_path"] 覆盖
-    pretrain_dir = args_json.get("finetuned_model_path", out_dir)
     return [
         sys.executable, "code/openset/baselines/CLAP/boundary_adjustment/run_adbes.py",
-        
-        
-        "--output_dir", out_dir,
-        "--pretrain_dir", pretrain_dir,
         *_common_flags(args_json),
         *_epoch_flags(args_json, is_pretrain=False),
     ]
