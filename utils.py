@@ -296,7 +296,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
                 break
 
         if len(save_result_df) > 0:
-            print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
+            # print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
             return None
             for items in save_result_df['args']:
                 if compare_common_keys(run_args, items):
