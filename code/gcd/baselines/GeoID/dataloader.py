@@ -108,7 +108,7 @@ class Data:
 
     def get_semi(self, labeled_examples, unlabeled_examples, args):
         
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         if self.n_known_cls > 0:
             labeled_features = convert_examples_to_features(labeled_examples, self.known_label_list, args.max_seq_length, tokenizer)
             labeled_input_ids = torch.tensor([f.input_ids for f in labeled_features], dtype=torch.long)
@@ -149,7 +149,7 @@ class Data:
         return semi_data, semi_dataloader
 
     def get_loader(self, examples, args, mode = 'train'):
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         
         if mode == 'train' or mode == 'eval':
             features = convert_examples_to_features(examples, self.known_label_list, args.max_seq_length, tokenizer)

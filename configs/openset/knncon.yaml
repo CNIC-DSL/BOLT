@@ -12,7 +12,7 @@ seed: 0
 
 # --- 路径与模型设置 ---
 output_dir: "./outputs/openset/knncon"
-model_name_or_path: "./pretrained_models/bert-base-uncased"
+bert_model: "./pretrained_models/bert-base-uncased"
 # cache_dir: null # 可选，用于指定Hugging Face模型缓存目录
 
 # --- 训练流程控制 ---

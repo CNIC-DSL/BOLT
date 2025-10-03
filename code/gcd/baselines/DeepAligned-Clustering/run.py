@@ -306,7 +306,7 @@ if __name__ == '__main__':
             dataset_configs = yaml_config['dataset_specific_configs'].get(args.dataset, {})
             apply_config_updates(args, dataset_configs, parser)
 
-    args.bert_model = '../../pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
+    args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset == 'ecdt' else args.bert_model
     data = Data(args)
 
     if args.pretrain:

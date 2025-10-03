@@ -137,21 +137,21 @@ dataset_specific_configs:
     topk: 500
     task: "topic"
   news:
-    max_seq_length: 500
+    max_seq_length: 128
     topk: 500
     task: "topic"
     train_batch_size: 8
     eval_batch_size: 32
     pretrain_batch_size: 16
   thucnews:
-    max_seq_length: 500
+    max_seq_length: 128
     topk: 500
     task: "topic"
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
   20NG: # 20 Newsgroups
-    max_seq_length: 512
+    max_seq_length: 128
     topk: 500
     task: "topic"
     train_batch_size: 16

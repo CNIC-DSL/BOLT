@@ -52,7 +52,7 @@ class CLNNModelManager:
         
         self.optimizer, self.scheduler = self.get_optimizer(args)
 
-        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         self.generator = view_generator(self.tokenizer, args.rtr_prob, args.seed)
         self.feature_bank = torch.zeros(len(data.train_semi_dataset),int(args.feat_dim),device=self.device)
         self.centroids = None

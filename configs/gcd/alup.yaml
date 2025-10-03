@@ -77,6 +77,11 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
+  TREC:
+    max_seq_length: 256
+    train_batch_size: 16
+    eval_batch_size: 32
+    pretrain_batch_size: 16
   medical:
     max_seq_length: 256
 

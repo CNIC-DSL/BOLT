@@ -16,7 +16,7 @@ max_seq_length: 128    # 对应 my_args.py 中的 max_seq_length
 
 # --- 模型与训练设置 ---
 # 路径设置
-model_name_or_path: "./pretrained_models/bert-base-uncased"
+bert_model: "./pretrained_models/bert-base-uncased"
 
 # 训练周期与批次大小
 supcont_pre_epoches: 10

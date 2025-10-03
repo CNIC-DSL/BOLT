@@ -88,6 +88,8 @@ dataset_specific_configs:
   Yahoo: # Yahoo Answers
     max_seq_length: 128
     num_train_epochs: 20
+    train_batch_size: 16
+    eval_batch_size: 32
   ele:
     max_seq_length: 200
     num_train_epochs: 20
