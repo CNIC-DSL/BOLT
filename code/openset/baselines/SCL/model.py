@@ -164,7 +164,16 @@ class BiLSTM(nn.Module):
                 seq_embed = self.dropout(seq_embed)
                 seq_embed = seq_embed.clone().detach().requires_grad_(True).float()
             _, ht = self.rnn(seq_embed)
-            ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+
+            # ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+
+            if isinstance(self.rnn, nn.LSTM):
+                _, (h_n, _) = self.rnn(seq_embed)   # h_n: [num_layers*num_directions, B, H]
+            else:
+                _, h_n = self.rnn(seq_embed)         # h_n: [num_layers*num_directions, B, H]
+            # 把方向和层拼到最后一维：得到 [B, num_layers*num_directions*H]
+            ht = h_n.transpose(0, 1).contiguous().view(h_n.size(1), -1)
+
             logits = self.fc(ht)
             probs = torch.softmax(logits, dim=1)
             return probs, ht

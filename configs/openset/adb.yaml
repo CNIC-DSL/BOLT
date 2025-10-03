@@ -24,7 +24,7 @@ lr_boundary: 0.05
 wait_patient: 10
 feat_dim: 768
 freeze_bert_parameters: True
-save_model: True
+save_model: False
 
 # --- 输出目录设置 ---
 output_dir: "./outputs/openset/adb" 
