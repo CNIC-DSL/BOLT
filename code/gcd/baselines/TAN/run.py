@@ -90,8 +90,22 @@ class ModelManager:
         self.model.eval()
         feats, labels = self.get_features_labels(dataloader, self.model, args)
         feats = feats.cpu().numpy()
-        km = KMeans(n_clusters=self.num_labels, n_init=20, random_state=args.seed).fit(feats)
         y_true = labels.cpu().numpy()
+        # km = KMeans(n_clusters=min(self.num_labels, len(set(list(labels.cpu().numpy())))), n_init=20, random_state=args.seed).fit(feats)
+        # km = KMeans(n_clusters=self.num_labels, n_init=20, random_state=args.seed).fit(feats)
+        # --- 最小化修改开始 ---
+        import numpy as np
+        n_classes_in_split = np.unique(y_true).size
+        n_samples = feats.shape[0]
+        n_clusters = min(self.num_labels, n_classes_in_split, n_samples)
+
+        # 兜底：若可用簇数不足 2（KMeans 要求至少 2），用单簇预测回评估，避免报错
+        if n_clusters < 2:
+            y_pred = np.zeros_like(y_true)
+            return clustering_score(y_true, y_pred, self.data.known_lab)
+        # --- 最小化修改结束 ---
+
+        km = KMeans(n_clusters=n_clusters, n_init=20, random_state=args.seed).fit(feats)
         # 直接使用现有的度量计算
         return clustering_score(y_true, km.labels_, self.data.known_lab)
 

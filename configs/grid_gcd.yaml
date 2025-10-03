@@ -4,8 +4,8 @@ maps:
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
-methods: [glean]
-# methods: [tan]
+# methods: [glean]
+methods: [tan]
 result_file: summary_gcd
 
 # 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
