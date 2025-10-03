@@ -258,7 +258,7 @@ class ModelManager:
         criterion_boundary = BoundaryLoss(num_labels=data.num_labels, feat_dim=args.feat_dim, train_batch_size=args.train_batch_size)
         self.delta = F.softplus(criterion_boundary.delta)
         if args.optimizer_lr == 1:
-            total_steps = int(len(data.train_examples) / args.train_batch_size) * args.num_train_epochs
+            total_steps = max(1, int(len(data.train_examples) / args.train_batch_size) * args.num_train_epochs)
             optimizer = BertAdam(criterion_boundary.parameters(),
                                  lr=args.lr_boundary,
                                  warmup=args.warmup_proportion,
