@@ -86,7 +86,7 @@ class PretrainModelManager:
                 if wait >= args.wait_patient:
                     break
                 
-        self.model = best_model
+        self.model = best_model if best_model is not None else self.model
         if args.save_model:
             self.save_model(args)
 

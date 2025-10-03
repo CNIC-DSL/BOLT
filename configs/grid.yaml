@@ -5,14 +5,14 @@ maps:
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
 # methods: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
-methods: [tan]
+methods: [adb]
 
 result_file: summary_openset
 
 
 # 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
 # datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
-datasets: [ecdt]
+datasets: [TREC, ecdt]
 
 # 网格搜索参数
 grid:
@@ -25,7 +25,7 @@ grid:
 # 运行参数
 run:
   gpus: [0,1,2,3]      # 留空则不设置 CUDA_VISIBLE_DEVICES
-  max_workers: 1    # 并行线程数
+  max_workers: 4    # 并行线程数
   num_pretrain_epochs: 100
   num_train_epochs: 50
 

@@ -106,10 +106,10 @@ class Data:
         
         if mode == 'train':
             sampler = RandomSampler(datatensor)
-            dataloader = DataLoader(datatensor, sampler=sampler, batch_size = args.train_batch_size)    
+            dataloader = DataLoader(datatensor, sampler=sampler, batch_size = args.train_batch_size, drop_last=False)
         elif mode == 'eval' or mode == 'test':
             sampler = SequentialSampler(datatensor)
-            dataloader = DataLoader(datatensor, sampler=sampler, batch_size = args.eval_batch_size) 
+            dataloader = DataLoader(datatensor, sampler=sampler, batch_size = args.eval_batch_size, drop_last=False)
         
         return dataloader
 
