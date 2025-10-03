@@ -325,7 +325,7 @@ def main(args):
     CUDA = args.cuda
 
     class DataLoader(object):
-        def __init__(self, data, batch_size, mode='train', use_bert=False, raw_text=None, drop_last=True):
+        def __init__(self, data, batch_size, mode='train', use_bert=False, raw_text=None, drop_last=False):
             self.use_bert = use_bert
             self.mode = mode
             self.batch_size = int(batch_size)

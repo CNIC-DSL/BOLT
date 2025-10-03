@@ -4,21 +4,21 @@ maps:
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
-# methods: [scl, ab, adb, dyen, knncon]
-methods: [clap]
+# methods: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
+methods: [deepunk]
 
 result_file: summary_openset
 
 
 # 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
-datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
-# datasets: [ecdt]
+# datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
+datasets: [20NG]
 
 # 网格搜索参数
 grid:
-  known_cls_ratio: [0.5, 0.75, 0.25]
+  known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
-  fold_idxs: [4,0,1,2,3]
+  fold_idxs: [0,1,2,3,4]
   seeds: [2025]
   cluster_num_factor: [1.0]   # 需要多值就加上 [0.8, 1.0, 1.2]
 

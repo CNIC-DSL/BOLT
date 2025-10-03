@@ -55,9 +55,9 @@ def main(args):
     tokenizer.fit_on_texts(train_seen_df['text'].astype(str))
     word_index = tokenizer.word_index
     
-    X_train_seen = pad_sequences(tokenizer.texts_to_sequences(train_seen_df['text'].astype(str)), padding='post', truncating='post')
-    X_valid_seen = pad_sequences(tokenizer.texts_to_sequences(valid_seen_df['text'].astype(str)), padding='post', truncating='post')
-    X_test = pad_sequences(tokenizer.texts_to_sequences(df_test['text'].astype(str)), padding='post', truncating='post')
+    X_train_seen = pad_sequences(tokenizer.texts_to_sequences(train_seen_df['text'].astype(str)), padding='post', truncating='post', maxlen=4096)
+    X_valid_seen = pad_sequences(tokenizer.texts_to_sequences(valid_seen_df['text'].astype(str)), padding='post', truncating='post', maxlen=4096)
+    X_test = pad_sequences(tokenizer.texts_to_sequences(df_test['text'].astype(str)), padding='post', truncating='post', maxlen=4096)
     
     # 4. 标签编码
     le = LabelEncoder()
