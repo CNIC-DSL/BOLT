@@ -101,7 +101,7 @@ class PretrainModelManager:
         optimizer = BertAdam(optimizer_grouped_parameters,
                          lr = args.lr,
                          warmup = args.warmup_proportion,
-                         t_total = max(self.num_train_optimization_steps, 1)
+                         t_total = max(self.num_train_optimization_steps, 1))
         return optimizer
     
     def save_model(self, args):
