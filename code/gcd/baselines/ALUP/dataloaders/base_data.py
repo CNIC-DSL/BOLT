@@ -23,11 +23,12 @@ class BaseDataNew(object):
 
         # calculate the number of known classes
         self.num_labels = int(len(self.all_label_list) * args.cluster_num_factor)
-        self.n_known_cls = round(len(self.all_label_list) * args.known_cls_ratio)
+        # self.n_known_cls = round(len(self.all_label_list) * args.known_cls_ratio)
 
         # conduct the split of known and unknown classes
         # self.known_label_list = pd.read_csv(f"{self.data_dir}/label/label_{args.known_cls_ratio}.list", header=None)[0].tolist()
-        self.known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+        self.known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/{args.fold_type}{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+        self.n_known_cls = len(self.known_label_list)
 
 
         # self.known_train_sample = pd.read_csv(f"{self.data_dir}/labeled_data/train_{args.labeled_ratio}.tsv", sep='\t')

@@ -417,6 +417,7 @@ class TrainingArguments:
     labeled_ratio: float = field(default=1.0, metadata={"help": "The ratio of labeled data to use."})
     fold_idx: int = field(default=0, metadata={"help": "The index of the fold for cross-validation."})
     fold_num: int = field(default=5, metadata={"help": "The total number of folds for cross-validation."})
+    fold_type: str = field(default='fold', metadata={"help": "The total number of folds for cross-validation."})
     gpu_id: str = field(default="0", metadata={"help": "The GPU ID to use."})
     
     # --- KnnCon原有的全部自定义参数 ---

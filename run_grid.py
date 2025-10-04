@@ -50,6 +50,8 @@ def main():
     knowns = grid["known_cls_ratio"]
     labeleds = grid["labeled_ratio"]
     fold_idxs = grid["fold_idxs"]
+    fold_nums = grid["fold_nums"]
+    fold_types = grid["fold_types"]
     seeds = grid["seeds"]
     cfs = grid["cluster_num_factor"]
     
@@ -101,24 +103,27 @@ def main():
     combos = []
     for cf in cfs:
         for sd in seeds:
-            for fi in fold_idxs:
-                for lr in labeleds:
-                    for kr in knowns:
-                        for d in datasets:
-                            for m in final_methods:
-                                combos.append((m, d, kr, lr, fi, sd, cf, method_specs))
+            for ft in fold_types:
+                for fi in fold_idxs:
+                    for fn in fold_nums:
+                        for lr in labeleds:
+                            for kr in knowns:
+                                for d in datasets:
+                                    for m in final_methods:
+                                        combos.append((m, d, kr, lr, ft, fn, fi, sd, cf, method_specs))
 
     print(f"[INFO] 组合数={len(combos)} | methods={final_methods} | datasets={datasets}")
 
     def worker(task):
         """从池中领取 GPU -> 执行 -> 归还；可选 OOM 重试"""
-        m, d, kr, lr, fi, sd, cf, method_specs = task
+        m, d, kr, lr, ft, fn, fi, sd, cf, method_specs = task
         tries = 0
         while True:
             gpu_id = gpu_pool.get()  # 阻塞，直到有空闲 GPU
             try:
                 return run_combo(
                     method=m, dataset=d, known=kr, labeled=lr,
+                    fold_type=ft, fold_num=fn,
                     fold_idx=fi, seed=sd, c_factor=cf,
                     gpu_id=gpu_id,
                     num_pretrain_epochs=num_pretrain_epochs,

@@ -59,6 +59,7 @@ def init_model():
 
     parser.add_argument("--pretrain_batch_size", default=64, type=int,
                         help="Batch size for pre-training")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     parser.add_argument("--train_batch_size", default=96, type=int,
                         help="Batch size for training.")    # original: 128

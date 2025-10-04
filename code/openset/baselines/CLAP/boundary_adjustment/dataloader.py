@@ -46,7 +46,7 @@ class Data:
             args.data_dir,
             args.dataset,
             'label',
-            f'fold{args.fold_num}',
+            f'{args.fold_type}{args.fold_num}',
             f'part{args.fold_idx}',
             f'label_known_{args.known_cls_ratio}.list'
         )

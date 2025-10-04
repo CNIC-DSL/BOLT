@@ -4,7 +4,7 @@ from torch.utils.data import DataLoader
 from configs import args
 from datasets import concatenate_datasets
 
-known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/{args.fold_type}{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
 all_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/label.list', header=None)[0].tolist()
 all_label_list = known_label_list + [i for i in all_label_list if i not in known_label_list]
 ## origin data

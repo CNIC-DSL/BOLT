@@ -16,6 +16,7 @@ def init_model():
 
     parser.add_argument("--pretrain_dir", default='baseline_models', type=str, help="The output directory where the model predictions and checkpoints will be written.")
     parser.add_argument("--train_dir", default='sdc_models', type=str, help="The output directory where the model predictions and checkpoints will be written.")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     parser.add_argument("--bert_model", default="pretrained_models/bert-base-uncased", type=str,
                         help="The path or name for the pre-trained bert model.")

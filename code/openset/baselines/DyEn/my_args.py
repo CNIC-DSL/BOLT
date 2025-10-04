@@ -33,6 +33,10 @@ class DataTrainingArguments:
         default=5,
         metadata={"help": "The total number of folds for cross-validation."}
     )
+    fold_type: str = field(
+        default="fold",
+
+    )
     # --- 新增：补上遗漏的 gpu_id 参数 ---
     gpu_id: str = field(
         default="0",

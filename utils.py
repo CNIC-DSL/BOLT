@@ -190,14 +190,14 @@ def write_summary(row:dict):
     # seen = load_seen(); seen[key_hash] = dedup_key; save_seen(seen)
     print(f"[OK] Appended to {SUMMARY_CSV}")
 
-def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float,
+def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float, fold_type:str, fold_num:int,
                    fold_idx:int, seed:int, c_factor:float, gpu_id: Optional[int],
                    per_method_cfg: Optional[str], output_base: str,
                    # ★ 新增
                    num_pretrain_epochs: int, num_train_epochs: int, method_specs:dict) -> Dict[str, Any]:
     m_upper = method.upper()
     out_base = output_base or f"./outputs/{task}/{method}"
-    subname = f"{dataset}_{known}_{labeled}_fold{fold_idx}_{seed}"
+    subname = f"{dataset}_{known}_{labeled}_{fold_type}_{fold_idx}_{seed}"
     args_json = {
         "task": task,
         "config": per_method_cfg or "",
@@ -205,6 +205,8 @@ def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float
         "known_cls_ratio": float(known),
         "labeled_ratio": float(labeled),
         "fold_idx": int(fold_idx),
+        "fold_num": int(fold_num),
+        "fold_type": fold_type,
         "seed": int(seed),
         "gpu_id": (gpu_id if gpu_id is not None else -1),
         "method": m_upper,
@@ -241,7 +243,7 @@ def run_stage(cli:List[str], args_json:Dict[str,Any], gpu_id: Optional[int], dry
         return proc.wait()
     
 
-def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int, seed:int, c_factor:float,
+def run_combo(method:str, dataset:str, known:float, labeled:float, fold_type: str ,fold_num:int, fold_idx:int, seed:int, c_factor:float,
               gpu_id: Optional[int],
               # ★ 新增形参
               num_pretrain_epochs: int, num_train_epochs: int,
@@ -258,7 +260,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
 
     task = spec["task"]
     args_json = make_base_args(
-        task, method, dataset, known, labeled, fold_idx, seed, c_factor, gpu_id,
+        task, method, dataset, known, labeled, fold_type, fold_num, fold_idx, seed, c_factor, gpu_id,
         spec.get("config",""), spec.get("output_base", f"./outputs/{task}/{method}"),
         # ★ 传入
         num_pretrain_epochs=num_pretrain_epochs,
@@ -285,8 +287,10 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         save_result_df = save_result_df[~save_result_df['args'].isna()]
         save_result_df['args'] = save_result_df['args'].apply(lambda x: json.loads(x) if isinstance(x, str) else x)
         save_result_df['fold_idx'] = save_result_df['args'].apply(lambda x: int(x['fold_idx']))
+        save_result_df['fold_num'] = save_result_df['args'].apply(lambda x: int(x['fold_num']))
+        save_result_df['fold_type'] = save_result_df['args'].apply(lambda x: x['fold_type'])
         save_result_df['num_train_epochs'] = save_result_df['args'].apply(lambda x: int(x['num_train_epochs']))
-        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'num_train_epochs', 'backbone', 'reg_loss']
+        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'fold_num', 'fold_type', 'num_train_epochs', 'backbone', 'reg_loss']
         filter_list = set(list(save_result_df.columns)) & set(filter_list)
         for col in filter_list:
             save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
@@ -303,45 +307,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
                     print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
                     return None
 
-    print(f"[RUN ] {dataset} | {method} | kr={known} lr={labeled} fold={fold_idx} seed={seed} cf={c_factor} | gpu={gpu_id}")
-
-    # seen 索引
-    # # 去重键（忽略 gpu_id）
-    # dedup_key = {
-    #     "method": args_json["method"], "dataset": dataset,
-    #     "known_cls_ratio": known, "labeled_ratio": labeled,
-    #     "cluster_num_factor": c_factor, "fold_idx": fold_idx, "seed": seed,
-    #     "_args_wo_gpu": {k:v for k,v in args_json.items() if k!="gpu_id"},
-    # }
-    # key_hash = json_sha1(dedup_key)
-    # seen = load_seen()
-    # if key_hash in seen and not only_collect:
-    #     print(f"[SKIP] seen matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
-    #     return None
-
-    # # bucket 去重
-    # if already_done_via_bucket(task, dataset, known, labeled, args_json) and not only_collect:
-    #     print(f"[SKIP] bucket matched: {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed}")
-    #     return None
-
-    # # 只收集
-    # if only_collect:
-    #     row = collect_latest_result(f"./results/{task}/{method}/results.csv", args_json)
-    #     if row:
-    #         write_summary(row, dedup_key, key_hash)
-    #     else:
-    #         print(f"[WARN] No results for {method} {dataset} (collect mode)")
-    #     return row
-
-    # # 执行阶段
-    # log_file = LOG_DIR / f"{task}_{method}_{dataset}_{known}_{labeled}_c{c_factor}_fold{fold_idx}_seed{seed}_{int(time.time())}.log"
-    # for idx, st in enumerate(spec["stages"], 1):
-    #     cli_builder = st["cli_builder"]
-    #     cli = cli_builder(args_json, idx)
-    #     ret = run_stage(cli, args_json, gpu_id, dry_run, log_file)
-    #     if ret != 0:
-    #         print(f"[FAIL] stage{idx} ret={ret} | see {log_file}")
-    #         return None
+    print(f"[RUN ] {dataset} | {method} | kr={known} lr={labeled} fold_type={fold_type} fold_idx={fold_idx} seed={seed} cf={c_factor} | gpu={gpu_id}")
 
     # 分层日志目录：logs/{task}/{method}/{dataset}/krX/lrY/foldZ/seedS/
     log_dir = (
@@ -351,7 +317,7 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_idx:int,
         / args_json["dataset"]
         / f'kr{args_json["known_cls_ratio"]}'
         / f'lr{args_json["labeled_ratio"]}'
-        / f'fold{args_json["fold_idx"]}'
+        / f'{args_json['fold_type']}_{args_json["fold_num"]}_{args_json["fold_idx"]}'
         / f'seed{args_json["seed"]}'
     )
     log_dir.mkdir(parents=True, exist_ok=True)

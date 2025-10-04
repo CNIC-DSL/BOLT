@@ -29,7 +29,7 @@ def main(args):
 
     # 2. 标准化数据加载逻辑
     print("Loading standardized data...")
-    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'fold{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
+    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'{args.fold_type}{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
     seen_labels = pd.read_csv(known_label_path, header=None)[0].tolist()
 
     origin_train_path = os.path.join(args.data_dir, args.dataset, 'origin_data', 'train.tsv')
@@ -126,7 +126,8 @@ if __name__ == '__main__':
     parser.add_argument('--output_dir', type=str, default='./outputs/openset/ab')
     # parser.add_argument('--bert_model', type=str, default='./pretrained_models/stsb-roberta-base')
     parser.add_argument("--save_results_path", default='./results', type=str, help="The metric directory where results and models will be written.")
-    
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
+
     args = parser.parse_args()
     
     # --- 配置注入逻辑 ---

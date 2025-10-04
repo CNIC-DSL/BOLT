@@ -21,6 +21,7 @@ def create_parser():
     parser.add_argument("--seed", default=0, type=int)
     parser.add_argument("--fold_idx", default=0, type=int)
     parser.add_argument("--fold_num", default=5, type=int)
+    parser.add_argument("--fold_type", default='fold', type=str)
     parser.add_argument("--device", default="cuda:0", type=str)
     parser.add_argument("--root", default="data", type=str)
     parser.add_argument("--output_dir", default="outputs", type=str)

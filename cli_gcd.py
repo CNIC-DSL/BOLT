@@ -18,6 +18,8 @@ def _common_env(args_json:Dict[str,Any]) -> List[str]:
         "--known_cls_ratio", str(args_json["known_cls_ratio"]),
         "--labeled_ratio", str(args_json["labeled_ratio"]),
         "--fold_idx", str(args_json["fold_idx"]),
+        "--fold_num", str(args_json["fold_num"]),
+        "--fold_type", str(args_json["fold_type"]),
         "--seed", str(args_json["seed"]),
     ]
 
@@ -31,7 +33,7 @@ def _epoch_flags(args_json:Dict[str,Any], is_pretrain: bool) -> List[str]:
     
 
 def cli_tan(args_json:Dict[str,Any], stage:int) -> List[str]:
-    pre = f'./outputs/gcd/tan/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    pre = f'./outputs/gcd/tan/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}{args_json["fold_idx"]}_seed{args_json["seed"]}'
     return [
         sys.executable, "code/gcd/baselines/TAN/run.py",
         *_common_env(args_json),
@@ -43,8 +45,8 @@ def cli_tan(args_json:Dict[str,Any], stage:int) -> List[str]:
         "--freeze_bert_parameters",
     ]
 def cli_loop(args_json:Dict[str,Any], stage:int) -> List[str]:
-    pre = f'outputs/gcd/loop/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
-    save = f'outputs/gcd/loop/model_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    pre = f'outputs/gcd/loop/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    save = f'outputs/gcd/loop/model_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json["fold_idx"]}_seed{args_json["seed"]}'
     return [
         sys.executable, "code/gcd/baselines/LOOP/run.py",
         *_common_env(args_json),
@@ -57,8 +59,8 @@ def cli_loop(args_json:Dict[str,Any], stage:int) -> List[str]:
     ]
 
 def cli_glean(args_json:Dict[str,Any], stage:int) -> List[str]:
-    pre = f'./outputs/gcd/glean/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
-    save = f'./outputs/gcd/glean/model_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    pre = f'./outputs/gcd/glean/premodel_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    save = f'./outputs/gcd/glean/model_{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json["fold_idx"]}_seed{args_json["seed"]}'
     cli = [
         sys.executable, "code/gcd/baselines/Glean/run.py",
         *_common_env(args_json),
@@ -110,7 +112,7 @@ def cli_deepaligned(args_json:Dict[str,Any], stage:int) -> List[str]:
     ]
 
 def cli_alup(args_json:Dict[str,Any], stage:int) -> List[str]:
-    base = f'{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_{args_json["seed"]}'
+    base = f'{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json["fold_idx"]}_{args_json["seed"]}'
     pre_sub = f"pretrain/{base}"
     fin_sub = f"finetune/{base}"
     if stage == 1:
@@ -135,7 +137,7 @@ def cli_alup(args_json:Dict[str,Any], stage:int) -> List[str]:
         ]
 
 def cli_sdc_pre(args_json:Dict[str,Any], stage:int) -> List[str]:
-    pre = f'outputs/gcd/sdc/premodels/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    pre = f'outputs/gcd/sdc/premodels/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}{args_json["fold_idx"]}_seed{args_json["seed"]}'
     return [
         sys.executable, "code/gcd/baselines/SDC/pretrain.py",
         *_common_env(args_json),
@@ -147,8 +149,8 @@ def cli_sdc_pre(args_json:Dict[str,Any], stage:int) -> List[str]:
     ]
 
 def cli_sdc_run(args_json:Dict[str,Any], stage:int) -> List[str]:
-    pre = f'outputs/gcd/sdc/premodels/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
-    train = f'outputs/gcd/sdc/models/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_fold{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    pre = f'outputs/gcd/sdc/premodels/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}{args_json["fold_idx"]}_seed{args_json["seed"]}'
+    train = f'outputs/gcd/sdc/models/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["labeled_ratio"]}_{args_json['fold_type']}_{args_json['fold_num']}{args_json["fold_idx"]}_seed{args_json["seed"]}'
     return [
         sys.executable, "code/gcd/baselines/SDC/run.py",
         *_common_env(args_json),

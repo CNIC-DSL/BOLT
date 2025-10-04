@@ -58,6 +58,7 @@ def parse_arguments():
     parser.add_argument('--seed', type=int, default=None, help="Random seed for initialization")
     parser.add_argument("--fold_num", type=int, default=None, help="The total number of folds for cross validation") # <--- 新增这一行
     parser.add_argument("--fold_idx", type=int, default=None, help="The index of cross validation fold")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
     parser.add_argument("--gpu_id", type=int, default=None, help="Which GPU to use")
     parser.add_argument("--max_seq_length", type=int, default=None, help="Maximum sequence length for tokenizer.")
     parser.add_argument("--method", type=str, default="ALUP", help="Method name to log in results.")

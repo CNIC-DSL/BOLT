@@ -151,7 +151,7 @@ def load_datasets(data_args: DataTrainingArguments) -> DatasetDict:
         data_args.data_dir,
         data_args.dataset,
         'label',
-        f'fold{data_args.fold_num}',
+        f'{data_args.fold_type}{data_args.fold_num}',
         f'part{data_args.fold_idx}',
         f'label_known_{data_args.known_cls_ratio}.list'
     )

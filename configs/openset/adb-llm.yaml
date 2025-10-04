@@ -1,0 +1,38 @@
+# ADB 方法的通用配置模板
+# ----------------------------------
+
+# --- 基础设置 ---
+seed: 0
+gpu_id: "0"
+
+# --- 数据与任务设置 ---
+known_cls_ratio: 0.25 
+dataset: "banking"
+data_dir: "./data"
+labeled_ratio: 1.0
+fold_idx: 0
+fold_num: 5
+
+# --- 模型与训练设置 ---
+# 明确指定我们公共的模型路径
+bert_model: "./pretrained_models/bert-base-uncased" 
+num_train_epochs: 100 #100
+train_batch_size: 128
+eval_batch_size: 128
+lr: 2e-5
+lr_boundary: 0.05
+wait_patient: 10
+feat_dim: 768
+freeze_bert_parameters: True
+save_model: True
+
+llm_ood: true
+llm_model: 'deepseek-v3:671b'
+llm_api_base: 'https://uni-api.cstcloud.cn/v1'
+llm_api_key: "6c5c96209c4ef126a87fbe9840fab7c346b4c6fb6a57529fce7dea01c683fd1b"
+llm_batch: 4
+llm_temperature: 0.0
+
+# --- 输出目录设置 ---
+output_dir: "./outputs/openset/adb-llm" 
+save_results_path: "results/openset/adb-llm"

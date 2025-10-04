@@ -25,6 +25,7 @@ def init_model():
 
     parser.add_argument("--labeled_ratio", default=1.0, type=float,
                         help="The ratio of labeled samples in the training set")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     # pretrain model
     # parser.add_argument("--pretrain_dir", default='pretrain_models', type=str,

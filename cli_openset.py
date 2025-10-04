@@ -33,7 +33,7 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     """
     # 额外自定义 flags（例如某些模型特有参数），允许用户从外部传入列表
     extra = list(args_json.get("extra_flags", []))
-    output_dir = f"outputs/openset/{args_json['method']}/{args_json['dataset']}_{args_json['labeled_ratio']}_{args_json['known_cls_ratio']}_{args_json['fold_idx']}_{args_json['seed']}"
+    output_dir = f"outputs/openset/{args_json['method']}/{args_json['dataset']}_{args_json['labeled_ratio']}_{args_json['known_cls_ratio']}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json['fold_idx']}_{args_json['seed']}"
     bert_model = "./pretrained_models/bert-base-chinese" if args_json["dataset"] in ['ecdt', 'thucnews'] else "./pretrained_models/bert-base-uncased"
     if args_json['method'].lower() in ['ab', 'deepunk', 'doc', 'plm_ood', 'clap']:
         return [
@@ -44,6 +44,8 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
             "--known_cls_ratio", str(args_json["known_cls_ratio"]),
             "--labeled_ratio", str(args_json["labeled_ratio"]),
             "--fold_idx", str(args_json["fold_idx"]),
+            "--fold_num", str(args_json["fold_num"]),
+            "--fold_type", str(args_json["fold_type"]),
             "--output_dir", str(output_dir),
             *extra,
         ]
@@ -56,6 +58,8 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
             "--known_cls_ratio", str(args_json["known_cls_ratio"]),
             "--labeled_ratio", str(args_json["labeled_ratio"]),
             "--fold_idx", str(args_json["fold_idx"]),
+            "--fold_num", str(args_json["fold_num"]),
+            "--fold_type", str(args_json["fold_type"]),
             "--output_dir", str(output_dir),
             "--bert_model", bert_model,
             *extra,
@@ -255,6 +259,12 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
         "config": "configs/openset/adb.yaml",
         "output_base": "./outputs/openset/adb",
     },
+    "adb-llm": {
+        "task": "openset",
+        "stages": [{"entry": "code/openset/baselines/ADB-llm/ADB.py", "cli_builder": cli_adb}],
+        "config": "configs/openset/adb.yaml",
+        "output_base": "./outputs/openset/adb",
+    },
     "clap": {
         "task": "openset",
         "stages": [
@@ -296,11 +306,4 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
         ],
         "config": "configs/openset/plm_ood.yaml",
         "output_base": "./outputs/openset/plm_ood",
-    },
-    "scl": {
-        "task": "openset",
-        "stages": [{"entry": "code/openset/baselines/SCL/train.py", "cli_builder": cli_scl}],
-        "config": "configs/openset/scl.yaml",
-        "output_base": "./outputs/openset/scl",
-    },
-}
+  

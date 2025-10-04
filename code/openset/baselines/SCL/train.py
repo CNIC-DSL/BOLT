@@ -72,6 +72,7 @@ def define_parser():
     parser.add_argument('--labeled_ratio', type=float, default=1.0)
     parser.add_argument('--fold_idx', type=int, default=0)
     parser.add_argument('--fold_num', type=int, default=5)
+    parser.add_argument('--fold_type', type=str, default='fold')
     parser.add_argument("--gpu_id", type=str, default="0", help="The gpu device to use.")
     parser.add_argument("--train_batch_size", type=int, default=8, help="Mini-batch size for train and validation")
     parser.add_argument('--seed', type=int, default=0, help='Random seed')
@@ -168,6 +169,7 @@ def define_parser():
     parser.add_argument('--clip', type=float, default=0.25, help='gradient clipping')
     parser.add_argument('--save_results_path', type=str, default='results/openset/scl', help='gradient clipping')
     parser.add_argument('--bert_model', type=str, default='./pretrained_models/bert-base-uncased', help='gradient clipping')
+
     # args = parser.parse_args()
     return parser
 
@@ -197,7 +199,7 @@ def load_and_process_data_for_scl(args):
         dev_df['text'] = origin_dev_df['text']
 
         # 2. 加载标准化的已知类列表
-        known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'fold{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
+        known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'{args.fold_type}{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
         y_cols_seen = pd.read_csv(known_label_path, header=None)[0].tolist()
         y_cols_all = train_df['label'].unique().tolist()
         y_cols_unseen = [l for l in y_cols_all if l not in y_cols_seen]

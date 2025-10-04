@@ -19,6 +19,7 @@ def init_model():
                              "than this will be truncated, sequences shorter will be padded.")
 
     parser.add_argument("--feat_dim", default=768, type=int, help="The feature dimension.")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     parser.add_argument("--warmup_proportion", default=0.1, type=float)
 

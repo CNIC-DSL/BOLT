@@ -19,7 +19,7 @@ def load_and_prepare_datasets(args):
     Returns:
         一个包含所有数据对象的字典。
     """
-    known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+    known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/{args.fold_type}{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
     
     # 将标签数量更新到 args 对象中，以便其他模块使用
     args.num_labels = len(known_label_list)

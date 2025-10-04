@@ -30,6 +30,7 @@ parser.add_argument('--train_batch_size', type=int, default=128)
 # -- 输出目录设置
 parser.add_argument('--output_dir', type=str, default='./outputs/openset/doc')
 parser.add_argument('--save_results_path', type=str, default='./outputs/openset/doc')
+parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
 # --- 核心改造：配置注入逻辑 ---
 args = parser.parse_args()
@@ -108,7 +109,7 @@ np.random.seed(args.seed)
 def load_and_process_data(args):
     # ... (此处省略，保持原样)
     # 关键修正：将内部使用的旧参数名替换为新的标准参数名
-    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'fold{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
+    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'{args.fold_type}{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
     # ...
     labeled_train_path = os.path.join(args.data_dir, args.dataset, 'labeled_data', str(args.labeled_ratio), 'train.tsv')
     labeled_dev_path = os.path.join(args.data_dir, args.dataset, 'labeled_data', str(args.labeled_ratio), 'dev.tsv')
@@ -167,7 +168,7 @@ from tensorflow.keras.utils import to_categorical
 np.random.seed(args.seed)
 
 def load_and_process_data(args):
-    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'fold{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
+    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'{args.fold_type}{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
     seen_classes = pd.read_csv(known_label_path, header=None)[0].tolist()
     print(f"Loaded {len(seen_classes)} known classes.")
 

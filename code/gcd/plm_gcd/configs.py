@@ -37,6 +37,7 @@ parser.add_argument("--es_min_delta", type=float, default=0.0,
                     help="Minimum improvement to qualify as better.")
 parser.add_argument("--metric_for_best", type=str, default="accuracy",
                     help="Metric name from compute_metrics to select best model.")
+parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
 
 # 2. 解析初始参数 (主要是为了获取 --config 路径)

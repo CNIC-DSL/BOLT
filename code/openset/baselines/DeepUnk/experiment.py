@@ -33,7 +33,7 @@ def main(args):
 
     # 2. 标准化数据加载
     print("Loading standardized data...")
-    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'fold{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
+    known_label_path = os.path.join(args.data_dir, args.dataset, 'label', f'{args.fold_type}{args.fold_num}', f'part{args.fold_idx}', f'label_known_{args.known_cls_ratio}.list')
     seen_labels = pd.read_csv(known_label_path, header=None)[0].tolist()
     n_class_seen = len(seen_labels)
 
@@ -173,6 +173,7 @@ if __name__ == '__main__':
     # parser.add_argument("--bert_model", type=str, default=None)
     parser.add_argument("--model_name_or_path", type=str, default=".")
     parser.add_argument("--save_results_path", type=str, default="./results/openset/deepunk")
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     args = parser.parse_args()
 

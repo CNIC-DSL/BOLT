@@ -224,7 +224,7 @@ def main():
         training_args.data_dir,
         training_args.dataset,
         'label',
-        f'fold{training_args.fold_num}',
+        f'{training_args.fold_type}{training_args.fold_num}',
         f'part{training_args.fold_idx}',
         f'label_known_{training_args.known_cls_ratio}.list'
     )

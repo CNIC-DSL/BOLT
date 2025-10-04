@@ -56,21 +56,6 @@ def init_model():
 
     parser.add_argument("--fold_idx", default=0, type=int)
     parser.add_argument("--fold_num", default=5, type=int)
-
-    # 追加到 argparse 定义处
-    parser.add_argument('--llm_ood', action='store_true',
-                        help='Enable LLM OOD check during test')
-    parser.add_argument('--llm_api_base', type=str, default='https://api.openai.com/v1',
-                        help='LLM HTTP API base (OpenAI-compatible)')
-    parser.add_argument('--llm_model', type=str, default='gpt-4o-mini',
-                        help='LLM model name')
-    parser.add_argument('--llm_api_key_env', type=str, default='OPENAI_API_KEY',
-                        help='Env var name that stores API key')
-    parser.add_argument('--llm_batch', type=int, default=8,
-                        help='LLM batch size (prompt-wise)')
-    parser.add_argument('--llm_temperature', type=float, default=0.0)
-    parser.add_argument('--llm_cache', type=str, default='llm_cache.jsonl',
-                        help='Cache file under output_dir to avoid repeated calls')
-
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
     return parser
