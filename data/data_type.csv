@@ -1,0 +1,16 @@
+dataset,Language,Domain,Dataset
+20NG,EN,News Topic,20 Newsgroups
+AGNews,EN,News Topic,AG News
+news,EN,News Topic,News
+thucnews,CN,News Topic,THUCNews
+Yahoo,EN,Web Topic,Yahoo
+X-Topic,Multi,Multilingual Topic,X-Topic
+banking,EN,Banking Intent,BANKING77
+clinc,EN,Conversational Intent,CLINC150
+stackoverflow,EN,Question Intent,StackOverflow
+hwu,EN,User Intent,HWU64
+TREC,EN,Question Intent,TREC
+ecdt,CN,Question Intent,ECDT
+mcid,EN,Multi-domain Intent,MCID
+DBPedia,EN,Knowledge/Entity,DBPedia
+ele,EN,E-Commerce Reviews,E-Reviews

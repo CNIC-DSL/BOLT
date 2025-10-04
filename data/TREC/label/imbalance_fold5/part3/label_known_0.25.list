@@ -1,0 +1,12 @@
+HUM:title
+HUM:ind
+HUM:gr
+ENTY:color
+HUM:desc
+ENTY:symbol
+ENTY:animal
+NUM:money
+ENTY:food
+NUM:count
+ENTY:event
+ENTY:letter

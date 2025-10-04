@@ -1,0 +1,12 @@
+LOC:country
+LOC:state
+LOC:city
+NUM:date
+LOC:other
+LOC:mount
+ENTY:currency
+DESC:def
+ENTY:religion
+DESC:manner
+NUM:money
+ENTY:color
