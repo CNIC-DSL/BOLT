@@ -19,6 +19,7 @@ class Data:
 
         # self.num_known = round(len(self.all_label_list) * args.known_cls_ratio)
         self.known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/{args.fold_type}{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+        self.num_labels = len(self.known_label_list)
         self.n_known_cls = len(self.known_label_list)
 
         
