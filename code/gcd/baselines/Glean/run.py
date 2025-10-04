@@ -53,7 +53,7 @@ class ModelManager:
         
         self.optimizer, self.scheduler = self.get_optimizer(args)
         
-        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         self.generator = view_generator(self.tokenizer, args.rtr_prob, args.seed)
         args.num_training_rounds = math.ceil(args.num_train_epochs / args.update_per_epoch)
         args.current_training_round = 0
@@ -597,6 +597,8 @@ class ModelManager:
         vars_dict = {k:v for k,v in zip(names, var)}
         results = dict(self.test_results,**vars_dict)
         results['args'] = json.dumps(vars(args), ensure_ascii=False)
+        results['args'] = results['args'].apply(lambda x: {i:v for i,v in x.items() if 'prompt_demo' not in i})
+        
         results['cluster_num_factor'] = args.cluster_num_factor
         # keys = list(results.keys())
         # values = list(results.values())

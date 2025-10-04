@@ -113,7 +113,7 @@ class PretrainModelManager:
                 if wait >= args.wait_patient:
                     break
                 
-        self.model = best_model
+        self.model = best_model if best_model is not None else self.model
         if args.save_premodel:
             # 判断 self.model 是否是 DataParallel 实例
             if isinstance(self.model, nn.DataParallel):

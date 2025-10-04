@@ -9,6 +9,9 @@ from loss import *
 import yaml  # <-- 新增
 import sys   # <-- 新增
 import json
+from util import _read_api_key_from_env, _safe_load_cache, _append_cache, _hash
+from util import llm_chat_batch, normalize_ood_answer
+import csv
 
 class ModelManager:
     
@@ -77,6 +80,14 @@ class ModelManager:
             acc = round(accuracy_score(y_true, y_pred) * 100, 2)
             results['accuracy'] = acc
             self.test_results = results
+
+            if args.llm_ood:
+                known_labels = [l for i, l in enumerate(data.label_list) if i != data.unseen_token_id]
+                test_examples = data.test_examples  # Data 里已暴露
+                llm_acc = llm_ood_eval(args, data, test_examples, known_labels, args.output_dir)
+                self.test_results['LLM_OOD_Accuracy'] = llm_acc
+                print(f'[LLM] OOD Accuracy: {llm_acc:.4f}')
+
             self.save_results(args) # <-- 路径管理已在 save_results 中实现
 
     def train(self, args, data):     
@@ -196,6 +207,85 @@ class ModelManager:
         print('Test results saved to:', results_csv_path)
         print(df_new_row)
 
+
+def _build_ood_prompt(text, known_labels):
+    sys = ("You are an OOD detector for intent classification. "
+           "Given a user utterance and the list of KNOWN intent labels, "
+           "decide if the utterance belongs to an UNKNOWN intent (OOD) or not. "
+           "Answer STRICTLY with one token: 'OOD' or 'ID'.")
+    user = (f"KNOWN LABELS: {', '.join(known_labels)}\n"
+            f"UTTERANCE: {text}\n"
+            f"Answer: ")
+    return [
+        {"role":"system", "content": sys},
+        {"role":"user", "content": user}
+    ]
+
+def llm_ood_eval(args, data, test_examples, known_labels, output_dir):
+    # 准备缓存
+    cache_path = os.path.join(output_dir, args.llm_cache)
+    cache = _safe_load_cache(cache_path)
+    api_key = _read_api_key_from_env(args.llm_api_key_env)
+
+    # 真实 OOD：等于 unseen_token_id 的样本为 1，否则 0
+    gt = []
+    texts = []
+    keys = []
+    msg_batches = []
+    batch = []
+
+    for ex in test_examples:  # 假设 ex.text, ex.label_id 存在；如命名不同按项目实际字段改
+        txt = ex.text if hasattr(ex, 'text') else ex.text_a
+        label_id = ex.label_id
+        is_ood = 1 if label_id == data.unseen_token_id else 0
+        gt.append(is_ood)
+        texts.append(txt)
+
+        prompt_messages = _build_ood_prompt(txt, known_labels)
+        k = _hash(prompt_messages[-1]['content'])
+        keys.append(k)
+
+        if k in cache:
+            # 复用缓存
+            pass
+        else:
+            batch.append(prompt_messages)
+            if len(batch) >= args.llm_batch:
+                outs = llm_chat_batch(args.llm_api_base, args.llm_model, api_key, batch, args.llm_temperature)
+                for pm, out in zip(batch, outs):
+                    kk = _hash(pm[-1]['content'])
+                    _append_cache(cache_path, kk, {'response': out})
+                    cache[kk] = {'response': out}
+                batch = []
+
+    # 处理余下的
+    if batch:
+        outs = llm_chat_batch(args.llm_api_base, args.llm_model, api_key, batch, args.llm_temperature)
+        for pm, out in zip(batch, outs):
+            kk = _hash(pm[-1]['content'])
+            _append_cache(cache_path, kk, {'response': out})
+            cache[kk] = {'response': out}
+
+    # 归一化预测
+    preds = []
+    for k in keys:
+        out = cache[k]['response']
+        pred = normalize_ood_answer(out)
+        preds.append(pred)
+
+    # 计算准确率与简单统计
+    correct = sum(int(p == y) for p, y in zip(preds, gt))
+    acc = correct / max(1, len(gt))
+
+    # 保存逐样本结果
+    out_csv = os.path.join(output_dir, 'llm_ood_predictions.csv')
+    with open(out_csv, 'w', encoding='utf-8', newline='') as f:
+        w = csv.writer(f)
+        w.writerow(['text', 'gt_is_ood', 'llm_pred_is_ood'])
+        for t, y, p in zip(texts, gt, preds):
+            w.writerow([t, y, p])
+
+    return acc
 
 # --- 核心改造：将参数解析和配置注入逻辑放在主入口 ---
 if __name__ == '__main__':

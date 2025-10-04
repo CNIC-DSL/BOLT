@@ -8,6 +8,7 @@ import copy
 import random
 import csv
 import sys
+import time, json, hashlib, requests
 import torch.nn.functional as F
 from torch import nn
 from tqdm import tqdm_notebook, trange, tqdm
@@ -181,3 +182,82 @@ def plot_curve(points):
     plt.savefig('curve.pdf')
     
 
+def _read_api_key_from_env(env_name: str) -> str:
+    key = os.environ.get(env_name, '')
+    if not key:
+        raise RuntimeError(f'No API key in env: {env_name}')
+    return key
+
+def _hash(text: str) -> str:
+    return hashlib.md5(text.encode('utf-8')).hexdigest()
+
+def _safe_load_cache(path: str):
+    items = {}
+    if os.path.exists(path):
+        with open(path, 'r', encoding='utf-8') as f:
+            for line in f:
+                try:
+                    rec = json.loads(line)
+                    items[rec['key']] = rec['value']
+                except Exception:
+                    pass
+    return items
+
+def _append_cache(path: str, key: str, value: dict):
+    with open(path, 'a', encoding='utf-8') as f:
+        f.write(json.dumps({'key': key, 'value': value}, ensure_ascii=False) + '\n')
+
+def llm_chat_batch(api_base: str, model: str, api_key: str, prompts: list, temperature: float=0.0):
+    """
+    prompts: list[{"role":"system"/"user","content":...}] 列表的列表
+    return: list[str] 每个回答的 text
+    """
+    url = api_base.rstrip('/') + '/chat/completions'
+    headers = {'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'}
+    # 简单串行；如需并发可自行扩展
+    outputs = []
+    for messages in prompts:
+        payload = {
+            'model': model,
+            'messages': messages,
+            'temperature': temperature
+        }
+        for retry in range(5):
+            try:
+                r = requests.post(url, headers=headers, json=payload, timeout=60)
+                if r.status_code == 200:
+                    data = r.json()
+                    outputs.append(data['choices'][0]['message']['content'])
+                    break
+                else:
+                    time.sleep(1.5 * (retry + 1))
+            except Exception:
+                time.sleep(1.5 * (retry + 1))
+        else:
+            outputs.append('')  # 给个空，后续会当成无法判定
+    return outputs
+
+def normalize_ood_answer(text: str) -> int:
+    """
+    归一化 LLM 输出为 0/1：1 表示 OOD，0 表示 In-Distribution(ID)
+    """
+    t = (text or '').strip().lower()
+    # 粗鲁但稳健的归一化
+    if 'ood' in t or 'out-of-distribution' in t or 'unknown' in t or 'unseen' in t:
+        # 若出现强否定关键词覆盖
+        if 'not ood' in t or 'in-distribution' in t or 'known' in t:
+            return 0
+        return 1
+    if 'id' in t or 'in-distribution' in t or 'known' in t:
+        return 0
+    # 常见回答格式
+    if t.startswith('yes'):  # yes -> OOD?
+        return 1
+    if t.startswith('no'):
+        return 0
+    # 最后兜底：尝试抓到 "answer: OOD/ID"
+    if 'answer' in t and 'ood' in t:
+        return 1
+    if 'answer' in t and 'id' in t:
+        return 0
+    return 1  # 保守起见，无法判定当 OOD

@@ -142,9 +142,9 @@ class Data:
         return semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids,semi_true_label
 
     def get_semi_loader(self, semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids,true_label_ids, args):
-        semi_data = TensorDataset(semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids,true_label_ids)
+        semi_data = TensorDataset(semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids,true_label_ids) 
         semi_sampler = SequentialSampler(semi_data)
-        semi_dataloader = DataLoader(semi_data, sampler=semi_sampler, batch_size = args.train_batch_size) 
+        semi_dataloader = DataLoader(semi_data, sampler=semi_sampler, batch_size = args.train_batch_size, drop_last=False) 
 
         return semi_data, semi_dataloader
 
@@ -166,10 +166,10 @@ class Data:
         
         if mode == 'train':
             sampler = RandomSampler(data)
-            dataloader = DataLoader(data, sampler=sampler, batch_size = args.pretrain_batch_size)    
+            dataloader = DataLoader(data, sampler=sampler, batch_size = args.pretrain_batch_size, drop_last=False) 
         elif mode in ["eval", "test","train_eval"]:
             sampler = SequentialSampler(data)
-            dataloader = DataLoader(data, sampler=sampler, batch_size = args.eval_batch_size)
+            dataloader = DataLoader(data, sampler=sampler, batch_size = args.eval_batch_size, drop_last=False) 
         else:
             raise NotImplementedError(f"Mode {mode} not found")
         

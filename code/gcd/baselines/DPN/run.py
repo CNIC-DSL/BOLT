@@ -183,13 +183,39 @@ class ModelManager:
         train_dataloader = DataLoader(train_data, sampler = train_sampler, batch_size = args.train_batch_size)
         return train_dataloader
 
+    # def quick_eval(self, args, dataloader, known_lab):
+    #     self.model.eval()
+    #     feats, labels = self.get_features_labels(dataloader, self.model, args)
+    #     feats = feats.cpu().numpy()
+    #     km = KMeans(n_clusters=self.num_labels, n_init=20).fit(feats)
+    #     y_true = labels.cpu().numpy()
+    #     return clustering_score(y_true, km.labels_, known_lab)
+
     def quick_eval(self, args, dataloader, known_lab):
         self.model.eval()
         feats, labels = self.get_features_labels(dataloader, self.model, args)
         feats = feats.cpu().numpy()
-        km = KMeans(n_clusters=self.num_labels, n_init=20).fit(feats)
         y_true = labels.cpu().numpy()
-        return clustering_score(y_true, km.labels_, known_lab)
+
+        # —— 新增：把全局标签映射到当前 split 的本地连续索引 —— #
+        import numpy as np
+        uniq = np.unique(y_true)
+        lab2local = {lab: i for i, lab in enumerate(uniq)}
+        y_true_local = np.vectorize(lab2local.get)(y_true)
+        known_lab_local = [lab2local[lab] for lab in (known_lab or []) if lab in lab2local]
+
+        # —— 新增：将 K 夹到可行范围，避免 n_samples < n_clusters —— #
+        n_samples = feats.shape[0]
+        n_clusters = min(self.num_labels, len(uniq), n_samples)
+
+        # 兜底：不足 2 簇时，返回单簇预测，保证评估不报错
+        if n_clusters < 2:
+            y_pred = np.zeros_like(y_true_local)
+            return clustering_score(y_true_local, y_pred, known_lab_local)
+
+        km = KMeans(n_clusters=n_clusters, n_init=20, random_state=getattr(args, 'seed', None)).fit(feats)
+        return clustering_score(y_true_local, km.labels_, known_lab_local)
+
 
     def train(self, args, data):    
         feats_label, labels = self.get_features_labels(data.train_labeled_dataloader, self.model, args)

@@ -65,14 +65,14 @@ def clustering_accuracy_score(y_true, y_pred, known_lab):
     return (round(acc*100, 2), round(old_acc*100, 2), round(new_acc*100, 2))
 
 def clustering_score(y_true, y_pred, known_lab):
-    Acc, Known, Novel = clustering_accuracy_score(y_true, y_pred, known_lab)
+    ACC, Known, Novel = clustering_accuracy_score(y_true, y_pred, known_lab)
     return {
-            'Acc': Acc,
+            'ACC': ACC,
             'NMI': round(normalized_mutual_info_score(y_true, y_pred)*100, 2),
             'ARI': round(adjusted_rand_score(y_true, y_pred)*100, 2),
             'H-Score': round(2 * Known * Novel / (Known + Novel), 2),
-            'Known': Known,
-            'Novel': Novel
+            'K-ACC': Known,
+            'N-ACC': Novel
             }
 
 

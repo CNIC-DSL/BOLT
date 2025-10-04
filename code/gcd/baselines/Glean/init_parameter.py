@@ -51,7 +51,7 @@ def init_model():
     parser.add_argument('--seed', type=int, default=0,
                         help="Random seed.")
 
-    parser.add_argument("--method", type=str, default='CLNN',
+    parser.add_argument("--method", type=str, default='Glean',
                         help="The name of method.")
     
     parser.add_argument("--rtr_prob", default=0.25, type=float,

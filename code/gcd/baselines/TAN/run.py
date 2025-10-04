@@ -91,23 +91,29 @@ class ModelManager:
         feats, labels = self.get_features_labels(dataloader, self.model, args)
         feats = feats.cpu().numpy()
         y_true = labels.cpu().numpy()
-        # km = KMeans(n_clusters=min(self.num_labels, len(set(list(labels.cpu().numpy())))), n_init=20, random_state=args.seed).fit(feats)
-        # km = KMeans(n_clusters=self.num_labels, n_init=20, random_state=args.seed).fit(feats)
-        # --- 最小化修改开始 ---
+
+        # ---- 新增：把全局标签映射成当前 split 的本地连续索引 ----
         import numpy as np
-        n_classes_in_split = np.unique(y_true).size
+        uniq = np.unique(y_true)
+        lab2local = {lab: i for i, lab in enumerate(uniq)}
+        y_true_local = np.vectorize(lab2local.get)(y_true)
+        # 只保留当前 split 中实际出现的 known 类，并映射到本地索引
+        known_lab_local = [lab2local[lab] for lab in getattr(self.data, 'known_lab', []) if lab in lab2local]
+
+        # ---- 与之前一致：把 K 夹到可行范围内 ----
         n_samples = feats.shape[0]
+        n_classes_in_split = len(uniq)
         n_clusters = min(self.num_labels, n_classes_in_split, n_samples)
 
-        # 兜底：若可用簇数不足 2（KMeans 要求至少 2），用单簇预测回评估，避免报错
+        # 兜底：不足 2 簇时，给出单簇预测，避免 KMeans 报错
         if n_clusters < 2:
-            y_pred = np.zeros_like(y_true)
-            return clustering_score(y_true, y_pred, self.data.known_lab)
-        # --- 最小化修改结束 ---
+            y_pred = np.zeros_like(y_true_local)
+            return clustering_score(y_true_local, y_pred, known_lab_local)
 
         km = KMeans(n_clusters=n_clusters, n_init=20, random_state=args.seed).fit(feats)
-        # 直接使用现有的度量计算
-        return clustering_score(y_true, km.labels_, self.data.known_lab)
+
+        # 用本地索引空间的一致数据进入指标
+        return clustering_score(y_true_local, km.labels_, known_lab_local)
 
 
     def evaluation(self, args, data):

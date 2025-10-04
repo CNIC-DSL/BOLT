@@ -132,9 +132,9 @@ class Data:
         return semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids, idx_list
 
     def get_semi_loader(self, semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids, args):
-        semi_data = TensorDataset(semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids)
+        semi_data = TensorDataset(semi_input_ids, semi_input_mask, semi_segment_ids, semi_label_ids) 
         semi_sampler = SequentialSampler(semi_data)
-        semi_dataloader = DataLoader(semi_data, sampler=semi_sampler, batch_size = args.train_batch_size) 
+        semi_dataloader = DataLoader(semi_data, sampler=semi_sampler, batch_size = args.train_batch_size, drop_last=False) 
 
         return semi_data, semi_dataloader
 

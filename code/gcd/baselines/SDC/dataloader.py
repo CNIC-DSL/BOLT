@@ -10,9 +10,11 @@ class Data:
         self.data_dir = os.path.join(args.data_dir, args.dataset)
         all_label_path = os.path.join(self.data_dir, 'label', 'label.list')
         self.all_label_list = pd.read_csv(all_label_path, header=None)[0].tolist()
+        self.known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
+
+        self.all_label_list = self.known_label_list + [i for i in self.all_label_list if i not in self.known_label_list]
         self.n_known_cls = round(len(self.all_label_list) * args.known_cls_ratio)
         
-        self.known_label_list = pd.read_csv(f'{args.data_dir}/{args.dataset}/label/fold{args.fold_num}/part{args.fold_idx}/label_known_{args.known_cls_ratio}.list', header=None)[0].tolist()
 
         self.known_lab = [self.all_label_list.index(a) for a in self.known_label_list]
         self.num_labels = int(len(self.all_label_list) * args.cluster_num_factor)

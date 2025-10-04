@@ -48,7 +48,7 @@ class PretrainModelManager:
         return acc
         
     def train(self, args, data):
-        tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         wait = 0
         best_model = None
         mlm_iter = iter(data.train_semi_dataloader) # mlm on semi-dataloader

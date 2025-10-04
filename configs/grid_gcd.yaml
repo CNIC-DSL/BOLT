@@ -4,13 +4,13 @@ maps:
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 # 若仅跑子集，可指定 methods（会从 maps 里筛选）
-# methods: [glean]
-methods: [tan]
+methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
+# methods: [tan]
 result_file: summary_gcd
 
 # 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
-datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
-# datasets: [TREC]
+# datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
+datasets: [ecdt]
 
 # 网格搜索参数
 grid:
@@ -48,5 +48,5 @@ extra_args:
 
 per_method_extra:
   tan:
-    num_train_epochs: 100
+    num_train_epochs: 50
     # backbone: pretrained_models/bert-base-uncased

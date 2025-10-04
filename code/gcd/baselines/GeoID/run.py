@@ -43,7 +43,8 @@ class CLNNModelManager:
         
         if not args.disable_pretrain:
             self.pretrained_model = pretrained_model
-            self.load_pretrained_model()
+            if pretrained_model is not None:
+                self.load_pretrained_model()
 
         self.freeze_parameters()  
         
