@@ -109,7 +109,10 @@ class BiLSTM(nn.Module):
                 seq_embed = self.dropout(seq_embed)
                 seq_embed = seq_embed.clone().detach().requires_grad_(True).float()
             _, ht = self.rnn(seq_embed)
-            ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+            if ht.shape[1] == 1:                
+                ht = torch.cat((ht[0], ht[1]), dim=1)
+            else:
+                ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
             logits = self.fc(ht)
             if self.lmcl and sim != None:
                 probs = self.lmcl_loss(logits, label)
@@ -130,13 +133,21 @@ class BiLSTM(nn.Module):
                 normalized_noise = unnormalized_noise / (norm.unsqueeze(dim=-1) + 1e-10)  # add 1e-10 to avoid NaN
                 noise_embedding = seq_embed + self.norm_coef * normalized_noise
                 _, h_adv = self.rnn(noise_embedding, None)
-                h_adv = torch.cat((h_adv[0].squeeze(0), h_adv[1].squeeze(0)), dim=1)
+                if h_adv.shape[1] == 1:
+
+                    h_adv = torch.cat((h_adv[0], h_adv[1]), dim=1)
+                else:
+                    h_adv = torch.cat((h_adv[0].squeeze(0), h_adv[1].squeeze(0)), dim=1)
                 label_mask = torch.mm(label,label.T).bool().long()
                 sup_cont_loss = nt_xent(ht, h_adv, label_mask, cuda=self.use_cuda=='cuda')
                 return sup_cont_loss
         elif mode == 'inference':
             _, ht = self.rnn(seq)
-            ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+            if ht.shape[1] == 1:
+                ht = torch.cat((ht[0], ht[1]), dim=1)
+            else:
+                ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+            # ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
             logits = self.fc(ht)
             probs = torch.softmax(logits, dim=1)
             return probs, ht
@@ -150,7 +161,10 @@ class BiLSTM(nn.Module):
                 seq_embed = self.dropout(seq_embed)
                 seq_embed = seq_embed.clone().detach().requires_grad_(True).float()
             _, ht = self.rnn(seq_embed)
-            ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
+            if ht.shape[1] == 1:
+                ht = torch.cat((ht[0], ht[1]), dim=1)
+            else:
+                ht = torch.cat((ht[0].squeeze(0), ht[1].squeeze(0)), dim=1)
             logits = self.fc(ht)
             probs = torch.softmax(logits, dim=1)
             return torch.argmax(label, dim=1).tolist(), torch.argmax(probs, dim=1).tolist(), ht

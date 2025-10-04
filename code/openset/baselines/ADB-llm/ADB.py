@@ -84,8 +84,46 @@ class ModelManager:
             if args.llm_ood:
                 known_labels = [l for i, l in enumerate(data.label_list) if i != data.unseen_token_id]
                 test_examples = data.test_examples  # Data 里已暴露
-                llm_acc = llm_ood_eval(args, data, test_examples, known_labels, args.output_dir)
+                # llm_acc = llm_ood_eval(args, data, test_examples, known_labels, args.output_dir)
+                llm_acc, llm_texts, llm_preds, llm_gt = llm_ood_eval(
+                    args, data, test_examples, known_labels, args.output_dir
+                )
                 self.test_results['LLM_OOD_Accuracy'] = llm_acc
+                # 基于 ADB 的 y_pred/y_true 计算 OOD(0/1)
+                unseen = data.unseen_token_id
+                adb_is_ood = (y_pred == unseen).astype(int)
+                gt_is_ood  = (y_true == unseen).astype(int)
+
+                # 生成逐样本对比表（与 llm_ood_eval 的顺序对齐）
+                rows = []
+                for i in range(len(llm_texts)):
+                    gt = int(llm_gt[i])               # GT: 是否 OOD (0/1)
+                    adb = int(adb_is_ood[i])          # ADB: 是否判 OOD (0/1)
+                    llm = int(llm_preds[i])           # LLM: 是否判 OOD (0/1)
+
+                    who = 'both' if (adb==gt and llm==gt) else ('adb' if adb==gt else ('llm' if llm==gt else 'neither'))
+
+                    rows.append({
+                        'text': llm_texts[i],
+                        'gt_is_ood': gt,
+                        'adb_is_ood': adb,
+                        'llm_is_ood': llm,
+                        'adb_correct': int(adb==gt),
+                        'llm_correct': int(llm==gt),
+                        'who_is_right': who
+                    })
+
+                import pandas as pd, os
+                cmp_path = os.path.join(args.output_dir, 'ood_case_compare.csv')
+                pd.DataFrame(rows).to_csv(cmp_path, index=False)
+                print('[Saved]', cmp_path)
+
+                # 也可顺手导出“有分歧的样本”
+                disagree = [r for r in rows if r['adb_is_ood'] != r['llm_is_ood']]
+                if disagree:
+                    disagree_path = os.path.join(args.output_dir, 'ood_case_disagree.csv')
+                    pd.DataFrame(disagree).to_csv(disagree_path, index=False)
+                    print('[Saved]', disagree_path)
                 print(f'[LLM] OOD Accuracy: {llm_acc:.4f}')
 
             self.save_results(args) # <-- 路径管理已在 save_results 中实现
@@ -311,7 +349,7 @@ def llm_ood_eval(args, data, test_examples, known_labels, output_dir):
         for t, y, p in zip(texts, gt, preds):
             w.writerow([t, y, p])
 
-    return acc
+    return acc, texts, preds, gt
 
 # --- 核心改造：将参数解析和配置注入逻辑放在主入口 ---
 if __name__ == '__main__':

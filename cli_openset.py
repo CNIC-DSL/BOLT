@@ -102,6 +102,20 @@ def cli_adb(args_json: Dict[str, Any], stage: int) -> List[str]:
         *_epoch_flags(args_json, is_pretrain=False),
     ]
 
+def cli_adb_llm(args_json: Dict[str, Any], stage: int) -> List[str]:
+    """
+    入口：code/openset/baselines/ADB-llm/ADB.py
+    """
+    out_dir = args_json.get(
+        "output_dir",
+        f'./outputs/openset/adb-llm/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["seed"]}'
+    )
+    return [
+        sys.executable, "code/openset/baselines/ADB-llm/ADB.py",
+        "--output_dir", out_dir,
+        *_common_flags(args_json),
+        *_epoch_flags(args_json, is_pretrain=False),
+    ]
 
 def cli_clap_stage1(args_json: Dict[str, Any], stage: int) -> List[str]:
     """
@@ -261,9 +275,9 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
     },
     "adb-llm": {
         "task": "openset",
-        "stages": [{"entry": "code/openset/baselines/ADB-llm/ADB.py", "cli_builder": cli_adb}],
-        "config": "configs/openset/adb.yaml",
-        "output_base": "./outputs/openset/adb",
+        "stages": [{"entry": "code/openset/baselines/ADB-llm/ADB.py", "cli_builder": cli_adb_llm}],
+        "config": "configs/openset/adb-llm.yaml",
+        "output_base": "./outputs/openset/adb-llm",
     },
     "clap": {
         "task": "openset",
@@ -306,4 +320,11 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
         ],
         "config": "configs/openset/plm_ood.yaml",
         "output_base": "./outputs/openset/plm_ood",
-  
+    },
+    "scl": {
+        "task": "openset",
+        "stages": [{"entry": "code/openset/baselines/SCL/train.py", "cli_builder": cli_scl}],
+        "config": "configs/openset/scl.yaml",
+        "output_base": "./outputs/openset/scl",
+    },
+}
