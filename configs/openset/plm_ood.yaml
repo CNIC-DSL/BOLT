@@ -21,7 +21,7 @@ n_epochs: 1
 train_batch_size: 16
 eval_batch_size: 32
 lr: 5e-5
-reg_loss: "npo"
+reg_loss: "normal"
 
 # --- 输出目录设置 ---
 output_dir: "./outputs/openset/plm_ood"

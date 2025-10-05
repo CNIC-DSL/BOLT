@@ -48,9 +48,12 @@ class ModelManager:
     def evaluation(self, args, data, mode="eval"):
         self.model.eval()
 
-        total_labels = torch.empty(0,dtype=torch.long).to(self.device)
-        total_preds = torch.empty(0,dtype=torch.long).to(self.device)
-        
+        total_labels = torch.empty(0, dtype=torch.long).to(self.device)
+        total_preds  = torch.empty(0, dtype=torch.long).to(self.device)
+
+        # 新增：保存每条样本的 ood_score（margin）
+        ood_margins = []
+
         dataloader = data.eval_dataloader if mode == 'eval' else data.test_dataloader
 
         for batch in tqdm(dataloader, desc="Iteration"):
@@ -58,11 +61,22 @@ class ModelManager:
             input_ids, input_mask, segment_ids, label_ids = batch
             with torch.set_grad_enabled(False):
                 pooled_output, _ = self.model(input_ids, segment_ids, input_mask)
-                preds = self.open_classify(pooled_output, data) # <-- 修正：传入 data
 
-                total_labels = torch.cat((total_labels,label_ids))
-                total_preds = torch.cat((total_preds, preds))
-        
+                # 计算 margin = 距离 - 该预测类的 delta
+                logits = euclidean_metric(pooled_output, self.centroids)                  # [B, C]
+                _, preds_before = F.softmax(logits.detach(), dim=1).max(dim=1)            # [B]
+                euc_dis = torch.norm(pooled_output - self.centroids[preds_before], 2, 1)  # [B]
+                deltas_pred = self.delta[preds_before]                                    # [B]
+                margin = euc_dis - deltas_pred                                            # [B]
+
+                # 最终 ADB 预测（含 OOD 判定）
+                preds = self.open_classify(pooled_output, data)
+
+                total_labels = torch.cat((total_labels, label_ids))
+                total_preds  = torch.cat((total_preds, preds))
+                # 记录本 batch 的 ood_score
+                ood_margins.extend([float(m.cpu()) for m in margin])
+
         y_pred = total_preds.cpu().numpy()
         y_true = total_labels.cpu().numpy()
 
@@ -74,59 +88,53 @@ class ModelManager:
         elif mode == 'test':
             self.predictions = list([data.label_list[idx] for idx in y_pred])
             self.true_labels = list([data.label_list[idx] for idx in y_true])
-            
-            cm = confusion_matrix(y_true,y_pred)
+
+            cm = confusion_matrix(y_true, y_pred)
             results = F_measure(cm)
             acc = round(accuracy_score(y_true, y_pred) * 100, 2)
             results['accuracy'] = acc
             self.test_results = results
 
+            # ===== 统一导出表：text, label, llm_pred, abd_pred, ood_score =====
+            # 文本与真值标签
+            texts = [getattr(ex, 'text', None) or getattr(ex, 'text_a', '') for ex in data.test_examples]
+            labels = [data.label_list[idx] for idx in y_true]
+
+            # ADB 的 OOD 判定（0/1）
+            unseen = data.unseen_token_id
+            abd_pred = (y_pred == unseen).astype(int).tolist()
+
+            # LLM 的 OOD 判定（0/1），默认空；开关开启则调用
+            llm_pred = [''] * len(texts)
             if args.llm_ood:
-                known_labels = [l for i, l in enumerate(data.label_list) if i != data.unseen_token_id]
-                test_examples = data.test_examples  # Data 里已暴露
-                # llm_acc = llm_ood_eval(args, data, test_examples, known_labels, args.output_dir)
+                known_labels = [l for i, l in enumerate(data.label_list) if i != unseen]
+                test_examples = data.test_examples
                 llm_acc, llm_texts, llm_preds, llm_gt = llm_ood_eval(
                     args, data, test_examples, known_labels, args.output_dir
                 )
                 self.test_results['LLM_OOD_Accuracy'] = llm_acc
-                # 基于 ADB 的 y_pred/y_true 计算 OOD(0/1)
-                unseen = data.unseen_token_id
-                adb_is_ood = (y_pred == unseen).astype(int)
-                gt_is_ood  = (y_true == unseen).astype(int)
+                # 直接用 llm_preds（与 test_examples 顺序一致）
+                llm_pred = [int(p) for p in llm_preds]
 
-                # 生成逐样本对比表（与 llm_ood_eval 的顺序对齐）
-                rows = []
-                for i in range(len(llm_texts)):
-                    gt = int(llm_gt[i])               # GT: 是否 OOD (0/1)
-                    adb = int(adb_is_ood[i])          # ADB: 是否判 OOD (0/1)
-                    llm = int(llm_preds[i])           # LLM: 是否判 OOD (0/1)
+            # 只保留需要的 5 列
+            rows = []
+            for i in range(len(texts)):
+                rows.append({
+                    'text': texts[i],
+                    'label': labels[i],                # 真值标签（字符串）
+                    'llm_pred': llm_pred[i],           # 0/1 或空字符串
+                    'abd_pred': int(abd_pred[i]),      # 0/1
+                    'ood_score': float(ood_margins[i]) # margin：>0 判 OOD
+                })
 
-                    who = 'both' if (adb==gt and llm==gt) else ('adb' if adb==gt else ('llm' if llm==gt else 'neither'))
+            import pandas as pd, os
+            out_path = os.path.join(args.output_dir, 'ood_eval.csv')
+            pd.DataFrame(rows, columns=['text','label','llm_pred','abd_pred','ood_score']).to_csv(out_path, index=False)
+            print('[Saved]', out_path)
+            # ===== 统一表导出结束 =====
 
-                    rows.append({
-                        'text': llm_texts[i],
-                        'gt_is_ood': gt,
-                        'adb_is_ood': adb,
-                        'llm_is_ood': llm,
-                        'adb_correct': int(adb==gt),
-                        'llm_correct': int(llm==gt),
-                        'who_is_right': who
-                    })
+            self.save_results(args)
 
-                import pandas as pd, os
-                cmp_path = os.path.join(args.output_dir, 'ood_case_compare.csv')
-                pd.DataFrame(rows).to_csv(cmp_path, index=False)
-                print('[Saved]', cmp_path)
-
-                # 也可顺手导出“有分歧的样本”
-                disagree = [r for r in rows if r['adb_is_ood'] != r['llm_is_ood']]
-                if disagree:
-                    disagree_path = os.path.join(args.output_dir, 'ood_case_disagree.csv')
-                    pd.DataFrame(disagree).to_csv(disagree_path, index=False)
-                    print('[Saved]', disagree_path)
-                print(f'[LLM] OOD Accuracy: {llm_acc:.4f}')
-
-            self.save_results(args) # <-- 路径管理已在 save_results 中实现
 
     def train(self, args, data):     
         criterion_boundary = BoundaryLoss(num_labels = data.num_labels, feat_dim = args.feat_dim)

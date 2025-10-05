@@ -15,7 +15,7 @@ datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, 
 # 网格搜索参数
 grid:
   known_cls_ratio: [0.25]
-  labeled_ratio: [0.1]
+  labeled_ratio: [1.0]
   fold_idxs: [0,1,2,3,4]
   fold_types: [imbalance_fold]
   fold_nums: [5]

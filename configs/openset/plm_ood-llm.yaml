@@ -1,0 +1,30 @@
+# PLM-OOD 方法的通用配置模板
+# 在这里修改参数以进行不同的实验
+
+# --- 基础设置 ---
+seed: 0
+# device: "cuda:0"
+
+# --- 数据与任务设置 ---
+dataset_name: "banking"
+data_dir: "./data"
+rate: 0.25
+labeled_ratio: 0.1
+fold_idx: 0
+fold_num: 5
+
+# --- 模型与训练设置 ---
+backbone: "Meta-Llama-3.1-8B-Instruct"
+# 显式添加model_path，如果未指定，脚本会根据backbone自动生成
+model_path: "./pretrained_models/Meta-Llama-3.1-8B-Instruct" 
+n_epochs: 1
+train_batch_size: 16
+eval_batch_size: 32
+lr: 5e-5
+reg_loss: "normal"
+
+# --- 输出目录设置 ---
+output_dir: "./outputs/openset/plm_ood-llm"
+
+early_stop_patience: 3
+early_stop_delta: 0.0

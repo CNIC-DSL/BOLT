@@ -21,10 +21,14 @@ LOG_DIR: Path = None
 
 def safe_equal(a, b):
     # 尝试把两个值都转成 float
+
     try:
         return float(a) == float(b)
     except (ValueError, TypeError):
         # 转换失败时，直接比较原值
+        # print(a, b)
+        if type(a) == type(1.0):
+            print()
         return a.lower() == b.lower()
 
 
@@ -195,7 +199,7 @@ def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float
                    per_method_cfg: Optional[str], output_base: str,
                    # ★ 新增
                    num_pretrain_epochs: int, num_train_epochs: int, method_specs:dict) -> Dict[str, Any]:
-    m_upper = method.upper()
+    # m_upper = method.upper()
     out_base = output_base or f"./outputs/{task}/{method}"
     subname = f"{dataset}_{known}_{labeled}_{fold_type}_{fold_idx}_{seed}"
     args_json = {
@@ -209,7 +213,7 @@ def make_base_args(task:str, method:str, dataset:str, known:float, labeled:float
         "fold_type": fold_type,
         "seed": int(seed),
         "gpu_id": (gpu_id if gpu_id is not None else -1),
-        "method": m_upper,
+        "method": method,
         "data_dir": "./data",
         "output_base_dir": out_base,
         "output_subdir": subname,
@@ -289,6 +293,8 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_type: st
         save_result_df['fold_idx'] = save_result_df['args'].apply(lambda x: int(x['fold_idx']))
         save_result_df['fold_num'] = save_result_df['args'].apply(lambda x: int(x['fold_num']))
         save_result_df['fold_type'] = save_result_df['args'].apply(lambda x: x['fold_type'])
+        if 'reg_loss' in args_json:
+            save_result_df['reg_loss'] = save_result_df['args'].apply(lambda x: x['reg_loss'])
         save_result_df['num_train_epochs'] = save_result_df['args'].apply(lambda x: int(x['num_train_epochs']))
         filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'fold_num', 'fold_type', 'num_train_epochs', 'backbone', 'reg_loss']
         filter_list = set(list(save_result_df.columns)) & set(filter_list)

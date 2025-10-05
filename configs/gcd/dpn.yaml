@@ -92,7 +92,9 @@ dataset_specific_configs:
   ele:
     max_seq_length: 200
     gamma: 90
-    num_train_epochs: 10
+    train_batch_size: 8
+    eval_batch_size: 32
+    pretrain_batch_size: 16
   news:
     max_seq_length: 500
     gamma: 90
@@ -114,7 +116,10 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  X-Topic:
+  XTopic:
     max_seq_length: 512
     gamma: 90
-    num_train_epochs: 10
+    max_seq_length: 128
+    train_batch_size: 16
+    eval_batch_size: 32
+    pretrain_batch_size: 16

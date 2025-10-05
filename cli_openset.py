@@ -35,7 +35,8 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
     extra = list(args_json.get("extra_flags", []))
     output_dir = f"outputs/openset/{args_json['method']}/{args_json['dataset']}_{args_json['labeled_ratio']}_{args_json['known_cls_ratio']}_{args_json['fold_type']}_{args_json['fold_num']}_{args_json['fold_idx']}_{args_json['seed']}"
     bert_model = "./pretrained_models/bert-base-chinese" if args_json["dataset"] in ['ecdt', 'thucnews'] else "./pretrained_models/bert-base-uncased"
-    if args_json['method'].lower() in ['ab', 'deepunk', 'doc', 'plm_ood', 'clap']:
+    # print(output_dir)
+    if args_json['method'].lower() in ['ab', 'deepunk', 'doc', 'plm_ood', 'plm_ood-llm', 'clap']:
         return [
             "--config", str(args_json["config"]),
             "--seed", str(args_json["seed"]),
@@ -243,6 +244,62 @@ def cli_plm_ood_run(args_json: Dict[str, Any], stage: int) -> List[str]:
     return argv
 
 
+def cli_plm_ood_llm_pre(args_json: Dict[str, Any], stage: int) -> List[str]:
+    """
+    PLM_OOD 第一阶段（pretrain）：
+    入口：code/openset/plm_ood-llm/pretrain.py
+    shell 中使用 --dataset_name 与 --rate（而不是 --dataset / --known_cls_ratio）
+    个别额外参数（如 reg_loss）可通过 args_json["reg_loss"] 透传。
+    """
+    reg_loss = args_json.get("reg_loss", None)
+    if args_json.get("eval_only", False):
+        return [sys.executable, "-c", "print('skip plm_ood pretrain (eval_only=True)')"]
+    argv = [
+        sys.executable, "code/openset/plm_ood-llm/pretrain.py",
+        *_common_flags(args_json),
+        *_epoch_flags(args_json, is_pretrain=False),
+    ]
+    argv += _maybe(reg_loss, "--reg_loss")
+    return argv
+
+
+def cli_plm_ood_llm_run(args_json: Dict[str, Any], stage: int) -> List[str]:
+    """
+    PLM_OOD 第二阶段（train_ood）：
+    入口：code/openset/plm_ood-llm/train_ood.py
+    """
+    reg_loss = args_json.get("reg_loss", None)
+    argv = [
+        sys.executable, "code/openset/plm_ood-llm/train_ood.py",
+        *_common_flags(args_json),
+        *_epoch_flags(args_json, is_pretrain=False),
+    ]
+    argv += _maybe(reg_loss, "--reg_loss")
+
+    argv += _maybe(args_json.get("backbone"), "--backbone")
+    argv += _maybe(args_json.get("model_path"), "--model_path")
+
+    # ★ 新增：复用缓存路径（指向你现成的 case_study 或 vector 目录）
+    # 允许两种键名：vector_path 或 reuse_vectors_from（任选其一）
+    vec = args_json.get("vector_path") or args_json.get("reuse_vectors_from")
+    if vec:
+        argv += ["--vector_path", str(vec), "--case_path", str(vec)]
+
+    # ★ 新增：LLM 相关配置（都放在 per_method_extra 里）
+    if args_json.get("llm_ood", False):
+        argv += ["--llm_ood"]
+    argv += _maybe(args_json.get("llm_api_base"), "--llm_api_base")
+    argv += _maybe(args_json.get("llm_model"), "--llm_model")
+    argv += _maybe(args_json.get("llm_api_key_env"), "--llm_api_key_env")
+    argv += _maybe(args_json.get("llm_temperature"), "--llm_temperature")
+    argv += _maybe(args_json.get("llm_batch_size"), "--llm_batch_size")
+    argv += _maybe(args_json.get("detector_for_table"), "--detector_for_table")
+    argv += _maybe(args_json.get("llm_cache_path"), "--llm_cache_path")
+
+    # ★ 可选：把阈值抽成参数（若你在 train_ood.py 里支持了）
+    argv += _maybe(args_json.get("ood_threshold"), "--ood_threshold")
+    return argv
+
 def cli_scl(args_json: Dict[str, Any], stage: int) -> List[str]:
     """
     入口：code/openset/baselines/SCL/train.py
@@ -320,6 +377,15 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
         ],
         "config": "configs/openset/plm_ood.yaml",
         "output_base": "./outputs/openset/plm_ood",
+    },
+    "plm_ood-llm": {
+        "task": "openset",
+        "stages": [
+            {"entry": "code/openset/plm_ood-llm/pretrain.py", "cli_builder": cli_plm_ood_llm_pre},
+            {"entry": "code/openset/plm_ood-llm/train_ood.py", "cli_builder": cli_plm_ood_llm_run},
+        ],
+        "config": "configs/openset/plm_ood-llm.yaml",
+        "output_base": "./outputs/openset/plm_ood-llm",
     },
     "scl": {
         "task": "openset",
