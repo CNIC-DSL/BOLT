@@ -1,6 +1,6 @@
 bert_model: './pretrained_models/bert-base-chinese'
 data_dir: './data'
-llm_model_name: 'deepseek-v3:671b'
+llm_model_name: 'deepseek-v3:671b-gw'
 api_base: 'https://uni-api.cstcloud.cn/v1'
 logger_name: 'Discovery'
 

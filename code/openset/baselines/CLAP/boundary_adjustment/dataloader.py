@@ -105,7 +105,8 @@ class Data:
                     examples.append(example)
         elif mode == 'test':
             for example in ori_examples:
-                if (example.label in self.label_list) and (example.label is not self.unseen_token):
+                # if (example.label in self.label_list) and (example.label is not self.unseen_token):
+                if (example.label in self.label_list) and (example.label != self.unseen_token):
                     examples.append(example)
                 else:
                     example.label = self.unseen_token

@@ -1,0 +1,332 @@
+text	label	golds
+i want to donate	donate	0
+i want to donate for the refugees	donate	0
+i want to make a monetary donation	donate	0
+can i donate to medical needs for corona virus	donate	0
+i want to give funds to italy	donate	0
+i want to provide money to a fund for nyc food shelters	donate	0
+what is a good because to donate to	donate	0
+donate to local food banks	donate	0
+where can i donate to covid 19 relief	donate	0
+funding for covid 19 response chicago	donate	0
+i want to donate to local relief efforts	donate	0
+let us donate to the poorest people	donate	0
+does my city have a local relief fund	donate	0
+how do i donate to support washington	donate	0
+donate medical material to the nearest hospital	donate	0
+i want to donate a bit of money	donate	0
+how do i donate	donate	0
+how do i donate to grocery store workers in town	donate	0
+can i donate to hospitals near me	donate	0
+donate to china	donate	0
+what is up	hi	1
+hi doc	hi	1
+hey what is up	hi	1
+hello there doc	hi	1
+hi covid  19 doctor	hi	1
+hey corona doctor	hi	1
+hi covid doc	hi	1
+wake up corona doc	hi	1
+who are you	hi	1
+rise and shine mr corona	hi	1
+afternoon doc	hi	1
+are you still sleepy bot	hi	1
+morning doc	hi	1
+hello doctor	hi	1
+what is up covid bot	hi	1
+good morning doc covid	hi	1
+hi I am jack	hi	1
+how does 19 spread	how does corona spread	2
+how effective has masks been with slowing down the spread of covid 19	how does corona spread	2
+can coronavirus spread through drinking water	how does corona spread	2
+should i be concerned about the virus	how does corona spread	2
+can someone spread the disease just by walking or running past them	how does corona spread	2
+can my dog get infected with covid	how does corona spread	2
+how can touching shared surfuces put you at risk for corona virus	how does corona spread	2
+how does coronavirus get transmitted	how does corona spread	2
+can covid 19 spread through pools	how does corona spread	2
+how does the virus travel	how does corona spread	2
+should i be worried about my plants spreading the disease to me	how does corona spread	2
+can someone who has been quarantined still spread corona virus	how does corona spread	2
+is coronavirus spread on doorknobs	how does corona spread	2
+is the virus spreading growing	how does corona spread	2
+can someone spread coronavirus if they do not have symptoms	how does corona spread	2
+does the disease travel in food	how does corona spread	2
+how does covid 19 spread so easily	how does corona spread	2
+is 6ft apart effective to stop spreading the virus	how does corona spread	2
+can i get the corona from my kids ipad even after 3 days	how does corona spread	2
+how fast can people get infected if there is a community spread	how does corona spread	2
+can i use a mask to help with spreading corona virus	how does corona spread	2
+can i have more information on aerosol transmission	how does corona spread	2
+total deaths as of today	latest numbers	3
+I would like to know how many people have been tested so far for covid19 in the yous	latest numbers	3
+daily death rate in the us	latest numbers	3
+how many people are recovered in california	latest numbers	3
+number of tests carried out in spain	latest numbers	3
+recovery rate in modesto	latest numbers	3
+how many people have died from covid19 in the yous already	latest numbers	3
+what is the average cost of testing for the virus	latest numbers	3
+what is the recovery rate in the us	latest numbers	3
+how many people died in santa clara county	latest numbers	3
+what do the numbers look like now	latest numbers	3
+total confirmed cases in california	latest numbers	3
+recovery rate in san francisco	latest numbers	3
+how many us states have a shelter in place order	latest numbers	3
+how many cases has there been in the us	latest numbers	3
+how many people died today in the yous	latest numbers	3
+how many active cases that are critical condition	latest numbers	3
+how many people have been infected since march	latest numbers	3
+infected cases in colorado	latest numbers	3
+number of cases in mexico	latest numbers	3
+what is the latest numbers in california	latest numbers	3
+what is the death rate in china	latest numbers	3
+covid hoax snopes	myths	-1
+any myths about the origin of covid 19	myths	-1
+was the coronavirus engineered	myths	-1
+is it a myth that diffused oils can cure covid 19	myths	-1
+myth about half the population dying from covid 19	myths	-1
+covid 19 origin myths	myths	-1
+what are the misconceptions	myths	-1
+covid debunked myths	myths	-1
+popular coronavirus myths please	myths	-1
+is it true that drinking alcohol prevents coronavirus	myths	-1
+send me some myths about covid19	myths	-1
+did corona really come from eating bats	myths	-1
+is it the covid 19 transmited by water	myths	-1
+covid myths versus facts	myths	-1
+is it a myth that coronavirus dies in hot weather	myths	-1
+is it true that there is covid vaccine	myths	-1
+is it a myth that i can get coronavirus from my cat	myths	-1
+is it a myth that children are not prone to getting corona	myths	-1
+does hot weather kill the virus	myths	-1
+did the covid 19 come from africa	myths	-1
+what are some myths floating around about covid	myths	-1
+did donald trump fabricate coronavirus to get re elected	myths	-1
+what is the latest on coronavirus in dc	news and press	-1
+give me the daily corona update	news and press	-1
+what is the latest	news and press	-1
+give me daily updates	news and press	-1
+any news from seoul	news and press	-1
+are there any updates in texas	news and press	-1
+what is the latest news on the situation in india	news and press	-1
+latest news from new york	news and press	-1
+can you show me the latest updates in washington	news and press	-1
+tell me the news	news and press	-1
+coronavirus update iowa	news and press	-1
+what updates can you give me about covid 19	news and press	-1
+recent updates in bahrain	news and press	-1
+latest covid 19 article	news and press	-1
+show all the news on corona in my county	news and press	-1
+are there any recent covid 19 press releases	news and press	-1
+can i get a news briefing about covid	news and press	-1
+what are the most recent coronavirus numbers	news and press	-1
+what did the president announce	news and press	-1
+what is the most recent new from spain	news and press	-1
+what is the press saying	news and press	-1
+thanks for the help bot	okay thanks	-1
+thanks for the search doc	okay thanks	-1
+thanks for checking that up doctor bot	okay thanks	-1
+thanks so much doc	okay thanks	-1
+thank you	okay thanks	-1
+thanks i appreciate the help	okay thanks	-1
+okay thanks covid doc	okay thanks	-1
+i really appreciate you for helping me	okay thanks	-1
+thanks doctor bot	okay thanks	-1
+hmm thanks for the info	okay thanks	-1
+thank you for the info	okay thanks	-1
+cool thanks	okay thanks	-1
+thank you for the information	okay thanks	-1
+thank you kindly	okay thanks	-1
+great info thanks	okay thanks	-1
+thank you so so much	okay thanks	-1
+appreciate the help doc	okay thanks	-1
+what should essential workers do for prevention of the virus	protect yourself	-1
+what practices should i use when doing essential errands	protect yourself	-1
+should i use my own bags at the grocery store	protect yourself	-1
+I am scared what do i do	protect yourself	-1
+will wearing a mask be enough	protect yourself	-1
+what is the best face mask to wear	protect yourself	-1
+what cleaning practices kill the virus	protect yourself	-1
+are cloth masks as efficient as surgical masks	protect yourself	-1
+do i need a n95 mask	protect yourself	-1
+should i avoid wearing jewelry when shopping	protect yourself	-1
+are there any medications i should take if i have the virus	protect yourself	-1
+how can i protect my family from covid 19	protect yourself	-1
+best practices to stay safe from covid 19	protect yourself	-1
+how should i shop for produce at the grocery store	protect yourself	-1
+do gloves help	protect yourself	-1
+should i stand six feet apart from others	protect yourself	-1
+will wearing gloves help me avoid covid 19	protect yourself	-1
+how effective are gloves	protect yourself	-1
+give me information to avoiding covid 19	protect yourself	-1
+should different age groups take different prevention measures	protect yourself	-1
+does disinfecting clothes after grocery shopping help	protect yourself	-1
+should i wear gloves	protect yourself	-1
+let me share this chat	share	-1
+share this report	share	-1
+send this to parents	share	-1
+share this service with my family chat	share	-1
+share this with jack	share	-1
+can i share this	share	-1
+this would be great to share	share	-1
+link this to my profile	share	-1
+is sharing allowed	share	-1
+share with mom	share	-1
+let us share this report with my family	share	-1
+send this to my spouse	share	-1
+I am going to share this service online	share	-1
+post the service	share	-1
+send a report to this link	share	-1
+is there a way to share this service	share	-1
+share this link with mom	share	-1
+forward the news	share	-1
+i want to share this assistant with my contacts	share	-1
+share this information	share	-1
+will be the hotels reopen in 40 days	travel	-1
+should i cancel my destination wedding to italy	travel	-1
+can i safely travel via bus	travel	-1
+is it okay to travel to alaska	travel	-1
+are trains still running in europe	travel	-1
+give me the best options for travel in dc	travel	-1
+can i travel to japan	travel	-1
+should i avoid using uber	travel	-1
+what is the safest mode of travel	travel	-1
+what are the updates regarding covid 19 travel restrictions	travel	-1
+should i stop using public transport	travel	-1
+am i allowed to leave my state	travel	-1
+can i still travel to europe	travel	-1
+is the mexican border closed because of covid 19	travel	-1
+is it okay to commute across state lines	travel	-1
+is air travel safe yet	travel	-1
+is crossing state lines allowed	travel	-1
+do you think i have to cancel my trip to japan in august	travel	-1
+travel advice	travel	-1
+are taxis considered unsafe	travel	-1
+can i take an airplane on may the 15th	travel	-1
+what are the main signs of having the virus	what are symptoms	-1
+how can i tell if I have had coronva virus	what are symptoms	-1
+are muscle aches a symptom of corona	what are symptoms	-1
+i have a cold should i be worried	what are symptoms	-1
+what symptoms are there	what are symptoms	-1
+what symptoms are most common	what are symptoms	-1
+list all of the corona virus symptoms	what are symptoms	-1
+is having a lack of taste a symptom	what are symptoms	-1
+is a sign of corona having a lack of breath	what are symptoms	-1
+I have had a cold for a week now	what are symptoms	-1
+are body aches symptoms	what are symptoms	-1
+what should symptoms should i look out for if i am worried someone has corona	what are symptoms	-1
+what symptoms should we watch for	what are symptoms	-1
+tell me about the different symptoms of corona virus	what are symptoms	-1
+what are some differences betweens covid19 and the common cold	what are symptoms	-1
+is a fever a symptom	what are symptoms	-1
+what arethe first symptoms to appear	what are symptoms	-1
+what are some of the symptoms	what are symptoms	-1
+how long does corona virus last	what are symptoms	-1
+is pneumonia a symptom	what are symptoms	-1
+what to look out for for covid19	what are symptoms	-1
+is coughing a sign of the virus	what are symptoms	-1
+do any countries have a cure for coronavirus	what are treatment options	-1
+do hospitals know how to fix this	what are treatment options	-1
+at home remedies for covid	what are treatment options	-1
+is there a vaccine to treat the coronavirus	what are treatment options	-1
+is there a vaccine yet for the covid	what are treatment options	-1
+is there a vaccine for coronavirus yet	what are treatment options	-1
+how do i cure coronavirus if i caught it	what are treatment options	-1
+what are doctors using for covid	what are treatment options	-1
+can i use essential oils to tread covid	what are treatment options	-1
+covid vaccine	what are treatment options	-1
+how can i treat myself for coronavirus	what are treatment options	-1
+is plasma donation good to treat coronavirus	what are treatment options	-1
+is there a cure yet for covid 19	what are treatment options	-1
+i want treatment options for covid 19	what are treatment options	-1
+what are the treatment options for covid	what are treatment options	-1
+what is the treatment for a coronavirus patient	what are treatment options	-1
+is the malaria medicine safe for treatment of covid	what are treatment options	-1
+how to alleviate coronavirus symptoms	what are treatment options	-1
+what are some at home treatments for covid	what are treatment options	-1
+does acetaminophen cure coronavirus	what are treatment options	-1
+should i be worried about my girlfriend coming home from the hospital	what if i visited high risk area	-1
+how do i find out current quarantine restrictions for my city	what if i visited high risk area	-1
+will self quarantine help if i have come back from a high risk area	what if i visited high risk area	-1
+what are travel restrictions for high risk areas	what if i visited high risk area	-1
+what areas are at most risk for coronavirus outbreak	what if i visited high risk area	-1
+is it ok to visit a hospital this week	what if i visited high risk area	-1
+is there a list of countries that are officially high risk	what if i visited high risk area	-1
+is china still considered a high risk country	what if i visited high risk area	-1
+should i avoid those who recently came back from international travel	what if i visited high risk area	-1
+what should i do i need to travel for work	what if i visited high risk area	-1
+is there a specific number of cases that define high risk area	what if i visited high risk area	-1
+is there a list of items i should wear if i am going somewhere	what if i visited high risk area	-1
+i traveled to new york recently am i infected	what if i visited high risk area	-1
+should i travel within the yous during the pandemic	what if i visited high risk area	-1
+what policies are in place for high risk areas	what if i visited high risk area	-1
+what if i have come in contact with someone at the grocery store	what if i visited high risk area	-1
+what should i do if i live with essential workers	what if i visited high risk area	-1
+is it safe to walk around wuhan now	what if i visited high risk area	-1
+what do i do if i live with essential employees	what if i visited high risk area	-1
+is a place with 10 or more people considered a high risk area	what if i visited high risk area	-1
+are beaches considered high risk areas	what if i visited high risk area	-1
+i want more information on covid 19	what is corona	-1
+what is the science behind virus protection	what is corona	-1
+give me a summary on corona virus	what is corona	-1
+what can you tell me about the current pandemic	what is corona	-1
+what is the latest data on the corona	what is corona	-1
+what is it about the corona virus we should keep in mind	what is corona	-1
+when did the corona virus start	what is corona	-1
+can i hear updated info on the corona virus	what is corona	-1
+give ma breakdown of what the virus is	what is corona	-1
+what is there to know about the corona virus	what is corona	-1
+what is the virus	what is corona	-1
+anything else i should understand about covid	what is corona	-1
+is there more we can learn about covid 19	what is corona	-1
+what is the history of covid 10	what is corona	-1
+tell me more about covid 19	what is corona	-1
+i need more information about covid 19	what is corona	-1
+what is the latest infomation on corona	what is corona	-1
+can you tell me what covid 19 is	what is corona	-1
+what exactly is covid 19	what is corona	-1
+can you tell me about the virus	what is corona	-1
+may i get more details on the corona	what is corona	-1
+can i hear an update on the pandemic	what is corona	-1
+please tell me my fish are safe from the covid 19	can i get from feces animal pets	-1
+can i contract coronavirus from a guinea pig	can i get from feces animal pets	-1
+can i take my pets ivermectin to prevent or treat my covid 19 infection	can i get from feces animal pets	-1
+can fish and aquarium water spread the virus to people	can i get from feces animal pets	-1
+what symptoms would my iguana show	can i get from feces animal pets	-1
+can chickens carry the virus	can i get from feces animal pets	-1
+how can i care for a cat that has contracted the virus	can i get from feces animal pets	-1
+are wild mice coming up positive	can i get from feces animal pets	-1
+if i eat sea food can i get corona	can i get from feces animal pets	-1
+has any animal died from the virus	can i get from feces animal pets	-1
+is my dog immune to covid 19	can i get from feces animal pets	-1
+can snakes get the virus	can i get from feces animal pets	-1
+do i need to worry about my dog getting corona	can i get from feces animal pets	-1
+can i test my animal through a private veterinary laboratory	can i get from feces animal pets	-1
+are there any symptoms for animals that have the virus	can i get from feces animal pets	-1
+will i get the virus from eating meat	can i get from feces animal pets	-1
+can horses get the virus	can i get from feces animal pets	-1
+how can i tell if my dog has the virus	can i get from feces animal pets	-1
+are my animals at risk to catch the corona virus	can i get from feces animal pets	-1
+what animal did covid 19 originate from	can i get from feces animal pets	-1
+does the coronavirus affect dogs	can i get from feces animal pets	-1
+is it safe to touch glass	can i get from packages surfaces	-1
+is lysol the best option to clean surfaces	can i get from packages surfaces	-1
+will withdrawing cash from an atm give me the virus	can i get from packages surfaces	-1
+does virus thrive in water	can i get from packages surfaces	-1
+can i get covid 19 by touching my eyes	can i get from packages surfaces	-1
+which surfaces are likely to have virus	can i get from packages surfaces	-1
+what surface is safe from covid 19	can i get from packages surfaces	-1
+should i be worried about getting the virus from delivery packages	can i get from packages surfaces	-1
+will i get covid from my groceries	can i get from packages surfaces	-1
+can the virus be on doors	can i get from packages surfaces	-1
+will bleach kill coronavirus on my stove	can i get from packages surfaces	-1
+does coronavirus stay longer on cardboard	can i get from packages surfaces	-1
+can cloth mask be a carrier of virus	can i get from packages surfaces	-1
+does the virus live on mail boxes	can i get from packages surfaces	-1
+should i disinfect my table every day	can i get from packages surfaces	-1
+will you get covid if you read a newspaper	can i get from packages surfaces	-1
+does the virus live on clothing	can i get from packages surfaces	-1
+can covid19 live on food items touched by an infected person	can i get from packages surfaces	-1
+will corona die fast on metal	can i get from packages surfaces	-1
+can covid live long on trees	can i get from packages surfaces	-1
+what surface will have virus for the longest time	can i get from packages surfaces	-1

@@ -12,6 +12,7 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, Optional, List
 import yaml
+import math
 
 # 这些全局路径由 set_paths() 在主程序中设置
 RESULTS_DIR: Path = None
@@ -19,18 +20,63 @@ SUMMARY_CSV: Path = None
 SEEN_JSON: Path = None
 LOG_DIR: Path = None
 
+# 放在 utils.py 顶部现有的 safe_equal 同位置，直接覆盖
+import json
+import math
+
+def _is_numlike(x):
+    # bool 是 int 的子类，这里排除掉
+    return isinstance(x, (int, float)) and not isinstance(x, bool)
+
+def _is_missing(x):
+    # 统一判断缺失：None 或 NaN
+    if x is None:
+        return True
+    return isinstance(x, float) and math.isnan(x)
+
 def safe_equal(a, b):
-    # 尝试把两个值都转成 float
+    """鲁棒比较：支持 NaN/None、数字与数字字符串、大小写/空白不敏感的字符串、布尔、容器(JSON)等。"""
+    # 1) 都是缺失值 => 相等
+    if _is_missing(a) and _is_missing(b):
+        return True
+    # 单边缺失 => 不等
+    if _is_missing(a) or _is_missing(b):
+        return False
 
-    try:
+    # 2) 都像数字 => 浮点比较（1 == 1.0）
+    if _is_numlike(a) and _is_numlike(b):
         return float(a) == float(b)
-    except (ValueError, TypeError):
-        # 转换失败时，直接比较原值
-        # print(a, b)
-        if type(a) == type(1.0):
-            print()
-        return a.lower() == b.lower()
 
+    # 3) 都是字符串 => 去首尾空白 + 忽略大小写
+    if isinstance(a, str) and isinstance(b, str):
+        return a.strip().lower() == b.strip().lower()
+
+    # 4) 字符串 vs 数字：尝试把字符串转成数字再比
+    if isinstance(a, str) and _is_numlike(b):
+        try:
+            return float(a) == float(b)
+        except ValueError:
+            return False
+    if isinstance(b, str) and _is_numlike(a):
+        try:
+            return float(b) == float(a)
+        except ValueError:
+            return False
+
+    # 5) 布尔
+    if isinstance(a, bool) or isinstance(b, bool):
+        return bool(a) == bool(b)
+
+    # 6) 可 JSON 序列化的容器(dict/list/tuple …)
+    try:
+        aj = json.dumps(a, sort_keys=True, ensure_ascii=False)
+        bj = json.dumps(b, sort_keys=True, ensure_ascii=False)
+        return aj == bj
+    except (TypeError, ValueError):
+        pass
+
+    # 7) 兜底：转成字符串比较（避免直接 .lower() 导致 AttributeError）
+    return str(a) == str(b)
 
 def compare_common_keys(dict1: dict, dict2: dict, common_keys) -> bool:
     """
@@ -296,13 +342,52 @@ def run_combo(method:str, dataset:str, known:float, labeled:float, fold_type: st
         if 'reg_loss' in args_json:
             save_result_df['reg_loss'] = save_result_df['args'].apply(lambda x: x['reg_loss'])
         save_result_df['num_train_epochs'] = save_result_df['args'].apply(lambda x: int(x['num_train_epochs']))
-        filter_list = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio', 'cluster_num_factor', 'seed', 'fold_idx', 'fold_num', 'fold_type', 'num_train_epochs', 'backbone', 'reg_loss']
-        filter_list = set(list(save_result_df.columns)) & set(filter_list)
+
+
+        filter_list = [
+            'method','dataset','known_cls_ratio','labeled_ratio','cluster_num_factor',
+            'seed','fold_idx','fold_num','fold_type','num_train_epochs','backbone','reg_loss'
+        ]
+        # 仅过滤双方都存在的列
+        filter_list = list((set(save_result_df.columns) & set(filter_list)) & set(args_json.keys()))
+
+        def _vector_mask(series: pd.Series, val):
+            """尽量使用向量化比较；不行再退回 safe_equal。"""
+            s = series
+            # 缺失值处理：和 safe_equal 语义一致（两边缺失才算相等）
+            if val is None or (isinstance(val, float) and pd.isna(val)):
+                return s.isna()
+
+            # 字符串：大小写与首尾空白不敏感
+            if isinstance(val, str):
+                # 对混类型列，统一转为字符串再比较
+                return s.astype(str).str.strip().str.lower().eq(val.strip().lower())
+
+            # 数值（排除 bool）
+            if isinstance(val, (int, float)) and not isinstance(val, bool):
+                s_num = pd.to_numeric(s, errors='coerce')
+                return s_num.eq(float(val))
+
+            # 布尔
+            if isinstance(val, bool):
+                # 混类型列时，尽量保守：True/False 与字符串 'true'/'false' 不自动等价
+                # 若你希望 'True' == True，可改为：s.astype(str).str.lower().isin(['true','1']) 等
+                return s == val
+
+            # 容器/复杂类型：退回逐元素 safe_equal
+            return s.apply(lambda x: safe_equal(x, val))
+
         for col in filter_list:
-            save_result_df = save_result_df[save_result_df[col].apply(lambda x: safe_equal(x, args_json[col]))]
-            if len(save_result_df) == 0:
-                cur_values = list(save_result_df[col].unique())
-                print(f"[Not Exist]  {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed} | seen matched: {col}: args: {args_json[col]}; the current list: {cur_values}")
+            val = args_json[col]
+            series = save_result_df[col]
+            mask = _vector_mask(series, val)
+            # fillna(False) 防止 NaN 参与比较造成的空洞
+            save_result_df = save_result_df[mask.fillna(False)]
+            if save_result_df.empty:
+                # 注意：这里展示的是“原列”的去重值，便于排查
+                current_values = list(pd.unique(series.dropna()))
+                print(f"[Not Exist]  {method} {dataset} kr={known} lr={labeled} fold={fold_idx} seed={seed} | "
+                    f"seen matched: {col}: args: {val}; the current list: {current_values}")
                 break
 
         if len(save_result_df) > 0:

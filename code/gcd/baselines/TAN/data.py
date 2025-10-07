@@ -24,7 +24,7 @@ class Data:
 
         
         self.known_lab = [self.all_label_list.index(a) for a in self.known_label_list]
-        self.num_known = int(len(self.all_label_list) * args.cluster_num_factor)
+        self.num_known = len(self.known_lab)
         self.train_labeled_examples, self.train_unlabeled_examples = self.get_examples(processor, args, 'train')
         print('num_labeled_samples', len(self.train_labeled_examples))
         print('num_unlabeled_samples', len(self.train_unlabeled_examples))

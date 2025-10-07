@@ -145,7 +145,8 @@ class ModelManager:
 
         if mode == 'eval':
             cm = confusion_matrix(y_true, y_pred)
-            eval_score = F_measure(cm)['all_f1']
+            # eval_score = F_measure(cm)['all_f1']
+            eval_score = F_measure(cm)['F1-score']
             acc = round(accuracy_score(y_true, y_pred) * 100, 2)
             try:
                 classification = classification_report(y_true, y_pred, digits=4, target_names=data.label_list)
@@ -238,11 +239,14 @@ class ModelManager:
                 results['seed'] = args.seed
                 results['pretrain_acc'] = self.pretrained_acc
                 results['all_acc'] = acc
-                results['all_f1'] = result['all_f1']
+                # results['all_f1'] = result['all_f1']
+                results['all_f1'] = result.get('all_f1', result.get('F1-score'))
+                results['known_f1'] = result.get('known_f1', result.get('Known'))
+                results['open_f1']  = result.get('open_f1',  result.get('Open'))
                 results['known_acc'] = round((sum(known_acc) / len(known_acc)) * 100, 2)
                 results['open_acc'] = round((sum(unknown_acc) / len(unknown_acc)) * 100, 2)
-                results['known_f1'] = result['known_f1']
-                results['open_f1'] = result['open_f1']
+                # results['known_f1'] = result['known_f1']
+                # results['open_f1'] = result['open_f1']
                 results['kccl_k'] = args.kccl_k
                 results['temperature'] = args.temperature
                 results['KCCL_LOSS_LAMBDA'] = args.KCCL_LOSS_LAMBDA

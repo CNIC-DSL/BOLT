@@ -181,7 +181,7 @@ class ModelManager:
                 # generate augmented instance.
                 input_ids1 = self.random_token_replace(input_ids.cpu(), self.tokenizer).to(self.device)
                 pooled1 = self.model(input_ids1, segment_ids, input_mask, label_ids, mode='feature_extract')
-                
+
                 # cross entropy loss on unlabeled data with cluster ids as pseudo labels
                 loss_u, pooled = self.model(input_ids, segment_ids, input_mask, label_ids, mode='train')
                 

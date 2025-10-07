@@ -42,7 +42,7 @@ rtr_prob: 0.25
 update_per_epoch: 5 # 主动学习更新频率
 
 # 主动学习与LLM
-llm_model_name: 'deepseek-v3:671b' # 你的LLM模型
+llm_model_name: 'deepseek-v3:671b-gw' # 你的LLM模型
 api_base: 'https://uni-api.cstcloud.cn/v1' # 你的API地址
 comparison_cluster_ratio: 0.5
 student_t_freedom: 1

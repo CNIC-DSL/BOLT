@@ -53,11 +53,6 @@ def load_and_prepare_datasets(args):
     data_in_test['labels'] = data_in_test['label'].apply(lambda x: known_label_list.index(x) if x in known_label_list else -1)
     data_out_test['labels'] = data_out_test['label'].apply(lambda x: known_label_list.index(x) if x in known_label_list else -1)
     
-
-    test_texts = pd.concat([data_in_test['text'], data_out_test['text']], axis=0).tolist()
-    test_labels_str = pd.concat([data_in_test['label'], data_out_test['label']], axis=0).tolist()  # OOD 行为 'ood'
-
-
     # 初始化tokenizer
     tokenizer = AutoTokenizer.from_pretrained(args.model_path)
     tokenizer.add_special_tokens({'pad_token': '[PAD]'})
@@ -105,6 +100,9 @@ def load_and_prepare_datasets(args):
     
     # -----------------
     return {
+        "train_data": train_data,
+        "test_data": test_data,
+        "known_label_list": known_label_list,
         "train_dataset": train_dataset,
         "dataset_in_eval": dataset_in_eval,
         "dataset_in_test": dataset_in_test,
@@ -114,9 +112,6 @@ def load_and_prepare_datasets(args):
         "loader_in_eval": loader_in_eval,
         "test_loader": test_loader,
         "tokenizer": tokenizer,
-        "collate_batch": collate_batch,
-        "test_texts": test_texts,
-        "test_labels_str": test_labels_str,
-        "known_label_list": known_label_list 
+        "collate_batch": collate_batch
     }
     # -----------------

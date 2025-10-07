@@ -28,7 +28,7 @@ do
                 --num_pretrain_epochs 100 \
                 --num_train_epochs 50
                 # --api_base 'https://uni-api.cstcloud.cn/v1' \
-                # --llm_model_name 'deepseek-v3:671b' 
+                # --llm_model_name 'deepseek-v3:671b-gw' 
         done
     done
 done

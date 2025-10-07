@@ -27,7 +27,7 @@ freeze_bert_parameters: True
 save_model: True
 
 llm_ood: true
-llm_model: 'deepseek-v3:671b'
+llm_model: 'deepseek-v3:671b-gw'
 llm_api_base: 'https://uni-api.cstcloud.cn/v1'
 llm_api_key: "6c5c96209c4ef126a87fbe9840fab7c346b4c6fb6a57529fce7dea01c683fd1b"
 llm_batch: 4

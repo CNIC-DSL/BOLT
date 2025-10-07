@@ -13,7 +13,7 @@ class LLMQuerier:
             if not self.api_key:
                 raise ValueError("Environment variable OPENAI_API_KEY is not set.")
         elif "openrouter" in base_url.lower():
-            if 'deepseek-v3:671b' == model_name.lower():
+            if 'deepseek-v3:671b-gw' == model_name.lower():
                 self.model_name = 'deepseek/deepseek-chat-v3-0324'
             self.url = f"{self.base_url}/chat/completions"  # DeepSeek endpoint (without /v1)
             self.api_key = os.getenv("OPENROUTER_API_KEY")

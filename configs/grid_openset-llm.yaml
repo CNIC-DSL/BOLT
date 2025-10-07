@@ -11,13 +11,13 @@ result_file: summary_openset
 
 
 # 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
-# datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt]
-datasets: [TREC]
+# datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt]
+datasets: [mcid]
 
 # 网格搜索参数
 grid:
-  known_cls_ratio: [0.25]
-  labeled_ratio: [0.5]
+  known_cls_ratio: [0.25, 0.5, 0.75]
+  labeled_ratio: [0.1, 0.5, 1.0]
   fold_idxs: [0]
   fold_types: [fold]
   fold_nums: [5]
@@ -26,10 +26,11 @@ grid:
 
 # 运行参数
 run:
-  gpus: [1,2,3,4]      # 留空则不设置 CUDA_VISIBLE_DEVICES
-  max_workers: 4    # 并行线程数
+  gpus: [0,1,2,3,4,5,6,7]      # 留空则不设置 CUDA_VISIBLE_DEVICES
+  max_workers: 8    # 并行线程数
   num_pretrain_epochs: 100
   num_train_epochs: 50
+
 
 
 # 路径（可选）
@@ -50,25 +51,7 @@ extra_args:
   fold_num: 5
   gpu_id: 0            # 仅示意；真正的 GPU 绑定由 CUDA_VISIBLE_DEVICES 控制
 
-# 按方法分别追加/覆盖 extra_args（可选）
 per_method_extra:
-  # plm_ood:
-  #   reg_loss: normal
-  #   # backbone: pretrained_models/bert-base-uncased
-  
-  plm_ood-llm:
-    eval_only: true             # 跳过 pretrain（cli_plm_ood_pre 会短路）
-    # —— 复用你已有中间值的目录（就是截图里含 logits.npy 的 case_study 路径）——
-    # vector_path: "./outputs/openset/plm_ood/<...>/case_study"
-    # 或者用 reuse_vectors_from: ".../case_study"
-    reg_loss: normal
+  tan:
+    num_train_epochs: 50
     # backbone: pretrained_models/bert-base-uncased
-    # —— LLM 开关与参数 ——
-    llm_ood: true
-    llm_model: 'deepseek-v3:671b'
-    llm_api_base: 'https://uni-api.cstcloud.cn/v1'
-    llm_api_key: "6c5c96209c4ef126a87fbe9840fab7c346b4c6fb6a57529fce7dea01c683fd1b"
-    llm_api_key_env: "OPENAI_API_KEY"
-    detector_for_table: "EnergyBased"
-    llm_batch_size: 8
-    llm_temperature: 0.0

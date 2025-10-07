@@ -12,7 +12,7 @@ OPENAI_PIRCE = {
     'gpt-4-turbo-2024-04-09': {'input_token': 10.0 / 1000000, 'output_token': 30.0 / 1000000},
     'qwen7b': {'input_token': 0.0000001 / 1000000, 'output_token': 0.0000001 / 1000000},
     # vvvvv 为你的模型添加条目 vvvvv
-    'deepseek-v3:671b': {'input_token': 0.0000001 / 1000000, 'output_token': 0.0000001 / 1000000},
+    'deepseek-v3:671b-gw': {'input_token': 0.0000001 / 1000000, 'output_token': 0.0000001 / 1000000},
     'DeepSeek-V3-0324': {'input_token': 0.0000001 / 1000000, 'output_token': 0.0000001 / 1000000},
 }
 
