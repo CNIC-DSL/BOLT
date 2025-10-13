@@ -20,7 +20,7 @@ from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
 
 # from transformers.file_utils import cached_property, is_torch_available, is_torch_tpu_available, torch_required
-from functools import cached_property      # cached_property 已成为Python 3.8+的标准库
+from functools import cached_property
 from transformers.utils.import_utils import is_torch_available
 # from transformers import torch_required 
 from transformers.trainer_utils import EvaluationStrategy

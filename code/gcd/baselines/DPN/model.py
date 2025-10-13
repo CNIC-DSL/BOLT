@@ -10,7 +10,7 @@ from transformers import WEIGHTS_NAME, CONFIG_NAME, AutoTokenizer
 from sklearn.metrics import accuracy_score
 from pytorch_pretrained_bert.optimization import BertAdam
 import math
-from tqdm import trange  # 添加这行
+from tqdm import trange
 
 
 class PretrainModelManager:
@@ -65,7 +65,7 @@ class PretrainModelManager:
         best_model = None
         labelediter = iter(self.data.pretrain_labeled_dataloader)
         
-        for epoch in trange(int(self.args.num_pretrain_epochs), desc="Epoch"):  # 使用trange替代range
+        for epoch in trange(int(self.args.num_pretrain_epochs), desc="Epoch"):
             self.model.train()
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
@@ -78,10 +78,10 @@ class PretrainModelManager:
                 loss_mlm = self.model(mask_ids, input_mask, segment_ids, labels=mask_lb, mode='mlm')
                 
                 try:
-                    batch = next(labelediter)  # 修复next()调用
+                    batch = next(labelediter)
                 except StopIteration:
                     labelediter = iter(self.data.pretrain_labeled_dataloader)
-                    batch = next(labelediter)  # 修复next()调用
+                    batch = next(labelediter)
                 batch = tuple(t.to(self.device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
                 loss_ce, _ = self.model(input_ids, segment_ids, input_mask, label_ids, mode="train") 

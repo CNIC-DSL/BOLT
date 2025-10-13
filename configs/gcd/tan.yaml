@@ -1,52 +1,37 @@
-# TAN 方法的配置模板 
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
 
-# --- 路径设置 ---
 data_dir: "./data"
 bert_model: "./pretrained_models/bert-base-uncased"
 output_dir: "./outputs/gcd/tan"
 save_results_path: "./results/gcd/tan"
 
-# --- 数据与任务设置 ---
 dataset: "banking"
 known_cls_ratio: 0.75
 labeled_ratio: 0.1
 fold_num: 5
-# fold_idx: 0
-
-# --- 模型设置 ---
 feat_dim: 768
 
-# --- 训练设置 ---
 num_train_epochs: 100
 train_batch_size: 256
 eval_batch_size: 64
 lr: 1e-5
 warmup_proportion: 0.1
-wait_patient: 20       # 预训练
-es_metric: sum         # 或 NMI/ACC/ARI/H-Score
-es_patience: 8         # 正式训练
-es_min_delta: 0.1      # 示例
+wait_patient: 20       
+es_metric: sum         
+es_patience: 8         
+es_min_delta: 0.1      
 save_best: true
-
-
-# --- TAN 专属超参数 ---
 beta: 100
 topk: 5.0
 alpha: 0.8
 temperature: 0.07
 cluster_num_factor: 1.0
 
-# --- 预训练设置 ---
 num_pretrain_epochs: 100
 pretrain_batch_size: 32
 lr_pre: 1e-5
 
-# --- 数据集专属配置 ---
 dataset_specific_configs:
   clinc:
     max_seq_length: 30
@@ -66,7 +51,6 @@ dataset_specific_configs:
   ecdt:
     max_seq_length: 55
     num_train_epochs: 20
-  # --- 新增补齐的配置 ---
   AGNews:
     max_seq_length: 128
     num_train_epochs: 20
@@ -76,7 +60,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG: 
     max_seq_length: 512
     num_train_epochs: 20
     train_batch_size: 16
@@ -85,7 +69,7 @@ dataset_specific_configs:
   TREC:
     max_seq_length: 40
     num_train_epochs: 20
-  Yahoo: # Yahoo Answers
+  Yahoo: 
     max_seq_length: 128
     num_train_epochs: 20
     train_batch_size: 16

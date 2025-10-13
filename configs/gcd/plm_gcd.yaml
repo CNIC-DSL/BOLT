@@ -1,43 +1,27 @@
-# plm_gcd 方法的通用配置模板
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
-
-# --- 数据与任务设置 ---
-dataset_name: "banking"     # 保持原参数名
-data_dir: "./data"          # 统一路径
-rate: 0.25                  # 保持原参数名 (known_cls_ratio)
+dataset_name: "banking"     
+data_dir: "./data"          
+rate: 0.25                  
 labeled_ratio: 0.1
 fold_idx: 0
 fold_num: 5
-
-# --- 模型设置 ---
-# 将 backbone 从 shell 移入配置
 backbone: "Meta-Llama-3.1-8B-Instruct"
 bert_model: "./pretrained_models/bert-base-uncased"
-# 提供预训练模型的根目录，具体路径由代码生成
 model_path_root: "./pretrained_models"
-
-# --- 训练设置 ---
 n_epochs: 1
-lr: !!float 0.001           # 对应 model.py (未使用，但保留)
+lr: !!float 0.001           
 train_batch_size: 32
 eval_batch_size: 128
 
-# Early stopping 配置
-es_patience: 3        # 连续多少个 eval 没有提升就停
-es_min_delta: 0.0     # 最小提升幅度
-metric_for_best: accuracy   # 早停和保存最佳模型的指标
+es_patience: 3        
+es_min_delta: 0.0     
+metric_for_best: accuracy   
 
-# --- 输出目录设置 ---
-# 统一的顶层输出目录
 output_dir: "./outputs/gcd/plm_gcd"
 save_results_path: "results/gcd/plm_gcd"
 
 
-# --- 数据集专属配置 ---
 dataset_specific_configs:
   DBPedia:
     train_batch_size: 16

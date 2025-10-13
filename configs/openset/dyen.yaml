@@ -1,42 +1,31 @@
-# DyEn 方法的通用配置模板
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "3"
 
-# --- 数据与任务设置 ---
-dataset: "banking"       # 对应 my_args.py 中的 data
+dataset: "banking"       
 data_dir: "./data"
-known_cls_ratio: 0.25  # 对应 my_args.py 中的 known_ratio
-labeled_ratio: 0.1     # (我们的标准参数)
-fold_idx: 0            # (我们的标准参数)
-fold_num: 5            # (我们的标准参数)
-max_seq_length: 128    # 对应 my_args.py 中的 max_seq_length
+known_cls_ratio: 0.25  
+labeled_ratio: 0.1     
+fold_idx: 0            
+fold_num: 5            
+max_seq_length: 128    
 
-# --- 模型与训练设置 ---
-# 路径设置
 bert_model: "./pretrained_models/bert-base-uncased"
 
-# 训练周期与批次大小
 supcont_pre_epoches: 10
 per_device_train_batch_size: 32
 per_device_eval_batch_size: 32
 learning_rate: !!float 2e-5
 
-# 损失函数与 DyEn 特定参数
 loss_type: "ce_and_div"
 diversity_loss_weight: 0.1
 scale: 1.0
 scale_ood: 1.0
 
-# FreeLB 对抗训练参数 (adv_k <= 0 则不启用)
 adv_k: 0
 adv_lr: 0.03
 adv_init_mag: 0.05
 adv_max_norm: 0.0
 
-# --- 输出目录设置 ---
 output_dir: "./outputs/openset/dyen"
 save_results_path: "results/openset/dyen"
 

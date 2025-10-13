@@ -16,7 +16,6 @@ def init_model():
     parser.add_argument('--config', type=str, default=None, help="Path to the YAML config file.")
     parser.add_argument("--output_dir", type=str, default='./outputs/openset/adb', help="The unified output directory for all experiment artifacts.")
 
-    # --- 修正默认路径 ---
     parser.add_argument("--data_dir", default='./data', type=str,
                         help="The input data dir. Should contain the .csv files (or other data files) for the task.")
     parser.add_argument("--save_results_path", type=str, default='./results', help="the path to save results")
@@ -25,7 +24,6 @@ def init_model():
     parser.add_argument("--bert_model", default="./pretrained_models/bert-base-uncased", type=str, help="The path for the pre-trained bert model.")
     parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
 
-    # --- 其他参数 (保持不变) ---
     parser.add_argument("--max_seq_length", default=None, type=int,
                         help="The maximum total input sequence length after tokenization. Sequences longer "
                              "than this will be truncated, sequences shorter will be padded.")
@@ -58,7 +56,6 @@ def init_model():
     parser.add_argument("--fold_idx", default=0, type=int)
     parser.add_argument("--fold_num", default=5, type=int)
 
-    # 追加到 argparse 定义处
     parser.add_argument('--llm_ood', action='store_true',
                         help='Enable LLM OOD check during test')
     parser.add_argument('--llm_api_base', type=str, default='https://api.openai.com/v1',

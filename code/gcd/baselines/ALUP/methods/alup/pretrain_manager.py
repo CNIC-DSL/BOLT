@@ -20,7 +20,6 @@ def pick_device(requested_id: int | None):
         return torch.device("cpu")
 
     n = torch.cuda.device_count()
-    # 若只暴露1张卡或越界，回退到0
     gid = 0 if (requested_id is None or requested_id < 0 or requested_id >= n) else requested_id
     torch.cuda.set_device(gid)
     return torch.device(f"cuda:{gid}")

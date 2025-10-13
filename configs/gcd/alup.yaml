@@ -1,25 +1,18 @@
-# ALUP 方法的统一配置文件
-# ----------------------------------
-
-# --- 任务设置 ---
 dataset: "banking"
 known_cls_ratio: 0.25
 labeled_ratio: 0.1
 seed: 0
-fold_idx: 0  # 沿用Glean/SDC的交叉验证文件夹索引
+fold_idx: 0
 fold_num: 5 
 
-# --- 路径与环境设置 ---
 gpu_id: "0"
 data_dir: "./data"
 bert_model: "./pretrained_models/bert-base-uncased"
-# `output_base_dir` 是一个基础路径，脚本会在此基础上创建pretrain和finetune的子目录
 output_base_dir: "./outputs/gcd/alup" 
 save_results_path: "./results/gcd/alup"
 
-# --- 训练超参数 ---
-num_pretrain_epochs: 1 # 对应ALUP的预训练阶段
-num_train_epochs: 1     # 对应ALUP的对比学习和主动学习微调阶段
+num_pretrain_epochs: 1
+num_train_epochs: 1
 pretrain_batch_size: 16
 train_batch_size: 32
 eval_batch_size: 64
@@ -28,28 +21,24 @@ lr_pre: !!float 5e-5
 warmup_proportion: 0.1
 wait_patient: 20
 finish_pretrain: False 
-early_stopping_patience: 5        # 等待多少个epoch没提升就停
-early_stopping_min_delta: 0.001   # 至少提升多少才算改进
-monitor_sum_metrics: true         # 是否监控 ACC+ARI+NMI (true)，否则只看 ACC
+early_stopping_patience: 5
+early_stopping_min_delta: 0.001
+monitor_sum_metrics: true
 
-# --- ALUP 算法超参数 ---
-# 对比学习与数据增强
 cluster_num_factor: 1.0
 embed_feat_dim: 768
 head_feat_dim: 128
 topk: 50
 rtr_prob: 0.25
-update_per_epoch: 5 # 主动学习更新频率
+update_per_epoch: 5
 
-# 主动学习与LLM
-llm_model_name: 'deepseek-v3:671b-gw' # 你的LLM模型
-api_base: 'https://uni-api.cstcloud.cn/v1' # 你的API地址
+llm_model_name: 'deepseek-v3:671b-gw'
+api_base: 'https://uni-api.cstcloud.cn/v1'
 comparison_cluster_ratio: 0.5
 student_t_freedom: 1
 uncertainty_neighbour_num: 25
 rho: 0.1
 
-# --- 数据集专属配置 (从ALUP代码中提取) ---
 dataset_specific_configs:
   hwu:
     max_seq_length: 55
@@ -63,12 +52,11 @@ dataset_specific_configs:
     max_seq_length: 55
   ecdt:
     max_seq_length: 55
-  # --- Medium Length / Paragraph Datasets ---
   stackoverflow:
-    max_seq_length: 45 # Although a large dataset, individual posts for classification are often concise.
+    max_seq_length: 45
   AGNews:
     max_seq_length: 128
-  Yahoo: # Yahoo Answers
+  Yahoo:
     max_seq_length: 128
   ele:
     max_seq_length: 200
@@ -85,7 +73,6 @@ dataset_specific_configs:
   medical:
     max_seq_length: 256
 
-  # --- Long Document Datasets ---
   news:
     max_seq_length: 500
     train_batch_size: 8
@@ -96,7 +83,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG:
     max_seq_length: 512
     train_batch_size: 16
     eval_batch_size: 32

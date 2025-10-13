@@ -1,7 +1,3 @@
-# KnnCon 方法的最终配置模板
-# ----------------------------------
-
-# --- 任务与数据设置 ---
 dataset: "banking"
 data_dir: "./data"
 known_cls_ratio: 0.25
@@ -10,20 +6,15 @@ fold_idx: 0
 fold_num: 5
 seed: 0
 
-# --- 路径与模型设置 ---
 output_dir: "./outputs/openset/knncon"
 bert_model: "./pretrained_models/bert-base-uncased"
-# cache_dir: null # 可选，用于指定Hugging Face模型缓存目录
 
-# --- 训练流程控制 ---
 do_train: true
 do_eval: true
 do_predict: true
 overwrite_output_dir: true
-# load_best_model_at_end: false # 训练结束后是否加载最佳模型
 load_best_model_at_end: true
 
-# --- 训练超参数 ---
 num_train_epochs: 20.0
 per_device_train_batch_size: 16
 per_device_eval_batch_size: 16
@@ -32,21 +23,20 @@ weight_decay: !!float 0.0001
 warmup_steps: 0
 max_seq_length: 128
 
-# --- KnnCon 核心算法参数 ---
-load_model_pattern: "knn_bert" # 必须是 knn_bert 或 original_model
+load_model_pattern: "knn_bert" 
 top_k: 20
 end_k: 1
-m: 0.999 # MoCo momentum
+m: 0.999 
 queue_size: 32000
 contrastive_rate_in_training: 0.1
 temperature: 0.3
-sup_cont: false # 是否开启监督对比学习
+sup_cont: false 
 supcont_pre_epoches: 2
 
 
-evaluation_strategy: "epoch"      # <--- 新增：告诉 Trainer 每个 epoch 评估一次
-metric_for_best_model: "f1"       # <--- 新增：告诉 Trainer 监控 f1 分数
-greater_is_better: true           # <--- 新增：告诉 Trainer f1 分数越大越好
+evaluation_strategy: "epoch"      
+metric_for_best_model: "f1"       
+greater_is_better: true           
 early_stopping_patience: 3
 early_stopping_threshold: 0.0
 save_results_path: "results/openset/knncon"

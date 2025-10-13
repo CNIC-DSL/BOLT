@@ -11,16 +11,13 @@ import numpy as np
 import os, faiss
 
 def pick_valid_faiss_gpu_id(preferred: int | None = None) -> int:
-    # 先用 FAISS 统计当前可见 GPU 数
     n = faiss.get_num_gpus()
     if n == 0:
         raise RuntimeError("No visible GPUs for FAISS")
 
-    # 优先用传入的 gpu_id；否则用 LOCAL_RANK；都没有就用 0
     if preferred is None:
         preferred = int(os.environ.get("LOCAL_RANK", 0))
 
-    # 将 id 映射到 [0, n-1]
     return preferred % n
 
 class NIDDataset(Dataset):
@@ -194,7 +191,7 @@ class MemoryBank(object):
         res = faiss.StandardGpuResources()
         # index = faiss.index_cpu_to_gpu(res, gpu_id, index)
 
-        gpu_id = pick_valid_faiss_gpu_id()  # 你原本想用的 2
+        gpu_id = pick_valid_faiss_gpu_id()
         res = faiss.StandardGpuResources()
         index = faiss.index_cpu_to_gpu(res, gpu_id, index)  # OK
 

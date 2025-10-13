@@ -111,8 +111,8 @@ class RegTrainer(Trainer):
         ):
             loss *= self.accelerator.num_processes
 
-        # del outputs.hidden_states  # 这一步可选，outputs 也可删除
-        # outputs.__delitem__('hidden_states')  # 这一步可选，outputs 也可删除
+        # del outputs.hidden_states
+        # outputs.__delitem__('hidden_states') 
         inputs['output_hidden_states'] = False
 
         new_output = SequenceClassifierOutputWithPast(

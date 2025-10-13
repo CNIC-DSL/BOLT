@@ -1,31 +1,22 @@
-# SCL 方法的通用配置模板 (完整版)
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
 cuda: true
 
-# --- 数据与任务设置 ---
 dataset: "news"
 data_dir: "./data"
 known_cls_ratio: 0.25 
 labeled_ratio: 1.0
 fold_idx: 0
 fold_num: 5
-unseen_proportion: 100    # <-- 新增, 添加的未见类样本比例
-mask_proportion: 0        # <-- 新增, 遮蔽的已见类样本比例
-dataset_proportion: 100   # <-- 新增, 每个域内数据的比例
+unseen_proportion: 100    
+mask_proportion: 0        
+dataset_proportion: 100   
 
-# --- 任务运行模式与设置 ---
 mode: "both"
 setting: ["gda", "lof", "msp"]
 
-# --- 模型与训练设置 ---
-# 路径设置
 embedding_file: "./pretrained_models/glove.6B.300d.txt" 
 
-# 模型结构参数
 hidden_dim: 128
 contractive_dim: 32
 embedding_dim: 300
@@ -34,34 +25,29 @@ max_num_words: 10000
 num_layers: 1
 do_normalization: true
 
-# 损失函数与训练策略参数
 alpha: 1.0
 beta: 1.0
 norm_coef: 0.1
 adv: false
 cont_loss: true
 sup_cont: true
-ood_loss: false           # <-- 新增, OOD样本是否反向传播损失
-n_plus_1: false           # <-- 新增, 是否将OOD视为第 N+1 类
-augment: false            # <-- 新增, 是否使用回译来增强OOD数据
-cl_mode: 1                # <-- 新增, 计算对比损失的模式
-lmcl: false               # <-- 新增, 是否使用 LMCL 损失
-cont_proportion: 1.0      # <-- 新增, 对比损失的系数
-use_bert: false           # <-- 新增, 是否使用 BERT
+ood_loss: false           
+n_plus_1: false           
+augment: false            
+cl_mode: 1                
+lmcl: false               
+cont_proportion: 1.0      
+use_bert: false           
 
-# 训练周期
 ind_pre_epoches: 3
 supcont_pre_epoches: 3
 finetune_epoches: 20
 
-# 训练超参数
-# 注意: 原代码中有 train_batch_size 和 batch_size 两个参数, 建议统一使用 train_batch_size
 train_batch_size: 8
 learning_rate: 0.001
 weight_decay: 0.0001
 clip: 0.25
-patience: 10             # <-- 新增, Early Stopping 的耐心步数
+patience: 10             
 
-# --- 输出目录设置 ---
 output_dir: "./outputs/openset/scl"
 save_results_path: "results/openset/scl"

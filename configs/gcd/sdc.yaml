@@ -1,24 +1,16 @@
-# SDC 方法的最终配置模板
-# ----------------------------------
-
-# --- 任务设置 ---
 dataset: "banking"
 known_cls_ratio: 0.25
 labeled_ratio: 0.1
 seed: 0
 
-# --- 路径与环境设置 ---
 gpu_id: "3"
-data_dir: "./data" # 统一使用相对路径
+data_dir: "./data" 
 save_results_path: "./results/gcd/sdc"
 bert_model: "./pretrained_models/bert-base-uncased"
 tokenizer: "./pretrained_models/bert-base-uncased"
 
-# --- 交叉验证 ---
-# fold_num: 5
 fold_idx: 0
 
-# --- 训练超参数 ---
 train_batch_size: 32
 pretrain_batch_size: 32
 eval_batch_size: 32
@@ -29,7 +21,6 @@ lr_pre: !!float 5e-5
 warmup_proportion: 0.1
 pre_wait_patient: 20
 
-# --- 模型与算法超参数 ---
 cluster_num_factor: 1.0
 feat_dim: 768
 rtr_prob: 0.25
@@ -37,7 +28,6 @@ num_iters_sk: 3
 epsilon_sk: !!float 0.05
 imb-factor: 1.0
 
-# --- 数据集专属配置 ---
 dataset_specific_configs:
   hwu:
     max_seq_length: 20
@@ -57,7 +47,6 @@ dataset_specific_configs:
   ecdt:
     max_seq_length: 65
     beta: 0.05
-  # --- 新增补齐的配置 ---
   AGNews:
     max_seq_length: 128
     beta: 0.05
@@ -67,7 +56,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG: 
     max_seq_length: 512
     beta: 0.05
     train_batch_size: 16
@@ -76,7 +65,7 @@ dataset_specific_configs:
   TREC:
     max_seq_length: 40
     beta: 0.05
-  Yahoo: # Yahoo Answers
+  Yahoo: 
     max_seq_length: 128
     beta: 0.05
   ele:

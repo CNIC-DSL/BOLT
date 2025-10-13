@@ -1,20 +1,14 @@
-# 任务 -> 方法映射（可按需增删）
 maps:
   gcd: [alup, deepaligned, dpn, geoid, glean, loop, plm_gcd, sdc, tan]
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl, adb-llm, plm_ood-llm]
 
-# 若仅跑子集，可指定 methods（会从 maps 里筛选）
 # methods: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 methods: [plm_ood-llm]
 
 result_file: summary_openset
 
+datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt]
 
-# 数据集（留空则自动在 data/ 与 data/<task>/ 下尝试发现）
-# datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt]
-datasets: [mcid]
-
-# 网格搜索参数
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
@@ -22,34 +16,29 @@ grid:
   fold_types: [fold]
   fold_nums: [5]
   seeds: [2025]
-  cluster_num_factor: [1.0]   # 需要多值就加上 [0.8, 1.0, 1.2]
+  cluster_num_factor: [1.0]
 
-# 运行参数
 run:
-  gpus: [0,1,2,3,4,5,6,7]      # 留空则不设置 CUDA_VISIBLE_DEVICES
-  max_workers: 8    # 并行线程数
+  gpus: [0,1,2,3,4,5,6,7]
+  max_workers: 8
   num_pretrain_epochs: 100
   num_train_epochs: 50
 
 
-
-# 路径（可选）
 paths:
-  results_dir: results         # 汇总与去重索引的根目录
-  logs_dir: logs                    # 单次运行日志
+  results_dir: results
+  logs_dir: logs
 
-# 单方法脚本/结果路径覆盖（可选；默认 scripts/{task}/{method}.sh 和 outputs/{task}/{method}/**/results.csv）
 scripts_override:
   # sdc: scripts/custom/sdc_entry.sh
 
 result_globs_override:
   # ab: outputs/openset/ab/**/final_results.csv
 
-# 注入到每次运行的公共额外参数（进入 args JSON，子脚本可解析）
 extra_args:
   data_dir: ./data
   fold_num: 5
-  gpu_id: 0            # 仅示意；真正的 GPU 绑定由 CUDA_VISIBLE_DEVICES 控制
+  gpu_id: 0
 
 per_method_extra:
   tan:

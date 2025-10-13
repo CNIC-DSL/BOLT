@@ -1,11 +1,6 @@
-# ADB 方法的通用配置模板
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
 
-# --- 数据与任务设置 ---
 known_cls_ratio: 0.25 
 dataset: "banking"
 data_dir: "./data"
@@ -13,10 +8,8 @@ labeled_ratio: 1.0
 fold_idx: 0
 fold_num: 5
 
-# --- 模型与训练设置 ---
-# 明确指定我们公共的模型路径
 bert_model: "./pretrained_models/bert-base-uncased" 
-num_train_epochs: 100 #100
+num_train_epochs: 100
 train_batch_size: 128
 eval_batch_size: 128
 lr: 2e-5
@@ -26,6 +19,5 @@ feat_dim: 768
 freeze_bert_parameters: True
 save_model: True
 
-# --- 输出目录设置 ---
 output_dir: "./outputs/openset/adb" 
 save_results_path: "results/openset/adb"

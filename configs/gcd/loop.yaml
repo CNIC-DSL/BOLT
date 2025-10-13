@@ -1,12 +1,6 @@
-# ===================================================================
-# BOLT Platform: LOOP 算法配置文件 (loop.yaml) - v2 (带数据集专属配置)
-# ===================================================================
-
-# --- 必需参数 ---
 dataset: "banking"
 known_cls_ratio: 0.25
 
-# --- 常用参数 ---
 seed: 42
 gpu_id: "0"
 data_dir: "data"
@@ -16,10 +10,8 @@ pretrain_dir: "outputs/gcd/loop/premodels"
 bert_model: "./pretrained_models/bert-base-uncased"
 tokenizer: "./pretrained_models/bert-base-uncased"
 labeled_ratio: 0.1
-# fold_num: 5
 fold_idx: 0
 
-# --- 训练参数 ---
 train_batch_size: 64
 eval_batch_size: 128
 pretrain_batch_size: 64
@@ -30,18 +22,13 @@ es_metric: "NMI"
 es_patience: 5
 es_min_delta: 0.1
 
-
-# --- 算法专属参数 ---
-# topk 从这里移到下面的专属配置中
 view_strategy: 'rtr'
 update_per_epoch: 5
 
-# --- LLM 参数 ---
 api_key: "YOUR_API_KEY"
 api_base: "https://uni-api.cstcloud.cn/v1"
 llm_model_name: "deepseek-v3:671b"
 
-# --- 数据集专属配置 ---
 dataset_specific_configs:
   clinc:
     max_seq_length: 30
@@ -61,17 +48,13 @@ dataset_specific_configs:
   ecdt:
     max_seq_length: 55
     topk: 55
-  # --- 新增补齐的配置 ---
-  # 短文本问答数据集
   TREC:
     max_seq_length: 40
     topk: 50
-  
-  # 中等规模/段落数据集
   AGNews:
     max_seq_length: 128
     topk: 200
-  Yahoo: # Yahoo Answers
+  Yahoo: 
     max_seq_length: 128
     topk: 200
   DBPedia:
@@ -83,8 +66,6 @@ dataset_specific_configs:
   medical:
     max_seq_length: 256
     topk: 200
-
-  # 大型文档数据集
   ele:
     max_seq_length: 200
     topk: 500
@@ -103,7 +84,7 @@ dataset_specific_configs:
     train_batch_size: 8
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG: 
     max_seq_length: 256
     topk: 500
     train_batch_size: 8

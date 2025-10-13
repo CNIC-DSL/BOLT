@@ -1,23 +1,14 @@
-# DOC 方法的通用配置模板
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
 
-# --- 数据与任务设置 ---
 dataset: "banking"
 data_dir: "./data"
 known_cls_ratio: 0.25
 labeled_ratio: 0.1
 fold_idx: 0
 fold_num: 5
+num_train_epochs: 20           
+train_batch_size: 128          
 
-# --- 模型与训练设置 ---
-num_train_epochs: 20           # 对应原脚本的 epochs 参数
-train_batch_size: 128          # 对应原脚本的 batch_size 参数
-
-# --- 输出目录设置 ---
-# 将原脚本中硬编码的 ckpt/ 和 metrics/ 路径统一管理
 output_dir: "./outputs/openset/doc"
 save_results_path: "results/openset/doc"

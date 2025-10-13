@@ -3,9 +3,6 @@ from model import BertForModel
 from transformers import WEIGHTS_NAME, CONFIG_NAME, AutoTokenizer
 
 class PretrainModelManager:
-    """
-    Multi-task pre-training
-    """
     def __init__(self, args, data):
         set_seed(args.seed)
         self.args = args
@@ -23,9 +20,6 @@ class PretrainModelManager:
         self.best_eval_score = 0
         
     def eval(self, args, data):
-        """
-        calculate acc on validation set
-        """
         self.model.eval()
 
         total_labels = torch.empty(0,dtype=torch.long).to(self.device)
@@ -51,14 +45,14 @@ class PretrainModelManager:
         tokenizer = AutoTokenizer.from_pretrained(args.bert_model)
         wait = 0
         best_model = None
-        mlm_iter = iter(data.train_semi_dataloader) # mlm on semi-dataloader
+        mlm_iter = iter(data.train_semi_dataloader) 
         for epoch in trange(int(args.num_pretrain_epochs), desc="Epoch"):
             self.model.train()
             tr_loss = 0
             nb_tr_examples, nb_tr_steps = 0, 0
 
             for step, batch in enumerate(tqdm(data.train_labeled_dataloader, desc="Iteration")):
-                # 1. load data
+                
                 batch = tuple(t.to(self.device) for t in batch)
                 input_ids, input_mask, segment_ids, label_ids = batch
                 X = {"input_ids":input_ids, "attention_mask": input_mask, "token_type_ids": segment_ids}
@@ -73,11 +67,11 @@ class PretrainModelManager:
                     input_ids, input_mask, segment_ids, _ = batch
                 X_mlm = {"input_ids":input_ids, "attention_mask": input_mask, "token_type_ids": segment_ids}
 
-                # 2. get masked data
+                
                 mask_ids, mask_lb = mask_tokens(X_mlm['input_ids'].cpu(), tokenizer)
                 X_mlm["input_ids"] = mask_ids.to(self.device)
 
-                # 3. compute loss and update parameters
+                
                 with torch.set_grad_enabled(True):
                     logits = self.model(X)["logits"]
                     if isinstance(self.model, nn.DataParallel):
@@ -115,12 +109,12 @@ class PretrainModelManager:
                 
         self.model = best_model if best_model is not None else self.model
         if args.save_premodel:
-            # 判断 self.model 是否是 DataParallel 实例
+            
             if isinstance(self.model, nn.DataParallel):
-                # 如果是，则通过 .module 访问原始模型
+                
                 self.model.module.save_backbone(args.pretrain_dir)
             else:
-                # 如果不是（例如在单 GPU 环境下），则直接调用
+                
                 self.model.save_backbone(args.pretrain_dir)
         
     def get_optimizer(self, args):

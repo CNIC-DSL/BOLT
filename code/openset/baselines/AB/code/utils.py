@@ -16,12 +16,12 @@ DS_ROSTD_PATH = os.path.join(DS_PATH, 'ROSTD')
 DS_BANKING77_PATH = os.path.join(DS_PATH, 'BANKING77')
 
 def set_seed(seed):
-    random.seed(seed)  # 42 是种子数，可以换成其他整数
+    random.seed(seed)
     np.random.seed(seed)
 
     torch.manual_seed(seed)
-    torch.cuda.manual_seed(seed)           # 如果使用 GPU
-    torch.cuda.manual_seed_all(seed)       # 如果有多个 GPU
+    torch.cuda.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
     torch.backends.cudnn.deterministic = True
     torch.backends.cudnn.benchmark = False
 

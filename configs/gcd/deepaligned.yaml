@@ -1,12 +1,6 @@
-# ===================================================================
-# BOLT Platform: DeepAligned 算法配置文件 (v2)
-# ===================================================================
-
-# --- 必需参数 ---
 dataset: "banking"
 known_cls_ratio: 0.25
 
-# --- 常用参数 ---
 seed: 0
 gpu_id: "3"
 data_dir: "data"
@@ -15,12 +9,9 @@ pretrain_dir: "outputs/gcd/deepaligned/premodels"
 bert_model: "./pretrained_models/bert-base-uncased"
 result_dir: "./results/gcd/deepaligned"
 
-# --- 数据集与标签设置 ---
 labeled_ratio: 0.1
-# fold_num: 5
 fold_idx: 0
 
-# --- 训练参数 ---
 train_batch_size: 128
 eval_batch_size: 64
 num_pretrain_epochs: 100
@@ -30,12 +21,10 @@ lr: !!float 5e-5
 warmup_proportion: 0.1
 wait_patient: 20
 
-# --- 算法专属参数 ---
 method: "DeepAligned"
 cluster_num_factor: 1.0
 feat_dim: 768
 
-# --- 【新增】数据集专属配置 ---
 dataset_specific_configs:
   clinc:
     max_seq_length: 30
@@ -45,19 +34,15 @@ dataset_specific_configs:
     max_seq_length: 55
   hwu:
     max_seq_length: 55
-  # --- 新增补齐的配置 ---
-  # 短文本意图/问答数据集
   mcid:
     max_seq_length: 55
   ecdt:
     max_seq_length: 55
   TREC:
     max_seq_length: 40
-
-  # 中等长度/段落数据集
   AGNews:
     max_seq_length: 128
-  Yahoo: # Yahoo Answers
+  Yahoo: 
     max_seq_length: 128
   ele:
     max_seq_length: 200
@@ -68,8 +53,6 @@ dataset_specific_configs:
     pretrain_batch_size: 16
   medical:
     max_seq_length: 256
-
-  # 长文档数据集
   news:
     max_seq_length: 500
     train_batch_size: 8
@@ -80,7 +63,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG: 
     max_seq_length: 512
     train_batch_size: 16
     eval_batch_size: 32

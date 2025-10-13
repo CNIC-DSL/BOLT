@@ -76,12 +76,10 @@ def init_model():
     parser.add_argument("--gamma", default=None, type=float,
                         help="The gamma value for loss calculation. Set via dataset_specific_configs in YAML.")
     
-    # 在现有参数后添加以下参数
     parser.add_argument("--save_results_path", default='./results', type=str,
     help="The output directory where the results will be saved.")
     
     parser.add_argument("--method", default='DPN', type=str,
     help="The name of the method.")
     
-    # 添加这行返回语句
     return parser

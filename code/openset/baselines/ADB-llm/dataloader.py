@@ -64,7 +64,6 @@ class Data:
             merged_data['text'] = origin_data['text']
             
             if mode == 'train':
-                # 训练集需要同时满足：是已知类别 & 被标记为 'labeled'
                 final_data = merged_data[
                     (merged_data['label'].isin(self.known_label_list)) & (merged_data['labeled'])
                 ]
@@ -73,7 +72,6 @@ class Data:
                     (merged_data['label'].isin(self.known_label_list))
                 ]
 
-            # 将筛选后的 DataFrame 转换为 InputExample 对象列表
             examples = []
             for i, row in final_data.iterrows():
                 guid = f"{mode}-{i}"
@@ -189,7 +187,7 @@ class DatasetProcessor(DataProcessor):
     def get_labels(self, data_dir):
         """See base class."""
         import pandas as pd
-        file_path = os.path.join(data_dir, "train.tsv") # 只读取给定目录下的train.tsv
+        file_path = os.path.join(data_dir, "train.tsv")
         train_df = pd.read_csv(file_path, sep="\t")
         labels = np.unique(np.array(train_df['label']))
         return labels
@@ -197,7 +195,7 @@ class DatasetProcessor(DataProcessor):
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
         examples = []
-        for (i, line) in enumerate(lines[1:]): # 修正：跳过表头
+        for (i, line) in enumerate(lines[1:]): 
             if len(line) != 2:
                 continue
             guid = "%s-%s" % (set_type, i)

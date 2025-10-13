@@ -1,26 +1,14 @@
-# AB 方法的通用配置模板
-# ----------------------------------
-
-# --- 基础设置 ---
 seed: 0
 gpu_id: "0"
-
-# --- 数据与任务设置 ---
 dataset: "banking"
 data_dir: "./data"
 known_cls_ratio: 0.25
 labeled_ratio: 0.1
 fold_idx: 0
 fold_num: 5
-
-# --- 模型与训练设置 ---
-# 嵌入模型的选择 (原run.py中硬编码的test_idx)
-# 可选项: "sbert", "use_dan", "use_tran"
 emb_name: "sbert"
 
-# ADBThreshold 模型的alpha参数
 alpha: 0.35
 
-# --- 输出目录设置 ---
 output_dir: "./outputs/openset/ab"
 save_results_path: "results/openset/ab"

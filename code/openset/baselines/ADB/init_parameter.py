@@ -16,7 +16,6 @@ def init_model():
     parser.add_argument('--config', type=str, default=None, help="Path to the YAML config file.")
     parser.add_argument("--output_dir", type=str, default='./outputs/openset/adb', help="The unified output directory for all experiment artifacts.")
 
-    # --- 修正默认路径 ---
     parser.add_argument("--data_dir", default='./data', type=str,
                         help="The input data dir. Should contain the .csv files (or other data files) for the task.")
     parser.add_argument("--save_results_path", type=str, default='./results', help="the path to save results")
@@ -24,13 +23,12 @@ def init_model():
     #                     help="The output directory where the model predictions and checkpoints will be written.") 
     parser.add_argument("--bert_model", default="./pretrained_models/bert-base-uncased", type=str, help="The path for the pre-trained bert model.")
     
-    # --- 其他参数 (保持不变) ---
     parser.add_argument("--max_seq_length", default=None, type=int,
                         help="The maximum total input sequence length after tokenization. Sequences longer "
                              "than this will be truncated, sequences shorter will be padded.")
     parser.add_argument("--feat_dim", default=768, type=int, help="The feature dimension.")
     parser.add_argument("--warmup_proportion", default=0.1, type=float)
-    parser.add_argument("--freeze_bert_parameters", default=True, type=str_to_bool, help="Freeze the last parameters of BERT") # 使用新函数
+    parser.add_argument("--freeze_bert_parameters", default=True, type=str_to_bool, help="Freeze the last parameters of BERT") 
 
     parser.add_argument("--save_model", type=str_to_bool, default=False, help="save trained-model")
     parser.add_argument("--save_results", type=str_to_bool, default=False, help="save test results")

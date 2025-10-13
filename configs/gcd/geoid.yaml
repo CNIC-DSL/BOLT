@@ -1,12 +1,6 @@
-# ===================================================================
-# BOLT Platform: GeoID 算法配置文件 (v2)
-# ===================================================================
-
-# --- 必需参数 ---
 dataset: "banking"
 known_cls_ratio: 0.25
 
-# --- 常用参数 ---
 seed: 0
 data_dir: "data"
 save_results_path: "results/gcd/geoid"
@@ -17,7 +11,6 @@ labeled_ratio: 0.1
 fold_num: 5
 fold_idx: 0
 
-# --- 训练参数 ---
 pretrain_batch_size: 100
 train_batch_size: 128
 eval_batch_size: 128
@@ -29,11 +22,10 @@ lr: !!float 1e-3
 warmup_proportion: 0.2
 wait_patient: 20
 grad_clip: 1.0
-es_metric: "ACC"        # 或 "NMI" | "ARI" | "H-Score"（若你扩展了返回）
+es_metric: "ACC"        
 es_patience: 10
 es_min_delta: 0.0
 
-# --- 算法专属参数 ---
 method: "GeoID" 
 cluster_num_factor: 1.0
 cluster_temperature: 1.0
@@ -45,7 +37,6 @@ view_strategy: "rtr"
 update_per_epoch: 5
 topk: 64
 
-# --- 【新增】数据集专属配置 ---
 dataset_specific_configs:
   hwu:
     max_seq_length: 55
@@ -59,20 +50,19 @@ dataset_specific_configs:
     max_seq_length: 55
   ecdt:
     max_seq_length: 55
-  # --- Medium Length / Paragraph Datasets ---
   stackoverflow:
-    max_seq_length: 45 # Although a large dataset, individual posts for classification are often concise.
+    max_seq_length: 45 
   AGNews:
     max_seq_length: 128
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  Yahoo: # Yahoo Answers
+  Yahoo: 
     max_seq_length: 128
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  TREC: # Yahoo Answers
+  TREC: 
     max_seq_length: 128
     train_batch_size: 16
     eval_batch_size: 32
@@ -89,8 +79,6 @@ dataset_specific_configs:
     pretrain_batch_size: 16
   medical:
     max_seq_length: 256
-
-  # --- Long Document Datasets ---
   news:
     max_seq_length: 500
     train_batch_size: 8
@@ -101,7 +89,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  20NG: # 20 Newsgroups
+  20NG: 
     max_seq_length: 512
     train_batch_size: 16
     eval_batch_size: 32

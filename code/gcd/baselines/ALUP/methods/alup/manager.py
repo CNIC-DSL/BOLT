@@ -22,7 +22,6 @@ def pick_device(requested_id: int | None):
         return torch.device("cpu")
 
     n = torch.cuda.device_count()
-    # 若只暴露1张卡或越界，回退到0
     gid = 0 if (requested_id is None or requested_id < 0 or requested_id >= n) else requested_id
     torch.cuda.set_device(gid)
     return torch.device(f"cuda:{gid}")
@@ -137,7 +136,7 @@ class Manager:
         patience = getattr(args, "early_stopping_patience", 3)
         min_delta = getattr(args, "early_stopping_min_delta", 0.0)
         wait = 0
-        best_score = float("-inf")  # 监控值（ACC/ARI/NMI 之和或 ACC）
+        best_score = float("-inf")
         monitor_sum = getattr(args, "monitor_sum_metrics", True)  # True=ACC+ARI+NMI, False=ACC
         
         for epoch in trange(int(args.num_train_epochs), desc="Epoch"):
@@ -195,10 +194,8 @@ class Manager:
             self.logger.info("***** Epoch: %s: Train loss: %f *****", str(epoch), tr_loss)
             results = self.test(args, data)
 
-            # 计算本轮监控分
             curr_score = (results['ACC'] + results['ARI'] + results['NMI']) if monitor_sum else results['ACC']
 
-            # 判断是否提升
             if curr_score > best_score + min_delta:
                 best_score = curr_score
                 wait = 0
@@ -222,7 +219,7 @@ class Manager:
                 best_metrics['ARI'] = results['ARI']
                 best_metrics['NMI'] = results['NMI']
                 self.best_model = copy.deepcopy(self.model.eval())
-                save_model(args, self.best_model, 'best') # 保存模型
+                save_model(args, self.best_model, 'best')
             
             self.model.eval()
             # save_model(args, self.model, epoch)
