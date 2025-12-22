@@ -86,7 +86,8 @@ dataset_specific_configs:
   medical:
     max_seq_length: 256
     beta: 0.05
-  XTopic:
+  X-Topic:
+    beta: 0.05
     max_seq_length: 128
     train_batch_size: 16
     eval_batch_size: 32

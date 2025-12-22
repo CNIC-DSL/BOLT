@@ -2,13 +2,13 @@ maps:
   gcd: [alup, deepaligned, dpn, geoid, glean, loop, plm_gcd, sdc, tan]
   openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
 
-methods: [ab, adb, dyen, knncon, plm_ood, scl]
-result_file: summary_gcd
+methods: [plm_ood]
+result_file: summary_openset
 
-datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt]
+datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt, X-Topic]
 grid:
-  known_cls_ratio: [0.75]
-  labeled_ratio: [0.5]
+  known_cls_ratio: [0.25, 0.5, 0.75]
+  labeled_ratio: [0.1, 0.5, 1.0]
   fold_idxs: [0,1,2,3,4]
   fold_types: [fold]
   fold_nums: [5]
@@ -16,8 +16,8 @@ grid:
   cluster_num_factor: [1.0]
 
 run:
-  gpus: [0,1,2,3,4,5,6,7]
-  max_workers: 8
+  gpus: [0,1,2,3]
+  max_workers: 4
   num_pretrain_epochs: 100
   num_train_epochs: 50
 
@@ -41,3 +41,6 @@ per_method_extra:
   tan:
     num_train_epochs: 50
     # backbone: pretrained_models/bert-base-uncased
+  plm_ood:
+    backbone: Qwen2.5-7B
+    model_path: ./pretrained_models/Qwen2.5-7B

@@ -24,7 +24,7 @@ def init_model():
     # parser.add_argument("--tokenizer", default="pretrained_models/bert-base-uncased", type=str,
     #                     help="The path or name for the tokenizer")
 
-    parser.add_argument("--max_seq_length", default=None, type=int,
+    parser.add_argument("--max_seq_length", default=128, type=int,
                         help="The maximum total input sequence length after tokenization. Sequences longer "
                                 "than this will be truncated, sequences shorter will be padded.")
 

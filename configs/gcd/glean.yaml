@@ -139,7 +139,7 @@ dataset_specific_configs:
     train_batch_size: 16
     eval_batch_size: 32
     pretrain_batch_size: 16
-  XTopic:
+  X-Topic:
     topk: 500
     max_seq_length: 128
     train_batch_size: 16

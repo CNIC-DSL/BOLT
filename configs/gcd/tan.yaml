@@ -94,7 +94,7 @@ dataset_specific_configs:
   medical:
     max_seq_length: 256
     num_train_epochs: 20
-  XTopic:
+  X-Topic:
     max_seq_length: 128
     train_batch_size: 16
     eval_batch_size: 32

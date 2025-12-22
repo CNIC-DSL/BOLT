@@ -5,21 +5,22 @@ maps:
 methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan, plm_ood]
 result_file: summary_gcd
 
-datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, news, TREC, Yahoo, thucnews, ecdt, XTopic, ele]
+datasets: [X-Topic]
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
-  fold_idxs: [3]
+  fold_idxs: [0, 1, 2, 3]
   fold_types: [fold]
   fold_nums: [5]
   seeds: [2025]
   cluster_num_factor: [1.0]
 
 run:
-  gpus: [0,1,2,3,4,5,6,7]
-  max_workers: 8
+  gpus: [0,1,2]
+  max_workers: 3
   num_pretrain_epochs: 100
   num_train_epochs: 50
+  max_seq_length: 128
 
 
 paths:

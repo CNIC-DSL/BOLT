@@ -10,6 +10,7 @@ from typing import Any, Dict, Optional, List
 import yaml
 import math
 
+from datetime import datetime
 
 RESULTS_DIR: Path = None
 SUMMARY_CSV: Path = None
@@ -294,6 +295,8 @@ def write_summary(row: dict):
         csv.writer(f).writerow(content)
 
     print(f"[OK] Appended to {SUMMARY_CSV}")
+    print(datetime.now().strftime("%H:%M:%S"))
+
 
 
 def make_base_args(
@@ -527,7 +530,7 @@ def run_combo(
     print(
         f"[RUN ] {dataset} | {method} | kr={known} lr={labeled} fold_type={fold_type} fold_idx={fold_idx} seed={seed} cf={c_factor} | gpu={gpu_id}"
     )
-
+    print(datetime.now().strftime("%H:%M:%S"))
     log_dir = (
         LOG_DIR
         / args_json["task"]
@@ -535,7 +538,7 @@ def run_combo(
         / args_json["dataset"]
         / f'kr{args_json["known_cls_ratio"]}'
         / f'lr{args_json["labeled_ratio"]}'
-        / f'{args_json['fold_type']}_{args_json["fold_num"]}_{args_json["fold_idx"]}'
+        / f'{args_json["fold_type"]}_{args_json["fold_num"]}_{args_json["fold_idx"]}'
         / f'seed{args_json["seed"]}'
     )
     log_dir.mkdir(parents=True, exist_ok=True)

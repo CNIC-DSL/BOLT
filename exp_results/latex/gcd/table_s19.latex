@@ -1,0 +1,42 @@
+
+\begin{table*}[ht!]
+% \caption{N-ACC performance of GCD on the BOLT benchmark under different KCRs (LAR = 1.0)}
+% \label{app:table::gcd_5}
+\centering
+\tiny
+\setlength{\tabcolsep}{4pt}
+
+% Y 列型：可在此处定义（若已在导言区定义，可删掉下一行）
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\begin{tabularx}{\textwidth}{@{}l l l |l *{10}{Y}|Y@{}}
+\toprule
+Metric & KCR & Method & 20NG & THUCNews & Yahoo & TREC & BANK & S.O. & CLINC & HWU & ECDT & M-CID & DBPedia & \textbf{Avg.} \\ \midrule
+\multirow{21}{*}{N-ACC} & \multirow{7}{*}{0.25} & DAL & 64.23 & 34.86 & 18.85 & 33.60 & 49.62 & 52.47 & 70.66 & 50.61 & 52.24 & 48.31 & \underline{77.08} & 50.23 \\
+ &  & GeoID & \textbf{99.96} & 69.80 & \textbf{56.57} & 38.16 & \underline{65.59} & 76.40 & 81.83 & 68.15 & 59.38 & \underline{60.94} & 73.37 & \underline{68.20} \\
+ &  & SDC & 67.75 & \textbf{72.13} & 48.14 & \textbf{44.55} & 42.91 & 76.40 & 61.03 & 60.64 & \underline{67.87} & 48.13 & 61.53 & 59.19 \\
+ &  & DPN & 72.77 & 36.97 & 16.81 & 27.15 & 23.27 & 4.48 & 42.63 & 20.02 & 44.67 & 24.29 & 67.69 & 34.61 \\
+ &  & TAN & 89.41 & 56.95 & 28.53 & 31.36 & 32.38 & 15.83 & 50.82 & 29.61 & 50.47 & 27.84 & 73.03 & 44.20 \\
+ &  & LOOP & 83.89 & 62.37 & 52.45 & \underline{38.57} & 64.83 & \underline{79.16} & \textbf{84.23} & \textbf{70.55} & 62.28 & \textbf{65.46} & 74.67 & 67.13 \\
+ &  & ALUP & \underline{98.45} & \underline{70.39} & \underline{53.84} & 38.37 & \textbf{67.54} & \textbf{79.56} & \underline{83.56} & \underline{70.18} & \textbf{69.48} & 60.78 & \textbf{78.54} & \textbf{70.06} \\
+\cmidrule(l){2-15}
+ & \multirow{7}{*}{0.5} & DAL & 88.41 & 38.98 & 26.64 & 41.26 & 54.78 & 65.10 & 72.41 & 60.16 & 52.50 & 50.92 & \textbf{78.04} & 57.20 \\
+ &  & GeoID & \textbf{100.00} & \underline{74.08} & \underline{52.34} & 44.28 & 64.90 & 80.77 & \underline{84.04} & 71.17 & 56.83 & 59.13 & 73.81 & 69.21 \\
+ &  & SDC & 90.04 & \textbf{86.75} & \textbf{62.14} & \textbf{67.88} & 64.04 & \textbf{86.57} & 67.95 & \textbf{77.71} & \textbf{79.75} & \underline{63.22} & 68.04 & \textbf{74.01} \\
+ &  & DPN & 84.60 & 43.13 & 31.62 & 29.07 & 24.90 & 11.51 & 51.00 & 29.72 & 54.13 & 25.45 & 68.68 & 41.26 \\
+ &  & TAN & 96.42 & 55.69 & 32.48 & 32.13 & 39.63 & 33.10 & 55.09 & 33.52 & 53.79 & 30.28 & 74.56 & 48.79 \\
+ &  & LOOP & 87.93 & 70.42 & 50.88 & \underline{45.69} & \underline{68.53} & \underline{83.04} & 82.88 & \underline{75.16} & 62.37 & 59.84 & 75.63 & 69.31 \\
+ &  & ALUP & \underline{99.79} & 70.12 & 51.58 & 41.92 & \textbf{69.41} & 76.63 & \textbf{84.68} & 73.71 & \underline{62.72} & \textbf{65.12} & \underline{77.71} & \underline{70.31} \\
+\cmidrule(l){2-15}
+ & \multirow{7}{*}{0.75} & DAL & 82.91 & 44.67 & 34.35 & 49.24 & 51.39 & 56.18 & 70.14 & 58.31 & 57.63 & 53.16 & 75.88 & 57.62 \\
+ &  & GeoID & \textbf{100.00} & \underline{72.78} & \underline{55.94} & 51.09 & 64.53 & 77.18 & 83.89 & 69.79 & 54.43 & 62.61 & 71.79 & 69.46 \\
+ &  & SDC & 95.05 & \textbf{89.62} & \textbf{71.75} & \textbf{57.57} & \textbf{79.42} & \textbf{89.32} & 80.32 & \textbf{88.98} & \textbf{86.41} & \textbf{79.54} & \textbf{77.70} & \textbf{81.43} \\
+ &  & DPN & 89.76 & 32.76 & 31.15 & 25.97 & 32.32 & 22.68 & 54.35 & 31.11 & 46.06 & 30.01 & 70.87 & 42.46 \\
+ &  & TAN & 95.24 & 49.69 & 34.44 & 38.74 & 39.46 & 53.11 & 54.18 & 37.69 & 50.01 & 32.17 & 72.29 & 50.64 \\
+ &  & LOOP & 95.54 & 68.82 & 41.75 & \underline{53.76} & 64.95 & 78.63 & \textbf{84.98} & \underline{73.85} & 63.56 & \underline{63.90} & 74.74 & 69.50 \\
+ &  & ALUP & \underline{99.78} & 66.61 & 43.20 & 47.79 & \underline{69.18} & \underline{78.71} & \underline{84.70} & 73.05 & \underline{66.64} & 59.38 & \underline{76.89} & \underline{69.63} \\
+\bottomrule
+\end{tabularx}
+\caption{N-ACC performance of GCD on the BOLT benchmark under different KCRs (LAR = 1.0)}
+\label{app:table::gcd_5}
+\end{table*}
+
