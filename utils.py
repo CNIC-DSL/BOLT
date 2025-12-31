@@ -17,6 +17,10 @@ SUMMARY_CSV: Path = None
 SEEN_JSON: Path = None
 LOG_DIR: Path = None
 
+WORKDIR: Path = None
+DATA_DIR: Path = None
+MODEL_DIR: Path = None
+
 
 import json
 import math
@@ -93,13 +97,26 @@ def compare_common_keys(dict1: dict, dict2: dict, common_keys) -> bool:
     return True
 
 
-def set_paths(results_dir: str, logs_dir: str, result_file: str):
-    global RESULTS_DIR, SUMMARY_CSV, SEEN_JSON, LOG_DIR
-    RESULTS_DIR = Path(results_dir)
+# def set_paths(results_dir: str, logs_dir: str, result_file: str):
+#     global RESULTS_DIR, SUMMARY_CSV, SEEN_JSON, LOG_DIR
+#     RESULTS_DIR = Path(results_dir)
+#     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+#     SUMMARY_CSV = RESULTS_DIR / f"summary_{result_file}.csv"
+#     SEEN_JSON = RESULTS_DIR / f"seen_index_{result_file}.json"
+#     LOG_DIR = Path(logs_dir)
+#     LOG_DIR.mkdir(parents=True, exist_ok=True)
+def set_paths(results_dir: str, logs_dir: str, result_file: str, workdir: str, data_dir: str, model_dir: str):
+    global RESULTS_DIR, SUMMARY_CSV, SEEN_JSON, LOG_DIR, WORKDIR, DATA_DIR, MODEL_DIR
+    WORKDIR = Path(workdir).resolve()
+    DATA_DIR = Path(data_dir).resolve()
+    MODEL_DIR = Path(model_dir).resolve()
+
+    RESULTS_DIR = Path(results_dir).resolve()
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
     SUMMARY_CSV = RESULTS_DIR / f"summary_{result_file}.csv"
     SEEN_JSON = RESULTS_DIR / f"seen_index_{result_file}.json"
-    LOG_DIR = Path(logs_dir)
+
+    LOG_DIR = Path(logs_dir).resolve()
     LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 
@@ -341,6 +358,7 @@ def make_base_args(
         "K": 0,
         "num_pretrain_epochs": int(num_pretrain_epochs),
         "num_train_epochs": int(num_train_epochs),
+        "model_dir": str(MODEL_DIR) if MODEL_DIR is not None else "",
     }
     if method in method_specs:
         for i, v in method_specs[method].items():
@@ -348,6 +366,34 @@ def make_base_args(
 
     return args_json
 
+
+# def run_stage(
+#     cli: List[str],
+#     args_json: Dict[str, Any],
+#     gpu_id: Optional[int],
+#     dry_run: bool,
+#     log_file: Path,
+# ) -> int:
+#     env = os.environ.copy()
+#     env["ARGS_JSON"] = json.dumps(args_json, ensure_ascii=False)
+#     if gpu_id is not None:
+#         env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+#     if dry_run:
+#         print("[DRY-RUN]", " ".join(cli))
+#         print(
+#             "          ARGS_JSON=",
+#             (
+#                 (env["ARGS_JSON"][:240] + "...")
+#                 if len(env["ARGS_JSON"]) > 240
+#                 else env["ARGS_JSON"]
+#             ),
+#         )
+#         return 0
+#     with log_file.open("a", encoding="utf-8") as lf:
+#         lf.write(f"# CMD: {' '.join(cli)}\n# ARGS_JSON: {env['ARGS_JSON']}\n\n")
+#         lf.flush()
+#         proc = subprocess.Popen(cli, stdout=lf, stderr=subprocess.STDOUT, env=env)
+#         return proc.wait()
 
 def run_stage(
     cli: List[str],
@@ -358,23 +404,38 @@ def run_stage(
 ) -> int:
     env = os.environ.copy()
     env["ARGS_JSON"] = json.dumps(args_json, ensure_ascii=False)
+
+    # 三根目录（子进程也能读到）
+    if WORKDIR is not None:
+        env["BOLT_OUTPUT_DIR"] = str(WORKDIR)
+    if DATA_DIR is not None:
+        env["BOLT_DATA_DIR"] = str(DATA_DIR)
+    if MODEL_DIR is not None:
+        env["BOLT_MODEL_DIR"] = str(MODEL_DIR)
+
+        # HuggingFace 统一落到 MODEL_DIR
+        env.setdefault("HF_HOME", str(MODEL_DIR))
+        env.setdefault("HUGGINGFACE_HUB_CACHE", str(MODEL_DIR / "hub"))
+        env.setdefault("TRANSFORMERS_CACHE", str(MODEL_DIR / "transformers"))
+        env.setdefault("HF_DATASETS_CACHE", str(MODEL_DIR / "datasets"))
+
     if gpu_id is not None:
         env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+
     if dry_run:
         print("[DRY-RUN]", " ".join(cli))
-        print(
-            "          ARGS_JSON=",
-            (
-                (env["ARGS_JSON"][:240] + "...")
-                if len(env["ARGS_JSON"]) > 240
-                else env["ARGS_JSON"]
-            ),
-        )
         return 0
+
     with log_file.open("a", encoding="utf-8") as lf:
         lf.write(f"# CMD: {' '.join(cli)}\n# ARGS_JSON: {env['ARGS_JSON']}\n\n")
         lf.flush()
-        proc = subprocess.Popen(cli, stdout=lf, stderr=subprocess.STDOUT, env=env)
+        proc = subprocess.Popen(
+            cli,
+            stdout=lf,
+            stderr=subprocess.STDOUT,
+            env=env,
+            cwd=str(WORKDIR) if WORKDIR is not None else None,   # ✅关键：固定 cwd
+        )
         return proc.wait()
 
 
@@ -395,8 +456,10 @@ def run_combo(
     only_collect: bool,
     method_specs: dict,
 ) -> Optional[dict]:
-    from cli_gcd import METHOD_REGISTRY_GCD
-    from cli_openset import METHOD_REGISTRY_OPENSET
+    # from cli_gcd import METHOD_REGISTRY_GCD
+    # from cli_openset import METHOD_REGISTRY_OPENSET
+    from .cli_gcd import METHOD_REGISTRY_GCD
+    from .cli_openset import METHOD_REGISTRY_OPENSET
 
     if method in METHOD_REGISTRY_GCD:
         spec = METHOD_REGISTRY_GCD.get(method)

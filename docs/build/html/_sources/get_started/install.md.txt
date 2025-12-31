@@ -13,7 +13,7 @@ This section describes the environment requirements and the recommended installa
 
 1) Install bolt-lab (wheel package)
 ```bash
-pip install bolt_lab-0.1.0-py3-none-any.whl
+pip install bolt_lab
 ```
 
 2) Install PyTorch (CUDA 12.6 uses cu126) 
