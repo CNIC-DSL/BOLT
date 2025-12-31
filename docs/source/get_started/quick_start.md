@@ -5,8 +5,9 @@ Goal of this section: complete a reproducible run with the fewest steps, and cle
 ## 0. (Optional) Initialize the Workspace Only (`--init-only`)
 
 If you want to set up the working directory structure first (without running any experiments), use `--init-only`:
-
-bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models --init-only
+```bash
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+```
 
 What it does:
 - Creates/initializes the workspace under `--output-dir` (e.g., `logs/`, `results/`, `outputs/`, and linked directories like `code/`, `configs/`, `data/`, `pretrained_models/`)
@@ -36,7 +37,9 @@ Argument details:
 To avoid an overly large and time-consuming setup on your first run, use the following workflow:
 
 Step 0 (optional): Initialize the workspace
+```bash
 bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models --init-only
+```
 
 Step 1: Copy a config to your own directory
 For example, copy an internal/built-in config out (choose the path according to your setup), then modify the copied version.
@@ -50,7 +53,9 @@ For the first run, it is recommended to keep only:
 - Set training epochs to a small value (to validate the pipeline)
 
 Step 3: Run your copied config using an absolute path
+```bash
 bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models
+```
 
 This ensures:
 - The config source is always clear for each run;

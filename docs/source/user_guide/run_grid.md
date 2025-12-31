@@ -5,9 +5,9 @@ This page explains how to start runs, how to control scale and concurrency, and 
 ## 0. Initialize Workspace Only (`--init-only`)
 
 If you want to prepare the working directory structure without running any combos, use `--init-only`:
-
-bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models --init-only
-
+```bash
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+```
 What it does:
 - Initializes the workspace under `--output-dir` (e.g., creates `outputs/`, `results/`, `logs/` and linked directories such as `code/`, `configs/`, `data/`, `pretrained_models/`)
 - Useful for verifying paths/permissions and confirming the workspace layout before starting a large run
