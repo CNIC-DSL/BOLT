@@ -35,6 +35,7 @@ The overall workflow is illustrated as follows:
 
    get_started/install
    get_started/quick_start
+   get_started/pretrained_models
    get_started/outputs
 
 .. toctree::
@@ -54,6 +55,7 @@ The overall workflow is illustrated as follows:
 
    user_guide/concepts
    user_guide/config_yaml
+   user_guide/datasets
    user_guide/run_grid
    user_guide/outputs_and_logs
    user_guide/metrics
