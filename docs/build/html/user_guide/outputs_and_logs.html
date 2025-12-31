@@ -1,0 +1,211 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>输出与日志定位 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="指标说明" href="metrics.html" />
+    <link rel="prev" title="运行方式与常用操作" href="run_grid.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">输出与日志定位</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#output-dir">1. 关键输出目录（位于工作目录 –output-dir 下）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2. 日志目录组织方式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">3. 结果文件与汇总文件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">4. 常见问题排查顺序</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">输出与日志定位</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/outputs_and_logs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>输出与日志定位<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页说明运行完成后应当在哪里查看日志、结果汇总与产出文件，并给出常见问题的排查顺序。</p>
+<section id="output-dir">
+<h2>1. 关键输出目录（位于工作目录 –output-dir 下）<a class="headerlink" href="#output-dir" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>logs/
+每个组合（combo）的运行日志，包含分阶段日志与总日志。排查错误优先查看此处。</p></li>
+<li><p>results/
+汇总与索引文件目录。通常包含：</p>
+<ul>
+<li><p>summary_{result_file}.csv</p></li>
+<li><p>seen_index_{result_file}.json</p></li>
+</ul>
+</li>
+<li><p>outputs/
+训练/评测产物（模型、预测、缓存等），按方法与组合组织。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>2. 日志目录组织方式<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>每个 combo 的日志目录通常按以下层级组织：</p>
+<p>logs/{task}/{method}/{dataset}/
+kr{known_cls_ratio}/
+lr{labeled_ratio}/
+{fold_type}<em>{fold_num}</em>{fold_idx}/
+seed{seed}/</p>
+<p>目录内通常包含：</p>
+<ul class="simple">
+<li><p>stage1.log、stage2.log…：各阶段 stdout/stderr</p></li>
+<li><p>all.log：该组合的关键事件记录（开始、每阶段返回码、结束）</p></li>
+</ul>
+<p>stage 日志的开头通常会写入两段信息：</p>
+<ul class="simple">
+<li><p>CMD：实际执行命令</p></li>
+<li><p>ARGS_JSON：本次组合的完整参数（用于复现与排查）</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>3. 结果文件与汇总文件<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>3.1 单方法结果文件（results.csv）
+框架默认从以下位置读取单方法结果：
+results/{task}/{method}/results.csv</p>
+<p>框架会读取该 CSV 的最后一行作为“最新结果记录”，并将其写入汇总表。</p>
+<p>3.2 汇总文件（summary_{result_file}.csv）
+汇总文件位于：
+results/summary_{result_file}.csv</p>
+<p>每当某个 combo 成功收集到结果，汇总表就会追加一行。</p>
+</section>
+<section id="id4">
+<h2>4. 常见问题排查顺序<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>问题 A：组合失败 / 运行报错</p>
+<ol class="arabic simple">
+<li><p>先找到该组合对应的 stageX.log</p></li>
+<li><p>查看报错堆栈与关键参数（ARGS_JSON）</p></li>
+<li><p>结合 CMD 可直接复现单次运行进行定位</p></li>
+</ol>
+<p>问题 B：运行结束但 summary 没有新增记录</p>
+<ol class="arabic simple">
+<li><p>检查该组合是否有任何 stage 返回码非 0（失败会直接停止且不写 summary）</p></li>
+<li><p>检查 results/{task}/{method}/results.csv 是否存在且有内容</p></li>
+<li><p>检查方法写出的列是否完整（特别是指标列与 args 字段）</p></li>
+</ol>
+<p>问题 C：输出目录结构不符合预期</p>
+<ol class="arabic simple">
+<li><p>确认 –output-dir 是否指向运行根目录（不建议直接指向 outputs 子目录）</p></li>
+<li><p>确认 paths.results_dir / paths.logs_dir 是否为相对路径（相对路径会落在工作目录下）</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="run_grid.html" class="btn btn-neutral float-left" title="运行方式与常用操作" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="metrics.html" class="btn btn-neutral float-right" title="指标说明" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

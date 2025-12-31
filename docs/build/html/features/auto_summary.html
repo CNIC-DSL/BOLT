@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>自动结果收集与汇总 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="可复现性与重复运行控制" href="reproducibility.html" />
+    <link rel="prev" title="OOM 重试机制" href="oom_retry.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">自动结果收集与汇总</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1. 结果文件约定</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2. 汇总文件位置与命名</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">3. 汇总表包含哪些字段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary">4. 常见问题：为什么没有写入 summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">5. 使用建议</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">自动结果收集与汇总</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/features/auto_summary.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>自动结果收集与汇总<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>bolt-lab 在每个实验组合结束后，会自动收集该组合对应的结果记录，并追加写入统一的汇总表，便于后续对比与分析。</p>
+<section id="id2">
+<h2>1. 结果文件约定<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>框架默认从以下位置读取单方法的结果文件：
+./results/{task}/{method}/results.csv</p>
+<p>其中：</p>
+<ul class="simple">
+<li><p>task 为 gcd 或 openset</p></li>
+<li><p>method 为方法名（例如 tan、plm_ood、ab 等）</p></li>
+</ul>
+<p>框架会读取该 CSV 的最后一行作为“最新结果记录”。</p>
+<p>说明：</p>
+<ul class="simple">
+<li><p>如果 results.csv 不存在或为空，框架不会写入汇总表，并会打印提示信息。</p></li>
+<li><p>因此，每个方法脚本需要保证在运行结束后写入上述位置，且包含关键指标列。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>2. 汇总文件位置与命名<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>汇总文件写入到 YAML 的 paths.results_dir 下：
+{results_dir}/summary_{result_file}.csv</p>
+<p>同时会生成索引文件：
+{results_dir}/seen_index_{result_file}.json</p>
+<p>其中 result_file 来自 YAML 顶层字段 result_file。</p>
+</section>
+<section id="id4">
+<h2>3. 汇总表包含哪些字段<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>汇总表至少包含：</p>
+<ul class="simple">
+<li><p>method、dataset</p></li>
+<li><p>known_cls_ratio、labeled_ratio、cluster_num_factor、seed</p></li>
+<li><p>指标列（随任务类型不同而变化）</p></li>
+<li><p>args：一份 JSON 字符串，记录本次运行的关键参数（用于复现与去重）</p></li>
+</ul>
+<p>一般情况下：</p>
+<ul class="simple">
+<li><p>GCD 常见指标包括 ACC、H-Score、K-ACC、N-ACC、ARI、NMI 等</p></li>
+<li><p>OpenSet 常见指标包括 F1、K-F1、N-F1 等</p></li>
+</ul>
+</section>
+<section id="summary">
+<h2>4. 常见问题：为什么没有写入 summary<a class="headerlink" href="#summary" title="Link to this heading"></a></h2>
+<p>按以下顺序排查：</p>
+<ol class="arabic simple">
+<li><p>子任务是否执行失败
+先查看 logs/ 下该组合的 stage 日志，确认是否有错误堆栈或非 0 返回码。</p></li>
+<li><p>results.csv 是否生成
+确认 ./results/{task}/{method}/results.csv 是否存在，且 CSV 至少有一行结果数据。</p></li>
+<li><p>结果列是否完整
+若方法脚本写出的列与框架期望列差异较大，可能导致汇总缺失或指标为空。建议在方法侧统一列名，或在方法侧补齐汇总所需字段。</p></li>
+</ol>
+</section>
+<section id="id5">
+<h2>5. 使用建议<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>进行方法对比时，直接使用 summary_{result_file}.csv 作为分析入口。</p></li>
+<li><p>若要区分多次大实验，建议通过改变 result_file 生成不同的汇总文件，避免相互覆盖。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="oom_retry.html" class="btn btn-neutral float-left" title="OOM 重试机制" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="reproducibility.html" class="btn btn-neutral float-right" title="可复现性与重复运行控制" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

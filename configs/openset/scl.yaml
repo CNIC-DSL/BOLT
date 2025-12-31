@@ -13,7 +13,7 @@ mask_proportion: 0
 dataset_proportion: 100   
 
 mode: "both"
-setting: ["gda", "lof", "msp"]
+setting: ["lof", "msp"]
 
 embedding_file: "./pretrained_models/glove.6B.300d.txt" 
 

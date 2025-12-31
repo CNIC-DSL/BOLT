@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>接入新数据集 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="扩展网格维度" href="add_grid_dimension.html" />
+    <link rel="prev" title="新增方法" href="add_method.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_method.html">新增方法</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">接入新数据集</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developer_guide/add_dataset.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>接入新数据集<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本文说明如何以“数据集名称（dataset 字符串）”为单位接入新数据集，使其能够被 YAML 引用并在各方法中正确加载。</p>
+<p>一、基本约定</p>
+<p>1）dataset 是一个字符串标识符</p>
+<ul class="simple">
+<li><p>YAML 的 datasets: […] 中写入 dataset 名称</p></li>
+<li><p>方法脚本与配置需要能够识别该名称并加载对应数据</p></li>
+</ul>
+<p>2）默认 data_dir</p>
+<ul class="simple">
+<li><p>框架构造 args_json 时会设置 data_dir=./data</p></li>
+<li><p>具体如何读数据由方法脚本决定：有的从 config 中读路径，有的从命令行参数读路径</p></li>
+</ul>
+<p>二、推荐的落地方式</p>
+<p>方式 A：以目录结构组织（推荐）
+1）在 ./data 下为新数据集建立目录，例如：
+./data/my_dataset/</p>
+<p>2）在方法配置中新增该数据集的专用配置（推荐）
+在 configs/<task>/<method>.yaml 中加入 dataset_specific_configs（如需要）：</p>
+<p>dataset_specific_configs:
+my_dataset:
+data_path: ./data/my_dataset
+max_length: 128
+num_labels: 20</p>
+<p>优势：</p>
+<ul class="simple">
+<li><p>不需要在 runner 层加任何硬编码</p></li>
+<li><p>不同方法可以对同一 dataset 采用不同配置</p></li>
+</ul>
+<p>方式 B：方法脚本内部按 dataset 名称分发
+适用于数据加载逻辑复杂、且必须在代码侧控制的情况。
+建议将分发逻辑收敛到一个统一的数据加载模块，避免每个 baseline 重复实现。</p>
+<p>三、与模型选择相关的注意事项</p>
+<p>部分 cli_builder 会按 dataset 名称决定使用中文或英文 BERT。
+如果你接入的新数据集不是中文/英文的默认列表，建议明确：</p>
+<ul class="simple">
+<li><p>在配置中指定 backbone / bert_model 路径（如果方法支持）
+或</p></li>
+<li><p>在方法脚本中提供可配置的 bert_model 参数入口</p></li>
+</ul>
+<p>四、接入验证（建议流程）</p>
+<p>1）选择一个最简单的方法（单阶段、日志清晰）
+2）只跑：</p>
+<ul class="simple">
+<li><p>datasets: [my_dataset]</p></li>
+<li><p>methods: [tan 或 ab 等]</p></li>
+<li><p>seeds: [单个]</p></li>
+<li><p>fold_idxs: [单个]</p></li>
+<li><p>epochs 设为小值
+3）检查：</p></li>
+<li><p>logs 下是否能看到正常的加载与训练过程</p></li>
+<li><p>outputs 下是否产生预期产物</p></li>
+<li><p>results/{task}/{method}/results.csv 是否产生并包含最后一行结果</p></li>
+<li><p>summary_{result_file}.csv 是否新增记录</p></li>
+</ul>
+<p>五、常见问题</p>
+<p>1）找不到数据文件</p>
+<ul class="simple">
+<li><p>优先检查 data_path 是否正确（config / 参数是否生效）</p></li>
+<li><p>再检查方法脚本是否正确解析 dataset 名称并映射到数据目录</p></li>
+</ul>
+<p>2）不同方法对同一数据集行为不一致</p>
+<ul class="simple">
+<li><p>建议用 dataset_specific_configs 将关键参数显式写出来（max_length、num_labels、文本字段名等）</p></li>
+<li><p>避免依赖方法内部默认值导致差异难以追踪</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="add_method.html" class="btn btn-neutral float-left" title="新增方法" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_grid_dimension.html" class="btn btn-neutral float-right" title="扩展网格维度" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

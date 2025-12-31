@@ -1,0 +1,228 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>扩展网格维度 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="接入新数据集" href="add_dataset.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">扩展网格维度</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developer_guide/add_grid_dimension.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>扩展网格维度<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本文说明如何增加一个新的可扫描维度（grid dimension），例如 backbone、temperature、reg_loss 等。</p>
+<p>在当前实现中，你有两种实现路径：</p>
+<ul class="simple">
+<li><p>路径 A：该维度仅与某个 method 相关，使用 per_method_extra 即可（无需改 runner）</p></li>
+<li><p>路径 B：该维度需要参与全局网格笛卡尔积，必须改 runner 与 args_json（需要改代码）</p></li>
+</ul>
+<p>一、路径 A：用 per_method_extra 注入（推荐优先）</p>
+<p>适用场景：</p>
+<ul class="simple">
+<li><p>新参数只对某一个/少数方法有效</p></li>
+<li><p>不要求该参数参与“全局组合数计算”</p></li>
+<li><p>你希望以最小改动完成接入</p></li>
+</ul>
+<p>做法：
+1）在 YAML 中为目标方法增加 per_method_extra：
+per_method_extra:
+plm_ood:
+reg_loss: cosine
+tan:
+backbone: ./pretrained_models/bert-base-uncased</p>
+<p>2）在 cli_builder 或方法脚本中从 args_json 读取该字段并转成命令行参数</p>
+<ul class="simple">
+<li><p>args_json 会在 make_base_args 中合并 method_specs[method] 的字段</p></li>
+<li><p>日志里的 ARGS_JSON 会记录该字段，便于复现</p></li>
+</ul>
+<p>优点：</p>
+<ul class="simple">
+<li><p>不需要改 run_grid.py 的组合生成逻辑</p></li>
+<li><p>不会影响其他方法</p></li>
+</ul>
+<p>二、路径 B：增加真正的 grid 维度（需要改代码）</p>
+<p>适用场景：</p>
+<ul class="simple">
+<li><p>该参数需要参与网格展开，形成完整的笛卡尔积组合</p></li>
+<li><p>你希望在 summary 中按该维度进行对比分析</p></li>
+<li><p>该维度对多个方法通用，且希望统一控制</p></li>
+</ul>
+<p>你需要完成以下改动：</p>
+<p>步骤 1：在 YAML 的 grid 中增加新维度列表
+例如：
+grid:
+…
+backbone: [“bert-base-uncased”, “bert-base-chinese”]</p>
+<p>步骤 2：修改 run_grid.py 的组合展开逻辑
+当前 run_grid.py 是显式读取并展开固定维度（known_cls_ratio、labeled_ratio、fold_*、seeds、cluster_num_factor）。
+因此你需要：</p>
+<ul class="simple">
+<li><p>读取 grid[“backbone”] 到本地变量</p></li>
+<li><p>在嵌套循环中加入 backbone 这一层</p></li>
+<li><p>将 backbone 作为 combo 元组的一部分传入 worker / run_combo</p></li>
+</ul>
+<p>步骤 3：在 utils.make_base_args 中把新维度写入 args_json
+例如：
+args_json[“backbone”] = backbone</p>
+<p>确保：</p>
+<ul class="simple">
+<li><p>cli_builder 能读取该字段并传入方法脚本</p></li>
+<li><p>ARGS_JSON 中包含该字段（便于复现）</p></li>
+</ul>
+<p>步骤 4：更新“重复运行跳过”的匹配字段（如你依赖该机制）
+当前实现会从 results.csv 中读取历史记录并按若干字段过滤。
+如果 backbone 是区分实验的重要维度，应将其纳入匹配字段集合，避免不同 backbone 被误判为同一组合。</p>
+<p>步骤 5：确保结果收集与 summary 中能体现该维度
+建议方法在写入 results.csv 时把 backbone 记录在 args 字段中（JSON），这样 summary 侧可追溯。</p>
+<p>三、建议的开发与验证顺序</p>
+<p>1）先用路径 A（per_method_extra）把方法跑通并能写出 results.csv 与 summary
+2）确认该维度确实需要全局网格化，再走路径 B
+3）每次改动后用最小网格验证：</p>
+<ul class="simple">
+<li><p>1 method</p></li>
+<li><p>1 dataset</p></li>
+<li><p>1 seed</p></li>
+<li><p>1 fold</p></li>
+<li><p>1~2 个新维度取值
+确保组合数与 summary 记录符合预期</p></li>
+</ul>
+<p>四、常见问题</p>
+<p>1）组合数不符合预期</p>
+<ul class="simple">
+<li><p>检查 run_grid.py 中新维度是否真的进入嵌套循环</p></li>
+<li><p>检查 combos 元组是否携带了该值并传到了 run_combo</p></li>
+</ul>
+<p>2）参数传递丢失</p>
+<ul class="simple">
+<li><p>查看 stage 日志开头 ARGS_JSON 是否包含该字段</p></li>
+<li><p>如 ARGS_JSON 有但方法行为未变化，检查 cli_builder 是否把它转成了实际命令行参数</p></li>
+</ul>
+<p>3）summary 无法区分不同取值</p>
+<ul class="simple">
+<li><p>确认 results.csv 的 args 中记录了该字段</p></li>
+<li><p>如依赖“重复运行跳过”机制，确认该字段被纳入匹配逻辑</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="add_dataset.html" class="btn btn-neutral float-left" title="接入新数据集" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

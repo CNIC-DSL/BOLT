@@ -1,0 +1,193 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>输出目录结构与注意事项 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="YAML 实验规格" href="../features/yaml_experiment_spec.html" />
+    <link rel="prev" title="快速开始" href="quick_start.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">快速开始</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">输出目录结构与注意事项</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#output-dir">1. 工作目录（–output-dir）的含义</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2. 运行后通常会生成的目录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">3. 推荐的使用方式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">4. 常见问题与规避</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">输出目录结构与注意事项</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/get_started/outputs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>输出目录结构与注意事项<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本节说明 bolt-lab 的运行输出会写到哪里、运行后会生成哪些目录，以及推荐的使用方式，便于快速定位日志与结果。</p>
+<section id="output-dir">
+<h2>1. 工作目录（–output-dir）的含义<a class="headerlink" href="#output-dir" title="Link to this heading"></a></h2>
+<p>运行时通过 –output-dir 指定一个“工作目录”。框架会在该目录下生成本次实验所需的运行环境与产出目录，并将日志、结果汇总、训练/评测产物统一写入该目录，方便迁移、打包与复现。</p>
+<p>建议将 –output-dir 指向一个独立的运行根目录（例如 ~/tmp/exp_001），不要直接指向 outputs/ 或 logs/ 这样的子目录。</p>
+</section>
+<section id="id2">
+<h2>2. 运行后通常会生成的目录<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>以 –output-dir ~/tmp 为例，运行后你会看到（示例结构）：</p>
+<p>~/tmp/
+outputs/            训练/评测产物（模型、预测、缓存等）
+results/            汇总与索引文件（例如 summary、seen_index 等）
+logs/               运行日志（用于定位报错与阶段进度）
+code/               运行时使用的代码副本（用于记录本次运行对应的代码状态）
+configs/            运行时使用的配置副本（用于记录本次运行对应的配置状态）
+data/               数据入口目录（可能为空或由你的数据准备流程填充）
+pretrained_models/  模型入口目录（与 –model-dir 对应）</p>
+<p>说明：</p>
+<ul class="simple">
+<li><p>优先关注 logs/、results/、outputs/ 三个目录。</p></li>
+<li><p>code/、configs/ 等目录用于记录本次运行所使用的环境状态，便于复现与追踪。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>3. 推荐的使用方式<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>3.1 配置文件的修改方式
+建议不要直接在工作目录下修改 configs/ 内的文件作为长期配置来源。
+更稳妥的做法是：</p>
+<ul class="simple">
+<li><p>将示例配置复制到你自己的目录进行修改；</p></li>
+<li><p>运行时用 –config 传入该配置文件的绝对路径。</p></li>
+</ul>
+<p>这样可以避免不同实验之间相互覆盖，且更便于版本管理。</p>
+<p>3.2 先看哪里能最快定位问题</p>
+<ul class="simple">
+<li><p>运行报错、卡住、阶段失败：先查看 logs/，通常可以直接找到错误堆栈与失败阶段。</p></li>
+<li><p>关心实验汇总结果：查看 results/（通常包含 summary、索引等汇总文件）。</p></li>
+<li><p>关心模型与预测产物：查看 outputs/。</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>4. 常见问题与规避<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>4.1 避免目录“套娃”
+请确保 –output-dir 是运行根目录。
+不建议将 –output-dir 设为 …/outputs，否则容易出现 outputs/outputs 的嵌套结构，后续查找与清理会变得困难。</p>
+<p>4.2 关于 –model-dir（补充说明）
+–model-dir 用于指定模型/缓存目录（用于预训练模型与相关缓存的读取/写入）。
+工作目录下的 pretrained_models/ 用于承载该入口，建议 –model-dir 指向一个稳定且可读写的位置，以减少重复下载与重复准备成本。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quick_start.html" class="btn btn-neutral float-left" title="快速开始" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../features/yaml_experiment_spec.html" class="btn btn-neutral float-right" title="YAML 实验规格" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

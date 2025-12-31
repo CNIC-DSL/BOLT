@@ -1,0 +1,265 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YAML 实验规格 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="方法注册与执行流水线" href="method_registry.html" />
+    <link rel="prev" title="输出目录结构与注意事项" href="../get_started/outputs.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">YAML 实验规格</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1. 顶层字段说明</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">2. 最小示例（可直接复制）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">3. 组合数如何计算</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#per-method-extra">4. per_method_extra 的使用示例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">YAML 实验规格</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/features/yaml_experiment_spec.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="yaml">
+<h1>YAML 实验规格<a class="headerlink" href="#yaml" title="Link to this heading"></a></h1>
+<p>bolt-lab 的批量实验由一个 YAML 文件完整描述。该 YAML 主要由 7 个部分组成：maps、methods、datasets、grid、run、paths、per_method_extra。</p>
+<p>本页说明这些字段的含义、取值方式，以及一份可直接复用的最小示例。</p>
+<section id="id1">
+<h2>1. 顶层字段说明<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>maps
+用于声明“方法属于哪类任务”，当前包含两类任务：</p></li>
+</ol>
+<ul class="simple">
+<li><p>gcd：GCD 任务的方法集合</p></li>
+<li><p>openset：OpenSet 任务的方法集合</p></li>
+</ul>
+<p>maps 的作用是让框架能够将 method 解析为 task（gcd 或 openset），并选择正确的执行入口。</p>
+<ol class="arabic simple" start="2">
+<li><p>methods
+本次要运行的方法列表。框架会根据 maps 过滤/识别有效方法，并按 grid 组合运行。</p></li>
+<li><p>datasets
+本次要运行的数据集列表。每个 dataset 会与 methods、grid 组合构成最终的实验组合。</p></li>
+<li><p>result_file
+汇总文件的命名后缀。最终会在 results_dir 下生成：</p></li>
+</ol>
+<ul class="simple">
+<li><p>summary_{result_file}.csv</p></li>
+<li><p>seen_index_{result_file}.json（用于记录已运行/已收集的组合信息）</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>grid
+网格搜索空间。框架会对 grid 中的每个维度做笛卡尔积，生成所有组合（combo）。
+常见维度包括：</p></li>
+</ol>
+<ul class="simple">
+<li><p>known_cls_ratio：已知类别比例</p></li>
+<li><p>labeled_ratio：标注比例</p></li>
+<li><p>fold_types / fold_nums / fold_idxs：交叉验证切分方式与索引</p></li>
+<li><p>seeds：随机种子</p></li>
+<li><p>cluster_num_factor：聚类簇数倍率（如方法使用该参数）</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>run
+运行控制参数，常用包括：</p></li>
+</ol>
+<ul class="simple">
+<li><p>gpus：可用 GPU 列表（例如 [0,1,2]）</p></li>
+<li><p>max_workers：最大并发 worker 数</p></li>
+<li><p>slots_per_gpu：每张 GPU 同时允许占用的“槽位”数量（默认 1）</p></li>
+<li><p>dry_run：仅打印命令，不实际执行（默认 false）</p></li>
+<li><p>retry_on_oom：是否在 OOM 时重试（默认 true）</p></li>
+<li><p>max_retries：OOM 最大重试次数（默认 2）</p></li>
+<li><p>retry_backoff_sec：每次重试前等待秒数（默认 15）</p></li>
+</ul>
+<p>此外还包括训练轮数：</p>
+<ul class="simple">
+<li><p>num_pretrain_epochs</p></li>
+<li><p>num_train_epochs</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>paths
+输出路径设置：</p></li>
+</ol>
+<ul class="simple">
+<li><p>results_dir：汇总文件目录（例如 results）</p></li>
+<li><p>logs_dir：日志目录（例如 logs）</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>per_method_extra
+按方法覆写/追加参数。该字段用于将额外参数注入到某个 method 的运行参数中，例如：</p></li>
+</ol>
+<ul class="simple">
+<li><p>为某个方法单独指定 backbone、reg_loss、extra_flags 等</p></li>
+<li><p>或者为 OpenSet LLM 方法指定 llm_model、llm_api_base 等</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>2. 最小示例（可直接复制）<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>以下示例展示一个最小可运行的 YAML 结构。首次建议将 methods/datasets/grid 都缩到最小规模用于验证流程。</p>
+<p>maps:
+gcd: [tan]
+openset: []</p>
+<p>methods: [tan]
+datasets: [XTopic]
+result_file: demo</p>
+<p>grid:
+known_cls_ratio: [0.75]
+labeled_ratio: [0.5]
+fold_types: [fold]
+fold_nums: [5]
+fold_idxs: [0]
+seeds: [2025]
+cluster_num_factor: [1.0]</p>
+<p>run:
+gpus: [0]
+max_workers: 1
+slots_per_gpu: 1
+num_pretrain_epochs: 1
+num_train_epochs: 1
+dry_run: false</p>
+<p>paths:
+results_dir: results
+logs_dir: logs</p>
+<p>per_method_extra: {}</p>
+</section>
+<section id="id3">
+<h2>3. 组合数如何计算<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>组合数 = methods 数量 × datasets 数量 ×
+known_cls_ratio × labeled_ratio × fold_types × fold_nums × fold_idxs × seeds × cluster_num_factor 的笛卡尔积大小。</p>
+<p>当组合数较大时，建议先使用 dry_run 检查命令与参数是否符合预期，再逐步扩大网格规模。</p>
+</section>
+<section id="per-method-extra">
+<h2>4. per_method_extra 的使用示例<a class="headerlink" href="#per-method-extra" title="Link to this heading"></a></h2>
+<p>per_method_extra:
+plm_ood-llm:
+llm_ood: true
+llm_model: gpt-4.1-mini
+llm_temperature: 0.0
+llm_batch_size: 16
+plm_ood:
+reg_loss: cosine
+ab:
+emb_name: sbert
+extra_flags: [”–some_flag”, “1”]</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../get_started/outputs.html" class="btn btn-neutral float-left" title="输出目录结构与注意事项" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="method_registry.html" class="btn btn-neutral float-right" title="方法注册与执行流水线" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

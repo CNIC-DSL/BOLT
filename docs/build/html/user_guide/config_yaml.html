@@ -1,0 +1,266 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>配置文件（YAML）说明 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="运行方式与常用操作" href="run_grid.html" />
+    <link rel="prev" title="核心概念" href="concepts.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心概念</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">配置文件（YAML）说明</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id1">1. 顶层字段一览</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#grid">2. grid 字段建议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#run">3. run 字段建议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#paths">4. paths 字段建议</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#per-method-extra">5. per_method_extra：按方法注入参数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">6. 最小可运行示例</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">配置文件（YAML）说明</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/user_guide/config_yaml.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="yaml">
+<h1>配置文件（YAML）说明<a class="headerlink" href="#yaml" title="Link to this heading"></a></h1>
+<p>本页面向使用者说明：一个 YAML 配置应包含哪些字段、每个字段的含义是什么、以及如何从“小规模验证”逐步扩展到“大规模网格实验”。</p>
+<section id="id1">
+<h2>1. 顶层字段一览<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>一个可运行的配置文件通常包含以下顶层字段：</p>
+<ul class="simple">
+<li><p>maps
+声明方法属于哪个任务（gcd 或 openset）。</p></li>
+<li><p>methods
+本次运行的方法列表。</p></li>
+<li><p>datasets
+本次运行的数据集列表。</p></li>
+<li><p>result_file
+汇总文件的命名后缀。最终会生成：</p>
+<ul>
+<li><p>results/summary_{result_file}.csv</p></li>
+<li><p>results/seen_index_{result_file}.json</p></li>
+</ul>
+</li>
+<li><p>grid
+网格搜索空间。每个维度为列表，框架做笛卡尔积生成 combos。</p></li>
+<li><p>run
+运行控制参数（GPU、并发、epochs、dry_run、OOM 重试等）。</p></li>
+<li><p>paths
+输出目录设置（results_dir、logs_dir）。</p></li>
+<li><p>per_method_extra
+按方法注入/覆写额外参数（用于方法特定超参或开关）。</p></li>
+</ul>
+<p>缺少任一必需字段会导致配置无法运行。</p>
+</section>
+<section id="grid">
+<h2>2. grid 字段建议<a class="headerlink" href="#grid" title="Link to this heading"></a></h2>
+<p>常用维度示例：</p>
+<ul class="simple">
+<li><p>known_cls_ratio: [0.75]</p></li>
+<li><p>labeled_ratio: [0.5]</p></li>
+<li><p>fold_types: [fold]</p></li>
+<li><p>fold_nums: [5]</p></li>
+<li><p>fold_idxs: [0]</p></li>
+<li><p>seeds: [2025]</p></li>
+<li><p>cluster_num_factor: [1.0]</p></li>
+</ul>
+<p>建议实践：</p>
+<ul class="simple">
+<li><p>首次验证流程时，fold_idxs 与 seeds 尽量各保留 1 个值。</p></li>
+<li><p>确认流程正确后，再逐步增加 seeds / folds / ratios 扩大规模。</p></li>
+</ul>
+</section>
+<section id="run">
+<h2>3. run 字段建议<a class="headerlink" href="#run" title="Link to this heading"></a></h2>
+<p>常用字段：</p>
+<ul class="simple">
+<li><p>gpus: [0,1,2,3]</p></li>
+<li><p>max_workers: 4</p></li>
+<li><p>slots_per_gpu: 1</p></li>
+<li><p>num_pretrain_epochs: 1</p></li>
+<li><p>num_train_epochs: 1</p></li>
+<li><p>dry_run: false</p></li>
+<li><p>retry_on_oom: true</p></li>
+<li><p>max_retries: 2</p></li>
+<li><p>retry_backoff_sec: 15</p></li>
+<li><p>only_collect: false</p></li>
+</ul>
+<p>建议实践：</p>
+<ul class="simple">
+<li><p>首次运行建议 dry_run=true，先检查组合数量与命令拼接是否符合预期。</p></li>
+<li><p>并发策略建议从“每卡 1 个任务”开始，再根据显存余量调整 slots_per_gpu。</p></li>
+</ul>
+</section>
+<section id="paths">
+<h2>4. paths 字段建议<a class="headerlink" href="#paths" title="Link to this heading"></a></h2>
+<p>常见设置：</p>
+<ul class="simple">
+<li><p>results_dir: results</p></li>
+<li><p>logs_dir: logs</p></li>
+</ul>
+<p>通常保持为相对路径即可。相对路径会落在工作目录（–output-dir）下，便于整体归档。</p>
+</section>
+<section id="per-method-extra">
+<h2>5. per_method_extra：按方法注入参数<a class="headerlink" href="#per-method-extra" title="Link to this heading"></a></h2>
+<p>per_method_extra 用于对某个方法单独设置参数，示例：</p>
+<p>per_method_extra:
+tan:
+backbone: bert-base-uncased
+ab:
+emb_name: sbert
+temperature: 0.07</p>
+<p>说明：</p>
+<ul class="simple">
+<li><p>per_method_extra 下的键必须与 methods 列表中的方法名一致。</p></li>
+<li><p>注入的字段会与基础 args 合并后传给方法执行脚本，并写入日志中的 ARGS_JSON，便于复现。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>6. 最小可运行示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>maps:
+gcd: [tan]
+openset: []</p>
+<p>methods: [tan]
+datasets: [XTopic]
+result_file: demo</p>
+<p>grid:
+known_cls_ratio: [0.75]
+labeled_ratio: [0.5]
+fold_types: [fold]
+fold_nums: [5]
+fold_idxs: [0]
+seeds: [2025]
+cluster_num_factor: [1.0]</p>
+<p>run:
+gpus: [0]
+max_workers: 1
+slots_per_gpu: 1
+num_pretrain_epochs: 1
+num_train_epochs: 1
+dry_run: false</p>
+<p>paths:
+results_dir: results
+logs_dir: logs</p>
+<p>per_method_extra: {}</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="concepts.html" class="btn btn-neutral float-left" title="核心概念" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run_grid.html" class="btn btn-neutral float-right" title="运行方式与常用操作" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+\begin{table*}[ht!]
+\centering
+\tiny
+\setlength{\tabcolsep}{4pt}
+\newcolumntype{Y}{>{\centering\arraybackslash}X}
+\begin{tabularx}{\textwidth}{@{}l l l |l *{11}{Y}|Y@{}}
+\toprule
+Metric & KCR & Method & 20NG & THUCNews & Yahoo & TREC & BANK & S.O. & CLINC & HWU & ECDT & M-CID & DBPedia & X-Topic & \textbf{Avg.} \\ \midrule
+\multirow{21}{*}{ACC} & \multirow{7}{*}{0.25} & DAL & 69.80 & 46.59 & 26.59 & 34.49 & 54.92 & 54.62 & 74.08 & 56.36 & 54.28 & 52.06 & 78.03 & 14.51 & 51.36 \\
+ &  & GeoID & \textbf{99.97} & \textbf{77.16} & \textbf{59.78} & 42.53 & \underline{72.24} & 79.98 & 85.51 & 73.08 & 63.25 & 66.65 & 77.45 & 21.49 & \underline{68.26} \\
+ &  & SDC & 67.95 & 74.29 & 48.17 & \textbf{49.88} & 42.96 & 75.86 & 61.93 & 61.10 & \underline{69.28} & 52.38 & 63.30 & \textbf{34.70} & 58.48 \\
+ &  & DPN & 78.43 & 53.81 & 26.36 & 41.55 & 38.19 & 26.68 & 53.39 & 35.56 & 56.07 & 38.43 & 73.12 & 19.98 & 45.13 \\
+ &  & TAN & 91.60 & 67.79 & 36.70 & 44.42 & 46.44 & 34.02 & 62.10 & 43.42 & 59.39 & 43.20 & 77.46 & \underline{33.59} & 53.34 \\
+ &  & LOOP & 87.42 & 72.01 & \underline{57.26} & 41.51 & 71.33 & \underline{82.17} & \textbf{87.66} & \textbf{75.91} & 65.75 & \textbf{70.51} & \underline{78.15} & 20.81 & 67.54 \\
+ &  & ALUP & \underline{98.39} & \underline{76.64} & 56.79 & \underline{46.37} & \textbf{73.25} & \textbf{82.37} & \underline{86.66} & \underline{75.04} & \textbf{72.53} & \underline{67.25} & \textbf{81.32} & 22.48 & \textbf{69.92} \\
+\cmidrule(l){2-16}
+ & \multirow{7}{*}{0.5} & DAL & 90.33 & 60.92 & 41.03 & 43.30 & 63.72 & 71.59 & 81.71 & 68.64 & 57.74 & 66.99 & 80.10 & 15.00 & 61.76 \\
+ &  & GeoID & \textbf{100.00} & \underline{84.94} & \underline{61.20} & 55.02 & 77.84 & \underline{85.38} & \underline{90.84} & 79.98 & 67.20 & \underline{75.89} & 82.51 & 24.01 & \underline{73.73} \\
+ &  & SDC & 86.48 & \textbf{85.61} & 59.53 & \textbf{68.45} & 65.60 & 84.99 & 69.14 & 76.61 & \textbf{79.27} & 69.97 & 69.84 & \textbf{37.46} & 71.08 \\
+ &  & DPN & 90.35 & 68.35 & 46.85 & \underline{58.74} & 55.91 & 51.09 & 72.34 & 58.04 & 72.12 & 56.62 & 79.61 & \underline{28.36} & 61.53 \\
+ &  & TAN & 98.24 & 75.64 & 47.79 & 52.95 & 63.37 & 61.10 & 75.12 & 60.21 & 71.91 & 60.12 & \underline{83.67} & 28.20 & 64.86 \\
+ &  & LOOP & 93.38 & 82.80 & \textbf{62.08} & 53.55 & \underline{80.40} & \textbf{86.52} & 90.10 & \textbf{82.68} & 74.93 & 73.29 & 82.90 & 20.40 & 73.59 \\
+ &  & ALUP & \underline{99.85} & 82.52 & 61.08 & 57.47 & \textbf{80.68} & 84.41 & \textbf{91.27} & \underline{81.30} & \underline{76.36} & \textbf{76.56} & \textbf{83.90} & 24.84 & \textbf{75.02} \\
+\cmidrule(l){2-16}
+ & \multirow{7}{*}{0.75} & DAL & 91.16 & 76.46 & 60.21 & 46.53 & 72.13 & 72.89 & 86.99 & 74.03 & 66.16 & 78.77 & 81.04 & 19.67 & 68.84 \\
+ &  & GeoID & \textbf{100.00} & \underline{89.03} & 66.22 & 62.53 & 84.73 & 87.83 & 93.40 & 84.65 & 76.18 & \textbf{84.29} & 87.22 & 28.72 & 78.73 \\
+ &  & SDC & 94.74 & \textbf{92.10} & \textbf{69.17} & \textbf{83.84} & 80.93 & \textbf{88.81} & 82.27 & 85.76 & \textbf{84.66} & \underline{83.75} & 81.23 & \textbf{48.86} & \textbf{81.34} \\
+ &  & DPN & 95.71 & 76.35 & 61.22 & \underline{76.74} & 76.88 & 73.38 & 84.71 & 74.53 & 80.34 & 73.84 & 87.04 & \underline{40.17} & 75.08 \\
+ &  & TAN & 98.92 & 81.80 & 61.73 & 75.10 & 78.65 & 80.51 & 85.46 & 75.72 & 80.94 & 74.93 & \textbf{88.17} & 31.94 & 76.16 \\
+ &  & LOOP & 97.27 & 87.21 & 64.39 & 63.76 & \underline{86.01} & 88.56 & \underline{93.91} & \textbf{86.24} & 80.76 & 82.90 & 85.45 & 28.01 & 78.71 \\
+ &  & ALUP & \underline{99.22} & 87.08 & \underline{66.42} & 66.94 & \textbf{87.42} & \underline{88.73} & \textbf{94.04} & \underline{86.11} & \underline{83.88} & 82.78 & \underline{87.70} & 26.53 & \underline{79.74} \\
+\bottomrule
+\end{tabularx}
+\label{table::gcd_LCR1}
+\end{table*}

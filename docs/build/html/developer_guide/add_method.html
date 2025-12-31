@@ -1,0 +1,244 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新增方法 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="接入新数据集" href="add_dataset.html" />
+    <link rel="prev" title="架构与执行流程" href="architecture.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">新增方法</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developer_guide/add_method.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>新增方法<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本文说明如何在 bolt-lab 中接入一个新方法（method），使其能够：</p>
+<ul class="simple">
+<li><p>被 YAML 配置引用并进入网格调度</p></li>
+<li><p>正确执行（单阶段或多阶段）</p></li>
+<li><p>运行结束后被框架自动收集结果并写入 summary</p></li>
+</ul>
+<p>一、接入路径概览</p>
+<p>新增方法通常涉及三个部分：
+1）方法脚本（真正训练/评测的代码）
+2）方法配置（configs 下的 YAML 配置）
+3）注册与命令构建（cli_gcd.py 或 cli_openset.py）</p>
+<p>二、步骤 1：准备方法脚本与输出</p>
+<p>1）放置位置</p>
+<ul class="simple">
+<li><p>GCD 方法通常放在：code/gcd/…</p></li>
+<li><p>OpenSet 方法通常放在：code/openset/…</p></li>
+</ul>
+<p>2）输出要求（强制）
+方法运行结束后必须写入：
+./results/{task}/{method}/results.csv</p>
+<p>要求：</p>
+<ul class="simple">
+<li><p>CSV 至少包含一行结果</p></li>
+<li><p>建议包含 args 字段（JSON 字符串），用于后续去重与追溯</p></li>
+<li><p>指标列由方法决定，但建议与现有方法保持一致（便于横向对比）</p></li>
+</ul>
+<p>三、步骤 2：新增方法配置文件</p>
+<p>为新方法新增默认配置：</p>
+<ul class="simple">
+<li><p>GCD：configs/gcd/<method>.yaml</p></li>
+<li><p>OpenSet：configs/openset/<method>.yaml</p></li>
+</ul>
+<p>建议：</p>
+<ul class="simple">
+<li><p>将通用参数放在顶层</p></li>
+<li><p>如对不同 dataset 需要不同参数，可增加 dataset_specific_configs 字段（可选）</p></li>
+</ul>
+<p>四、步骤 3：实现 cli_builder（命令构建函数）</p>
+<p>在对应文件中新增命令构建函数：</p>
+<ul class="simple">
+<li><p>GCD：cli_gcd.py</p></li>
+<li><p>OpenSet：cli_openset.py</p></li>
+</ul>
+<p>命令构建的基本原则：
+1）从 args_json 中读取通用字段：</p>
+<ul class="simple">
+<li><p>dataset / known_cls_ratio / labeled_ratio</p></li>
+<li><p>fold_type / fold_num / fold_idx</p></li>
+<li><p>seed / gpu_id</p></li>
+<li><p>num_pretrain_epochs / num_train_epochs</p></li>
+<li><p>config（默认配置路径）
+2）将 method 特有参数也从 args_json 读取（来自 per_method_extra 或未来扩展字段）
+3）输出必须是 “argv 列表”，例如：
+[sys.executable, “code/xxx/run.py”, “–arg1”, “v1”, …]</p></li>
+</ul>
+<p>建议模式：</p>
+<ul class="simple">
+<li><p>若你的方法可复用通用参数集，可以复用已有的 _common_env / _common_flags / _epoch_flags 逻辑</p></li>
+<li><p>若需要额外 flag，可在 args_json 中定义 extra_flags（list），并在 cli_builder 中追加</p></li>
+</ul>
+<p>五、步骤 4：在 METHOD_REGISTRY 中注册方法</p>
+<p>1）选择 registry</p>
+<ul class="simple">
+<li><p>GCD：METHOD_REGISTRY_GCD（cli_gcd.py）</p></li>
+<li><p>OpenSet：METHOD_REGISTRY_OPENSET（cli_openset.py）</p></li>
+</ul>
+<p>2）新增条目结构</p>
+<p>“<method>”: {
+“task”: “gcd” 或 “openset”,
+“stages”: [
+{“entry”: “&lt;脚本路径&gt;”, “cli_builder”: &lt;函数名&gt;},
+…（多阶段时继续添加）
+],
+“config”: “configs/<task>/<method>.yaml”,
+“output_base”: “./outputs/<task>/<method>”,
+}</p>
+<p>说明：</p>
+<ul class="simple">
+<li><p>stags 数量决定该方法是单阶段还是多阶段</p></li>
+<li><p>entry 用于标识阶段入口（主要用于可读性与排查）</p></li>
+<li><p>output_base 会进入 args_json（用于输出目录组织）</p></li>
+</ul>
+<p>六、步骤 5：在 YAML 中声明并试跑</p>
+<p>1）在 YAML 的 maps 中把方法加入对应任务集合：
+maps:
+gcd: […, <method>]
+openset: […]</p>
+<p>2）在 methods 列表中引用该方法：
+methods: [<method>]</p>
+<p>3）首次建议使用最小网格并 dry_run</p>
+<ul class="simple">
+<li><p>先 dry_run=true 检查命令与参数</p></li>
+<li><p>再 dry_run=false 真跑 1 个 seed + 1 个 fold</p></li>
+</ul>
+<p>七、常见接入问题</p>
+<p>1）运行成功但 summary 没有新增</p>
+<ul class="simple">
+<li><p>优先检查：是否写出了 ./results/{task}/{method}/results.csv</p></li>
+<li><p>再检查：results.csv 是否有最后一行可读结果</p></li>
+</ul>
+<p>2）参数没传进去</p>
+<ul class="simple">
+<li><p>查看 stageX.log 开头的 ARGS_JSON</p></li>
+<li><p>确认 cli_builder 是否从 args_json 读取了对应字段</p></li>
+<li><p>如使用 per_method_extra 注入字段，确认 method 名称匹配且字段名一致</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="architecture.html" class="btn btn-neutral float-left" title="架构与执行流程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_dataset.html" class="btn btn-neutral float-right" title="接入新数据集" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

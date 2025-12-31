@@ -1,0 +1,203 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>可复现性与重复运行控制 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="核心概念" href="../user_guide/concepts.html" />
+    <link rel="prev" title="自动结果收集与汇总" href="auto_summary.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">可复现性与重复运行控制</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1. 可复现性的基础要素</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">2. 输出隔离的推荐做法</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">3. 避免重复运行：已有记录的跳过</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">4. 如何强制重跑</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">可复现性与重复运行控制</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/features/reproducibility.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>可复现性与重复运行控制<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>大规模网格实验常见需求包括：</p>
+<ul class="simple">
+<li><p>能够准确复现实验</p></li>
+<li><p>避免重复运行同一组合</p></li>
+<li><p>能够在需要时强制重跑</p></li>
+</ul>
+<p>本页说明 bolt-lab 在这三方面的设计与推荐实践。</p>
+<section id="id2">
+<h2>1. 可复现性的基础要素<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>每个实验组合由以下参数共同定义：</p>
+<ul class="simple">
+<li><p>method / dataset</p></li>
+<li><p>known_cls_ratio / labeled_ratio / cluster_num_factor</p></li>
+<li><p>fold_type / fold_num / fold_idx</p></li>
+<li><p>seed</p></li>
+<li><p>训练轮数（num_pretrain_epochs / num_train_epochs）</p></li>
+<li><p>以及 per_method_extra 注入的额外参数（如 backbone、reg_loss、extra_flags 等）</p></li>
+</ul>
+<p>运行时，这些信息会被记录为 ARGS_JSON，并写入对应 stage 的日志开头，作为复现依据。</p>
+</section>
+<section id="id3">
+<h2>2. 输出隔离的推荐做法<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>建议每次大实验使用独立的 –output-dir，例如：</p>
+<ul class="simple">
+<li><p>~/tmp/exp_gcd_001</p></li>
+<li><p>~/tmp/exp_openset_20251225</p></li>
+</ul>
+<p>这样可以确保：</p>
+<ul class="simple">
+<li><p>logs/results/outputs 互不干扰</p></li>
+<li><p>运行环境与配置副本与本次实验对应</p></li>
+<li><p>便于整体打包、迁移与归档</p></li>
+</ul>
+<p>同时建议：</p>
+<ul class="simple">
+<li><p>将使用的 YAML 配置保存在版本管理中（或与 output-dir 一起归档）</p></li>
+<li><p>使用固定的 –model-dir 复用模型缓存</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>3. 避免重复运行：已有记录的跳过<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>当框架检测到某方法已有 results.csv，并且其中存在与当前组合参数匹配的记录时，会跳过该组合的执行，以避免重复计算。</p>
+<p>建议将“是否跳过重复组合”的判断视为默认行为：在大规模实验中能显著节省时间与资源。</p>
+</section>
+<section id="id5">
+<h2>4. 如何强制重跑<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>若你需要重跑同一组合（例如代码更新、修复 bug、改了方法实现），建议使用以下方式之一：</p>
+<ol class="arabic simple">
+<li><p>更换 result_file
+通过更换 YAML 的 result_file，生成新的 summary 与索引文件，便于与旧结果区分。</p></li>
+<li><p>使用新的 –output-dir
+将本次运行输出写入新的工作目录，避免覆盖旧目录下的产物与日志。</p></li>
+<li><p>清理目标方法的 results.csv
+在明确知道影响范围的情况下，可以清理：
+./results/{task}/{method}/results.csv
+然后重跑对应组合，使框架重新收集结果。</p></li>
+</ol>
+<p>在实际使用中，优先推荐前两种方式（更安全、可追踪）。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="auto_summary.html" class="btn btn-neutral float-left" title="自动结果收集与汇总" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../user_guide/concepts.html" class="btn btn-neutral float-right" title="核心概念" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

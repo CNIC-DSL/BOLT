@@ -1,8 +1,8 @@
 maps:
-  gcd: [alup, deepaligned, dpn, geoid, glean, loop, plm_gcd, sdc, tan]
-  openset: [ab, adb, clap, deepunk, doc, dyen, knncon, plm_ood, scl]
+  gcd: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
+  openset: [ab, adb, deepunk, doc, dyen, knncon, plm_ood, scl]
 
-methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan, plm_ood]
+methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
 result_file: summary_gcd
 
 datasets: [X-Topic]

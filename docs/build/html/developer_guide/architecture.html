@@ -1,0 +1,248 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>架构与执行流程 &mdash; Bolt 0.1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=01f34227"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="新增方法" href="add_method.html" />
+    <link rel="prev" title="指标说明" href="../user_guide/metrics.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">架构与执行流程</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_method.html">新增方法</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">扩展网格维度</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">架构与执行流程</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/developer_guide/architecture.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>架构与执行流程<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本文面向二次开发者，说明 bolt-lab 的核心执行链路、关键数据结构、以及各模块之间的责任边界。</p>
+<p>一、整体数据流（从 YAML 到结果汇总）</p>
+<p>1）入口：bolt-grid</p>
+<ul class="simple">
+<li><p>CLI 接收参数：–config、–output-dir、–model-dir</p></li>
+<li><p>将配置文件定位到实际路径后，交给 runner 执行（runner 会读取 YAML 并启动调度）</p></li>
+</ul>
+<p>2）runner：run_grid.py</p>
+<ul class="simple">
+<li><p>读取 YAML 并校验必需字段：
+maps / methods / datasets / grid / run / paths / result_file / per_method_extra</p></li>
+<li><p>调用 set_paths(results_dir, logs_dir, result_file) 初始化：
+results/summary_{result_file}.csv
+results/seen_index_{result_file}.json
+logs/ 根目录</p></li>
+<li><p>将 grid 中每个维度展开为组合（combo），形成任务列表 combos</p></li>
+<li><p>建立 GPU token 池（Queue）：</p>
+<ul>
+<li><p>run.gpus 指定可用 GPU 列表</p></li>
+<li><p>run.slots_per_gpu 决定每张 GPU 提供多少个 token</p></li>
+<li><p>token 总数 = len(gpus) * slots_per_gpu</p></li>
+</ul>
+</li>
+<li><p>使用 ThreadPoolExecutor 并发调度：</p>
+<ul>
+<li><p>每个 worker 启动时领取一个 gpu_id</p></li>
+<li><p>执行完毕归还 gpu_id</p></li>
+<li><p>并发度 = min(max_workers, token 总数, combos 数)</p></li>
+</ul>
+</li>
+</ul>
+<p>3）单组合执行：utils.run_combo()</p>
+<ul class="simple">
+<li><p>根据 method 在两个 registry 中查找方法定义：</p>
+<ul>
+<li><p>cli_gcd.METHOD_REGISTRY_GCD</p></li>
+<li><p>cli_openset.METHOD_REGISTRY_OPENSET</p></li>
+</ul>
+</li>
+<li><p>生成 args_json（make_base_args）：
+包含 method/dataset/ratio/fold/seed/gpu/epochs 等参数，并合并 per_method_extra 中该 method 的扩展字段</p></li>
+<li><p>执行 stages：</p>
+<ul>
+<li><p>每个 stage 由 cli_builder(args_json, stage_idx) 生成命令行数组</p></li>
+<li><p>run_stage() 负责：</p>
+<ul>
+<li><p>设置 ARGS_JSON 环境变量（用于记录与复现）</p></li>
+<li><p>设置 CUDA_VISIBLE_DEVICES（绑定到领取到的 gpu_id）</p></li>
+<li><p>将 CMD 与 ARGS_JSON 记录到 stage 日志开头</p></li>
+<li><p>启动子进程并等待返回码</p></li>
+</ul>
+</li>
+<li><p>任一 stage 返回码非 0 则该 combo 失败，后续阶段不会继续</p></li>
+</ul>
+</li>
+</ul>
+<p>4）结果收集与汇总：collect_latest_result() + write_summary()</p>
+<ul class="simple">
+<li><p>combo 全部 stage 成功后，框架会尝试读取：
+./results/{task}/{method}/results.csv
+并使用最后一行作为“最新结果”</p></li>
+<li><p>若读取成功，则追加写入：
+results/summary_{result_file}.csv</p></li>
+<li><p>若未找到结果文件或结果为空，会提示 Finished but no results found，不写 summary</p></li>
+</ul>
+<p>二、关键模块与职责边界</p>
+<p>1）run_grid.py（调度层）</p>
+<ul class="simple">
+<li><p>负责：解析 YAML、展开组合、并发调度、OOM 重试策略（可选）</p></li>
+<li><p>不负责：方法内部训练逻辑与指标计算</p></li>
+</ul>
+<p>2）cli_gcd.py / cli_openset.py（方法注册与命令构建）</p>
+<ul class="simple">
+<li><p>负责：将 method 映射到 stages，并为每个 stage 提供 cli_builder</p></li>
+<li><p>负责：定义默认 config 路径与默认 output_base</p></li>
+<li><p>不负责：执行过程中的结果写入（这由方法脚本完成）</p></li>
+</ul>
+<p>3）utils.py（运行与汇总层）</p>
+<ul class="simple">
+<li><p>负责：构造 args_json、运行 stage、组织日志目录、收集结果并写入 summary</p></li>
+<li><p>负责：为每个 stage 写入 CMD 与 ARGS_JSON（用于复现与排查）</p></li>
+</ul>
+<p>三、关于可复现性的约定</p>
+<p>1）ARGS_JSON 是复现的最小闭环</p>
+<ul class="simple">
+<li><p>每个 stage 日志开头都会包含：</p>
+<ul>
+<li><p>CMD（实际执行命令）</p></li>
+<li><p>ARGS_JSON（完整参数 JSON）
+因此“复现实验”通常可以从日志中直接拿到命令与参数。</p></li>
+</ul>
+</li>
+</ul>
+<p>2）结果文件路径约定</p>
+<ul class="simple">
+<li><p>自动汇总依赖以下约定：
+./results/{task}/{method}/results.csv
+方法脚本必须在运行结束时写入该文件，否则框架无法自动收集并汇总。</p></li>
+</ul>
+<p>四、开发者常用调试手段</p>
+<p>1）dry_run</p>
+<ul class="simple">
+<li><p>在 YAML 的 run 中设置 dry_run=true，可只打印命令与 ARGS_JSON，不实际执行</p></li>
+<li><p>适合检查组合数、参数传递与命令拼接是否符合预期</p></li>
+</ul>
+<p>2）从 stage 日志复现</p>
+<ul class="simple">
+<li><p>找到失败 combo 的 stageX.log</p></li>
+<li><p>复制 CMD 与 ARGS_JSON，对照方法脚本的参数解析逻辑进行复现与定位</p></li>
+</ul>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../user_guide/metrics.html" class="btn btn-neutral float-left" title="指标说明" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_method.html" class="btn btn-neutral float-right" title="新增方法" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
