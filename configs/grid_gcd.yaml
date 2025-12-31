@@ -5,7 +5,7 @@ maps:
 methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
 result_file: summary_gcd
 
-datasets: [X-Topic]
+datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt, X-Topic]
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
