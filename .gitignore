@@ -15,7 +15,7 @@ experiments
 dataset
 inputs
 api_data
-results
+# results
 table_results
 pretrain_models
 img
