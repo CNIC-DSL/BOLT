@@ -15,6 +15,9 @@ This page explains where to find logs, aggregated results, and generated artifac
 - `outputs/`  
   Training/evaluation artifacts (models, predictions, caches, etc.), organized by method and combo.
 
+Note on `--init-only`:
+- If you run with `--init-only`, the directory skeleton (and linked directories) will be created, but it is normal that there are **no combo stage logs** and **no new summary records**, because no combos are executed.
+
 ## 2. Log Directory Organization
 
 The log directory for each combo is typically organized as follows:
@@ -49,6 +52,9 @@ results/summary_{result_file}.csv
 
 Whenever a combo successfully collects results, the summary table appends one new row.
 
+Note on `--init-only`:
+- `--init-only` does not run stages and does not write method results, so the summary table will not append new rows.
+
 ## 4. Recommended Troubleshooting Order
 
 Issue A: A combo fails / runtime error occurs
@@ -60,6 +66,9 @@ Issue B: The run finishes but the summary has no new records
 1) Check whether any stage return code is non-zero (on failure, the pipeline stops and will not write to the summary)
 2) Check whether `results/{task}/{method}/results.csv` exists and is non-empty
 3) Check whether the columns written by the method are complete (especially metric columns and the `args` field)
+
+Issue B (init-only): You used `--init-only`
+- This is expected: `--init-only` only initializes the workspace and does not execute combos, so it will not produce `results.csv` or append the summary.
 
 Issue C: The output directory structure is not as expected
 1) Confirm that `--output-dir` points to the experiment root directory (do not point it directly to an `outputs` subdirectory)

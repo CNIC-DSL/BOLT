@@ -67,6 +67,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config_yaml.html">Configuration File (YAML) Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Overview</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Running and Common Operations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#initialize-workspace-only-init-only">0. Initialize Workspace Only (<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-run-command">1. Basic Run Command</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#recommended-workflow">2. Recommended Workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#dry-run-print-only-do-not-execute-recommended-for-the-first-use">3. <code class="docutils literal notranslate"><span class="pre">dry_run</span></code>: Print Only, Do Not Execute (Recommended for the First Use)</a></li>
@@ -113,6 +114,24 @@
   <section id="running-and-common-operations">
 <h1>Running and Common Operations<a class="headerlink" href="#running-and-common-operations" title="Link to this heading"></a></h1>
 <p>This page explains how to start runs, how to control scale and concurrency, and a recommended workflow.</p>
+<section id="initialize-workspace-only-init-only">
+<h2>0. Initialize Workspace Only (<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>)<a class="headerlink" href="#initialize-workspace-only-init-only" title="Link to this heading"></a></h2>
+<p>If you want to prepare the working directory structure without running any combos, use <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--init-only<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models
+</pre></div>
+</div>
+<p>What it does:</p>
+<ul class="simple">
+<li><p>Initializes the workspace under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> (e.g., creates <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, <code class="docutils literal notranslate"><span class="pre">logs/</span></code> and linked directories such as <code class="docutils literal notranslate"><span class="pre">code/</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/</span></code>, <code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code>)</p></li>
+<li><p>Useful for verifying paths/permissions and confirming the workspace layout before starting a large run</p></li>
+</ul>
+<p>What it does NOT do:</p>
+<ul class="simple">
+<li><p>Does not expand the grid into combos</p></li>
+<li><p>Does not execute method scripts (no stage logs)</p></li>
+<li><p>Does not collect results or append new records into the summary table</p></li>
+</ul>
+</section>
 <section id="basic-run-command">
 <h2>1. Basic Run Command<a class="headerlink" href="#basic-run-command" title="Link to this heading"></a></h2>
 <p>After installation, you can run from any directory:</p>
@@ -131,6 +150,8 @@ The model/cache directory. It is recommended to point to a stable, readable/writ
 </section>
 <section id="recommended-workflow">
 <h2>2. Recommended Workflow<a class="headerlink" href="#recommended-workflow" title="Link to this heading"></a></h2>
+<p>Step 0 (optional): Initialize the workspace
+bolt-grid –config /abs/path/to/your.yaml –output-dir ~/tmp/exp_001 –model-dir ~/code/bolt/pretrained_models –init-only</p>
 <p>Step 1: Copy a config file to your working directory and modify it<br />
 Do not treat the example config as the only long-term source. Keep your own version-controlled copy.</p>
 <p>Step 2: Shrink the grid to a minimal size to validate the pipeline<br />
@@ -142,7 +163,9 @@ For the first run, keep only:</p>
 <li><p>1 <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
 <li><p>Set epochs to a small value</p></li>
 </ul>
-<p>Step 3: Run with a new output directory<br />
+<p>Step 3: (Recommended) Use <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> to validate combo expansion and commands<br />
+Set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> in YAML (see Section 3) to verify combo count and command construction before executing.</p>
+<p>Step 4: Run with a new output directory<br />
 For example:
 bolt-grid –config /abs/path/to/your.yaml –output-dir ~/tmp/exp_001 –model-dir ~/code/bolt/pretrained_models</p>
 <p>It is recommended to use an independent <code class="docutils literal notranslate"><span class="pre">output-dir</span></code> for each large experiment to make archiving, comparison, and cleanup easier.</p>
@@ -157,6 +180,11 @@ dry_run: true</p>
 <li><p>Verify the number of generated combos</p></li>
 <li><p>Verify method entry points, datasets, and fold/seed settings</p></li>
 <li><p>Avoid discovering configuration issues only after launching a large run</p></li>
+</ul>
+<p>Note:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dry_run</span></code> still goes through combo expansion and command construction, but does not run subprocesses.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--init-only</span></code> only initializes the workspace and does not expand combos.</p></li>
 </ul>
 </section>
 <section id="only-collect-collect-and-update-summary-only-as-needed">

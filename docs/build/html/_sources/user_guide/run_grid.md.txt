@@ -2,6 +2,21 @@
 
 This page explains how to start runs, how to control scale and concurrency, and a recommended workflow.
 
+## 0. Initialize Workspace Only (`--init-only`)
+
+If you want to prepare the working directory structure without running any combos, use `--init-only`:
+```bash
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+```
+What it does:
+- Initializes the workspace under `--output-dir` (e.g., creates `outputs/`, `results/`, `logs/` and linked directories such as `code/`, `configs/`, `data/`, `pretrained_models/`)
+- Useful for verifying paths/permissions and confirming the workspace layout before starting a large run
+
+What it does NOT do:
+- Does not expand the grid into combos
+- Does not execute method scripts (no stage logs)
+- Does not collect results or append new records into the summary table
+
 ## 1. Basic Run Command
 
 After installation, you can run from any directory:
@@ -22,6 +37,9 @@ Argument details:
 
 ## 2. Recommended Workflow
 
+Step 0 (optional): Initialize the workspace
+bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models --init-only
+
 Step 1: Copy a config file to your working directory and modify it  
 Do not treat the example config as the only long-term source. Keep your own version-controlled copy.
 
@@ -33,7 +51,10 @@ For the first run, keep only:
 - 1 `fold_idx`
 - Set epochs to a small value
 
-Step 3: Run with a new output directory  
+Step 3: (Recommended) Use `dry_run` to validate combo expansion and commands  
+Set `dry_run=true` in YAML (see Section 3) to verify combo count and command construction before executing.
+
+Step 4: Run with a new output directory  
 For example:
 bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models
 
@@ -49,6 +70,10 @@ run:
 - Verify the number of generated combos
 - Verify method entry points, datasets, and fold/seed settings
 - Avoid discovering configuration issues only after launching a large run
+
+Note:
+- `dry_run` still goes through combo expansion and command construction, but does not run subprocesses.
+- `--init-only` only initializes the workspace and does not expand combos.
 
 ## 4. `only_collect`: Collect and Update Summary Only (As Needed)
 

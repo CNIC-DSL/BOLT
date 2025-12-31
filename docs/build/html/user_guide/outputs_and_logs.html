@@ -130,6 +130,10 @@ Directory for summary and index files. It typically contains:</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">outputs/</span></code><br />
 Training/evaluation artifacts (models, predictions, caches, etc.), organized by method and combo.</p></li>
 </ul>
+<p>Note on <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>:</p>
+<ul class="simple">
+<li><p>If you run with <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>, the directory skeleton (and linked directories) will be created, but it is normal that there are <strong>no combo stage logs</strong> and <strong>no new summary records</strong>, because no combos are executed.</p></li>
+</ul>
 </section>
 <section id="log-directory-organization">
 <h2>2. Log Directory Organization<a class="headerlink" href="#log-directory-organization" title="Link to this heading"></a></h2>
@@ -163,6 +167,10 @@ results/{task}/{method}/results.csv</p>
 <p>The summary file is located at:
 results/summary_{result_file}.csv</p>
 <p>Whenever a combo successfully collects results, the summary table appends one new row.</p>
+<p>Note on <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--init-only</span></code> does not run stages and does not write method results, so the summary table will not append new rows.</p></li>
+</ul>
 </section>
 </section>
 <section id="recommended-troubleshooting-order">
@@ -179,6 +187,10 @@ results/summary_{result_file}.csv</p>
 <li><p>Check whether <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code> exists and is non-empty</p></li>
 <li><p>Check whether the columns written by the method are complete (especially metric columns and the <code class="docutils literal notranslate"><span class="pre">args</span></code> field)</p></li>
 </ol>
+<p>Issue B (init-only): You used <code class="docutils literal notranslate"><span class="pre">--init-only</span></code></p>
+<ul class="simple">
+<li><p>This is expected: <code class="docutils literal notranslate"><span class="pre">--init-only</span></code> only initializes the workspace and does not execute combos, so it will not produce <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> or append the summary.</p></li>
+</ul>
 <p>Issue C: The output directory structure is not as expected</p>
 <ol class="arabic simple">
 <li><p>Confirm that <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> points to the experiment root directory (do not point it directly to an <code class="docutils literal notranslate"><span class="pre">outputs</span></code> subdirectory)</p></li>

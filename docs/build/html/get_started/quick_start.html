@@ -49,6 +49,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Environment Setup</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#optional-initialize-the-workspace-only-init-only">0. (Optional) Initialize the Workspace Only (<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#run-with-a-single-command">1. Run with a Single Command</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#recommended-first-run-workflow">2. Recommended First-Run Workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#how-to-tell-whether-the-run-succeeded">3. How to Tell Whether the Run Succeeded</a></li>
@@ -111,6 +112,22 @@
   <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
 <p>Goal of this section: complete a reproducible run with the fewest steps, and clearly understand three key arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, and <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>.</p>
+<section id="optional-initialize-the-workspace-only-init-only">
+<h2>0. (Optional) Initialize the Workspace Only (<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>)<a class="headerlink" href="#optional-initialize-the-workspace-only-init-only" title="Link to this heading"></a></h2>
+<p>If you want to set up the working directory structure first (without running any experiments), use <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--init-only<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models
+</pre></div>
+</div>
+<p>What it does:</p>
+<ul class="simple">
+<li><p>Creates/initializes the workspace under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>, and linked directories like <code class="docutils literal notranslate"><span class="pre">code/</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/</span></code>, <code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code>)</p></li>
+<li><p>Useful for checking paths/permissions and confirming your workspace layout before launching a full run</p></li>
+</ul>
+<p>Note:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--init-only</span></code> does <strong>not</strong> run combos, does <strong>not</strong> produce stage logs, and does <strong>not</strong> append new records into the summary table.</p></li>
+</ul>
+</section>
 <section id="run-with-a-single-command">
 <h2>1. Run with a Single Command<a class="headerlink" href="#run-with-a-single-command" title="Link to this heading"></a></h2>
 <p>After installation, run the following directly (example uses the GCD configuration):</p>
@@ -133,6 +150,10 @@ Specifies the pretrained model and cache directory. It is recommended to point t
 <section id="recommended-first-run-workflow">
 <h2>2. Recommended First-Run Workflow<a class="headerlink" href="#recommended-first-run-workflow" title="Link to this heading"></a></h2>
 <p>To avoid an overly large and time-consuming setup on your first run, use the following workflow:</p>
+<p>Step 0 (optional): Initialize the workspace</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models<span class="w"> </span>--init-only
+</pre></div>
+</div>
 <p>Step 1: Copy a config to your own directory
 For example, copy an internal/built-in config out (choose the path according to your setup), then modify the copied version.</p>
 <p>Step 2: Shrink the config to a “minimal runnable scale”
@@ -144,8 +165,10 @@ For the first run, it is recommended to keep only:</p>
 <li><p>1 fold</p></li>
 <li><p>Set training epochs to a small value (to validate the pipeline)</p></li>
 </ul>
-<p>Step 3: Run your copied config using an absolute path
-bolt-grid –config /abs/path/to/your_config.yaml –output-dir ~/tmp/exp_001 –model-dir ~/code/bolt/pretrained_models</p>
+<p>Step 3: Run your copied config using an absolute path</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models
+</pre></div>
+</div>
 <p>This ensures:</p>
 <ul class="simple">
 <li><p>The config source is always clear for each run;</p></li>
@@ -160,11 +183,18 @@ bolt-grid –config /abs/path/to/your_config.yaml –output-dir ~/tmp/exp_001 �
 <li><p>The standard output will continuously print progress and key messages;</p></li>
 <li><p>If an error occurs, it usually tells you to check the log directory for detailed error information.</p></li>
 </ul>
-<p>After completion:</p>
+<p>After completion (a real run):</p>
 <ul class="simple">
 <li><p>You should see directories such as <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, and <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>;</p></li>
-<li><p>Next, open <code class="docutils literal notranslate"><span class="pre">outputs.md</span></code> to learn how to locate logs and summary results, and the recommended troubleshooting order.</p></li>
+<li><p>You should be able to find stage logs under <code class="docutils literal notranslate"><span class="pre">logs/</span></code> for executed combos;</p></li>
+<li><p>The summary file under <code class="docutils literal notranslate"><span class="pre">results/</span></code> should append new records when combos successfully produce results.</p></li>
 </ul>
+<p>After completion (init-only):</p>
+<ul class="simple">
+<li><p>You should see the workspace directory skeleton and linked directories under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>;</p></li>
+<li><p>It is normal that there are no combo stage logs and no new summary records.</p></li>
+</ul>
+<p>Next, open <code class="docutils literal notranslate"><span class="pre">outputs.md</span></code> to learn how to locate logs and summary results, and the recommended troubleshooting order.</p>
 </section>
 <section id="common-notes">
 <h2>4. Common Notes<a class="headerlink" href="#common-notes" title="Link to this heading"></a></h2>
