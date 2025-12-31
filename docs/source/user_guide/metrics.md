@@ -1,59 +1,59 @@
-# 指标说明
+# Metrics Guide
 
-本页解释汇总表中常见指标的含义与阅读方式。不同 task 的指标字段不同，以下为常用约定。
+This page explains the meaning of common metrics in the summary table and how to read them. Different tasks use different metric fields; the following describes the most common conventions.
 
-## 1. 汇总表字段结构
+## 1. Summary Table Field Structure
 
-summary_{result_file}.csv 通常包含两类字段：
-- 实验设置字段：method、dataset、known_cls_ratio、labeled_ratio、cluster_num_factor、seed（以及可能的 fold 信息、额外超参）
-- 结果指标字段：随 task 不同而变化（例如 ACC、H-Score、F1 等）
-- args：一段 JSON 字符串，记录本次运行的关键参数（用于复现与去重）
+`summary_{result_file}.csv` typically contains two types of fields:
+- Experiment setting fields: `method`, `dataset`, `known_cls_ratio`, `labeled_ratio`, `cluster_num_factor`, `seed` (and possibly fold information and extra hyperparameters)
+- Metric fields: vary by task (e.g., `ACC`, `H-Score`, `F1`, etc.)
+- `args`: a JSON string recording key run parameters (used for reproducibility and deduplication)
 
-建议阅读方式：
-- 横向比较：固定 dataset / ratios / folds，只比较 method 的指标差异
-- 纵向比较：固定 method，比较 ratios / seeds / folds 的稳定性与趋势
+Recommended reading approaches:
+- Horizontal comparison: fix `dataset` / ratios / folds, and compare metric differences across methods
+- Vertical comparison: fix `method`, and compare stability and trends across ratios / seeds / folds
 
-## 2. GCD 常见指标（示例）
+## 2. Common GCD Metrics (Examples)
 
-- ACC
-  聚类/分类整体准确率（具体定义依方法实现而定，通常反映总体分配质量）。
+- `ACC`  
+  Overall clustering/classification accuracy (the exact definition depends on the method implementation, and it typically reflects overall assignment quality).
 
-- H-Score
-  用于平衡“已知类（Known）”与“新类（Novel）”表现的综合指标，常用于综合评价。
+- `H-Score`  
+  A composite metric designed to balance performance on Known classes and Novel classes; commonly used as an overall evaluation score.
 
-- K-ACC
-  已知类（Known classes）上的准确率。
+- `K-ACC`  
+  Accuracy on Known classes.
 
-- N-ACC
-  新类（Novel classes）上的准确率。
+- `N-ACC`  
+  Accuracy on Novel classes.
 
-- ARI（Adjusted Rand Index）
-  衡量聚类结果与真实标签的一致性，考虑随机一致性的校正。
+- `ARI` (Adjusted Rand Index)  
+  Measures the agreement between clustering results and ground-truth labels, adjusted for chance agreement.
 
-- NMI（Normalized Mutual Information）
-  衡量聚类与真实标签的互信息一致性，范围通常在 [0,1]。
+- `NMI` (Normalized Mutual Information)  
+  Measures mutual-information consistency between clusters and ground-truth labels, typically in the range [0, 1].
 
-阅读建议：
-- 若方法在 K-ACC 高但 N-ACC 低，通常意味着对新类发现能力不足；
-- H-Score 往往更适合做综合排序，但仍需结合 K/N 的分解指标解释原因。
+Reading tips:
+- If a method has high `K-ACC` but low `N-ACC`, it usually indicates weak novel-class discovery ability.
+- `H-Score` is often more suitable for overall ranking, but you should still interpret it together with the decomposed K/N metrics to understand the reasons.
 
-## 3. OpenSet 常见指标（示例）
+## 3. Common OpenSet Metrics (Examples)
 
-- F1
-  总体 F1（精确率与召回率的调和平均），用于综合评价。
+- `F1`  
+  Overall F1 score (the harmonic mean of precision and recall), used as a general-purpose evaluation metric.
 
-- K-F1
-  已知类（Known）上的 F1。
+- `K-F1`  
+  F1 score on Known classes.
 
-- N-F1
-  未知/新类（Novel / Unknown）上的 F1。
+- `N-F1`  
+  F1 score on Novel / Unknown classes.
 
-阅读建议：
-- K-F1 与 N-F1 往往存在权衡关系；
-- 只看总体 F1 可能掩盖对未知类识别的不足，建议同时查看 K-F1 与 N-F1。
+Reading tips:
+- There is often a trade-off between `K-F1` and `N-F1`.
+- Looking only at overall `F1` may hide weaknesses in unknown-class recognition, so it is recommended to check `K-F1` and `N-F1` at the same time.
 
-## 4. 与方法实现的关系
+## 4. Relation to Method Implementations
 
-不同方法可能在“结果文件 results.csv”中写出更多列（例如 loss、时间、额外超参）。
-框架汇总时通常会保留核心字段并附带 args 以保证可追溯性。
-如你需要额外指标进入汇总表，优先在方法侧统一结果列名，并确保写入 results/{task}/{method}/results.csv。
+Different methods may write additional columns in `results.csv` (e.g., loss, runtime, extra hyperparameters).
+During aggregation, the framework typically keeps core fields and appends `args` to ensure traceability.
+If you need extra metrics to appear in the summary table, it is recommended to standardize the result column names on the method side and ensure they are written to `results/{task}/{method}/results.csv`.

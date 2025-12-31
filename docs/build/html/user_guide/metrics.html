@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>指标说明 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Metrics Guide &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="架构与执行流程" href="../developer_guide/architecture.html" />
-    <link rel="prev" title="输出与日志定位" href="outputs_and_logs.html" /> 
+    <link rel="next" title="Architecture and Execution Flow" href="../developer_guide/architecture.html" />
+    <link rel="prev" title="Outputs and Log Navigation" href="outputs_and_logs.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">指标说明</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">1. 汇总表字段结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#gcd">2. GCD 常见指标（示例）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#openset">3. OpenSet 常见指标（示例）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">4. 与方法实现的关系</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Metrics Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#summary-table-field-structure">1. Summary Table Field Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-gcd-metrics-examples">2. Common GCD Metrics (Examples)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-openset-metrics-examples">3. Common OpenSet Metrics (Examples)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#relation-to-method-implementations">4. Relation to Method Implementations</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">指标说明</li>
+      <li class="breadcrumb-item active">Metrics Guide</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/user_guide/metrics.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,66 +108,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>指标说明<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本页解释汇总表中常见指标的含义与阅读方式。不同 task 的指标字段不同，以下为常用约定。</p>
-<section id="id2">
-<h2>1. 汇总表字段结构<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>summary_{result_file}.csv 通常包含两类字段：</p>
+  <section id="metrics-guide">
+<h1>Metrics Guide<a class="headerlink" href="#metrics-guide" title="Link to this heading"></a></h1>
+<p>This page explains the meaning of common metrics in the summary table and how to read them. Different tasks use different metric fields; the following describes the most common conventions.</p>
+<section id="summary-table-field-structure">
+<h2>1. Summary Table Field Structure<a class="headerlink" href="#summary-table-field-structure" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code> typically contains two types of fields:</p>
 <ul class="simple">
-<li><p>实验设置字段：method、dataset、known_cls_ratio、labeled_ratio、cluster_num_factor、seed（以及可能的 fold 信息、额外超参）</p></li>
-<li><p>结果指标字段：随 task 不同而变化（例如 ACC、H-Score、F1 等）</p></li>
-<li><p>args：一段 JSON 字符串，记录本次运行的关键参数（用于复现与去重）</p></li>
+<li><p>Experiment setting fields: <code class="docutils literal notranslate"><span class="pre">method</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span></code> (and possibly fold information and extra hyperparameters)</p></li>
+<li><p>Metric fields: vary by task (e.g., <code class="docutils literal notranslate"><span class="pre">ACC</span></code>, <code class="docutils literal notranslate"><span class="pre">H-Score</span></code>, <code class="docutils literal notranslate"><span class="pre">F1</span></code>, etc.)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code>: a JSON string recording key run parameters (used for reproducibility and deduplication)</p></li>
 </ul>
-<p>建议阅读方式：</p>
+<p>Recommended reading approaches:</p>
 <ul class="simple">
-<li><p>横向比较：固定 dataset / ratios / folds，只比较 method 的指标差异</p></li>
-<li><p>纵向比较：固定 method，比较 ratios / seeds / folds 的稳定性与趋势</p></li>
-</ul>
-</section>
-<section id="gcd">
-<h2>2. GCD 常见指标（示例）<a class="headerlink" href="#gcd" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p>ACC
-聚类/分类整体准确率（具体定义依方法实现而定，通常反映总体分配质量）。</p></li>
-<li><p>H-Score
-用于平衡“已知类（Known）”与“新类（Novel）”表现的综合指标，常用于综合评价。</p></li>
-<li><p>K-ACC
-已知类（Known classes）上的准确率。</p></li>
-<li><p>N-ACC
-新类（Novel classes）上的准确率。</p></li>
-<li><p>ARI（Adjusted Rand Index）
-衡量聚类结果与真实标签的一致性，考虑随机一致性的校正。</p></li>
-<li><p>NMI（Normalized Mutual Information）
-衡量聚类与真实标签的互信息一致性，范围通常在 [0,1]。</p></li>
-</ul>
-<p>阅读建议：</p>
-<ul class="simple">
-<li><p>若方法在 K-ACC 高但 N-ACC 低，通常意味着对新类发现能力不足；</p></li>
-<li><p>H-Score 往往更适合做综合排序，但仍需结合 K/N 的分解指标解释原因。</p></li>
+<li><p>Horizontal comparison: fix <code class="docutils literal notranslate"><span class="pre">dataset</span></code> / ratios / folds, and compare metric differences across methods</p></li>
+<li><p>Vertical comparison: fix <code class="docutils literal notranslate"><span class="pre">method</span></code>, and compare stability and trends across ratios / seeds / folds</p></li>
 </ul>
 </section>
-<section id="openset">
-<h2>3. OpenSet 常见指标（示例）<a class="headerlink" href="#openset" title="Link to this heading"></a></h2>
+<section id="common-gcd-metrics-examples">
+<h2>2. Common GCD Metrics (Examples)<a class="headerlink" href="#common-gcd-metrics-examples" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>F1
-总体 F1（精确率与召回率的调和平均），用于综合评价。</p></li>
-<li><p>K-F1
-已知类（Known）上的 F1。</p></li>
-<li><p>N-F1
-未知/新类（Novel / Unknown）上的 F1。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ACC</span></code><br />
+Overall clustering/classification accuracy (the exact definition depends on the method implementation, and it typically reflects overall assignment quality).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">H-Score</span></code><br />
+A composite metric designed to balance performance on Known classes and Novel classes; commonly used as an overall evaluation score.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K-ACC</span></code><br />
+Accuracy on Known classes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N-ACC</span></code><br />
+Accuracy on Novel classes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARI</span></code> (Adjusted Rand Index)<br />
+Measures the agreement between clustering results and ground-truth labels, adjusted for chance agreement.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NMI</span></code> (Normalized Mutual Information)<br />
+Measures mutual-information consistency between clusters and ground-truth labels, typically in the range [0, 1].</p></li>
 </ul>
-<p>阅读建议：</p>
+<p>Reading tips:</p>
 <ul class="simple">
-<li><p>K-F1 与 N-F1 往往存在权衡关系；</p></li>
-<li><p>只看总体 F1 可能掩盖对未知类识别的不足，建议同时查看 K-F1 与 N-F1。</p></li>
+<li><p>If a method has high <code class="docutils literal notranslate"><span class="pre">K-ACC</span></code> but low <code class="docutils literal notranslate"><span class="pre">N-ACC</span></code>, it usually indicates weak novel-class discovery ability.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">H-Score</span></code> is often more suitable for overall ranking, but you should still interpret it together with the decomposed K/N metrics to understand the reasons.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>4. 与方法实现的关系<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>不同方法可能在“结果文件 results.csv”中写出更多列（例如 loss、时间、额外超参）。
-框架汇总时通常会保留核心字段并附带 args 以保证可追溯性。
-如你需要额外指标进入汇总表，优先在方法侧统一结果列名，并确保写入 results/{task}/{method}/results.csv。</p>
+<section id="common-openset-metrics-examples">
+<h2>3. Common OpenSet Metrics (Examples)<a class="headerlink" href="#common-openset-metrics-examples" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">F1</span></code><br />
+Overall F1 score (the harmonic mean of precision and recall), used as a general-purpose evaluation metric.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K-F1</span></code><br />
+F1 score on Known classes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N-F1</span></code><br />
+F1 score on Novel / Unknown classes.</p></li>
+</ul>
+<p>Reading tips:</p>
+<ul class="simple">
+<li><p>There is often a trade-off between <code class="docutils literal notranslate"><span class="pre">K-F1</span></code> and <code class="docutils literal notranslate"><span class="pre">N-F1</span></code>.</p></li>
+<li><p>Looking only at overall <code class="docutils literal notranslate"><span class="pre">F1</span></code> may hide weaknesses in unknown-class recognition, so it is recommended to check <code class="docutils literal notranslate"><span class="pre">K-F1</span></code> and <code class="docutils literal notranslate"><span class="pre">N-F1</span></code> at the same time.</p></li>
+</ul>
+</section>
+<section id="relation-to-method-implementations">
+<h2>4. Relation to Method Implementations<a class="headerlink" href="#relation-to-method-implementations" title="Link to this heading"></a></h2>
+<p>Different methods may write additional columns in <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> (e.g., loss, runtime, extra hyperparameters).
+During aggregation, the framework typically keeps core fields and appends <code class="docutils literal notranslate"><span class="pre">args</span></code> to ensure traceability.
+If you need extra metrics to appear in the summary table, it is recommended to standardize the result column names on the method side and ensure they are written to <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code>.</p>
 </section>
 </section>
 
@@ -173,8 +175,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="outputs_and_logs.html" class="btn btn-neutral float-left" title="输出与日志定位" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../developer_guide/architecture.html" class="btn btn-neutral float-right" title="架构与执行流程" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="outputs_and_logs.html" class="btn btn-neutral float-left" title="Outputs and Log Navigation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../developer_guide/architecture.html" class="btn btn-neutral float-right" title="Architecture and Execution Flow" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

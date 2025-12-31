@@ -1,41 +1,52 @@
-# 安装与环境准备
+# Installation and Environment Setup
 
-本节说明 bolt-lab 的环境要求与推荐安装步骤（已在 CUDA 12.6 + PyTorch cu126 组合上验证）。
+This section describes the environment requirements and the recommended installation steps for **bolt-lab** (verified with **CUDA 12.6 + PyTorch cu126**).
 
-## 环境要求
+## Requirements
 
 - Linux + NVIDIA GPU
 - Python 3.10
-- 已安装 NVIDIA 驱动（可运行 nvidia-smi）
-- 如需安装 flash-attn：需要编译环境，并保证临时目录空间充足（建议设置 TMPDIR）
+- NVIDIA driver installed (you can run `nvidia-smi`)
+- If you need to install `flash-attn`: a working build toolchain is required, and you must ensure sufficient free space in the temporary directory (recommended to set `TMPDIR`)
 
-## 安装步骤（按顺序执行）
+## Installation Steps (run in order)
 
-1）安装 bolt-lab（wheel 包）
+1) Install bolt-lab (wheel package)
+```bash
 pip install bolt_lab-0.1.0-py3-none-any.whl
+```
 
-2）安装 PyTorch（CUDA 12.6 对应 cu126）
+2) Install PyTorch (CUDA 12.6 uses cu126) 
+```bash
 pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu126
+```
 
-3）安装 NVCC（仅此项使用 conda）
+3) Install NVCC (use conda **only** for this step)
+```bash
 conda install -c nvidia cuda-nvcc -y
-
-4）安装其余 Python 依赖
+```
+4) Install the remaining Python dependencies
+```bash
 pip install -r requirements.txt
+```
 
-5）安装 flash-attn（单独安装，避免构建隔离与缓存导致失败）
+5) Install flash-attn (install separately to avoid build isolation and cache-related failures)
+```bash
 mkdir -p ~/tmp/pip
-TMPDIR=~/tmp/pip 
+TMPDIR=~/tmp/pip
 pip install --no-build-isolation --no-cache-dir flash-attn==2.8.3
+```
 
-## 可选快速自检（确认安装成功）
-
+## Optional Quick Self-Check (verify installation)
+```bash
 python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
 bolt-grid --help
+```
 
-## 常见问题
+## Troubleshooting
 
-- torch.cuda.is_available() 为 False：
-  优先检查 NVIDIA 驱动是否正常、以及 PyTorch 是否安装了 cu126 版本。
-- flash-attn 安装失败：
-  常见原因是临时目录空间不足（建议设置 TMPDIR）、torch/CUDA 不匹配、或编译环境缺失。
+- `torch.cuda.is_available()` is `False`:
+  First check whether the NVIDIA driver works correctly, and whether you installed the **cu126** build of PyTorch.
+
+- `flash-attn` installation fails:
+  Common causes include insufficient temporary disk space (recommended to set `TMPDIR`), a mismatch between torch/CUDA versions, or missing build tools.

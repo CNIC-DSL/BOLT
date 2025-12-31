@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>OOM 重试机制 &mdash; Bolt 0.1.0 documentation</title>
+  <title>OOM Retry Mechanism &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="自动结果收集与汇总" href="auto_summary.html" />
-    <link rel="prev" title="GPU 并发调度" href="gpu_scheduler.html" /> 
+    <link rel="next" title="Automatic Result Collection and Summarization" href="auto_summary.html" />
+    <link rel="prev" title="GPU Concurrency Scheduling" href="gpu_scheduler.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">OOM 重试机制</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. 触发条件</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run">2. 可配置参数（run 节）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">3. 重试行为说明</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">4. 处理 OOM 的优先建议</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">OOM Retry Mechanism</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#trigger-conditions">1. Trigger Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configurable-parameters-in-run">2. Configurable Parameters (in <code class="docutils literal notranslate"><span class="pre">run</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#retry-behavior">3. Retry Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-actions-to-handle-oom-priority-order">4. Recommended Actions to Handle OOM (Priority Order)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">OOM 重试机制</li>
+      <li class="breadcrumb-item active">OOM Retry Mechanism</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/features/oom_retry.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,50 +108,50 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="oom">
-<h1>OOM 重试机制<a class="headerlink" href="#oom" title="Link to this heading"></a></h1>
-<p>在 GPU 训练中，CUDA OOM（显存不足）属于常见失败原因。bolt-lab 提供了可控的 OOM 自动重试机制，用于提高大规模网格实验的完成率。</p>
-<section id="id1">
-<h2>1. 触发条件<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<p>当子任务抛出 RuntimeError 且错误信息包含：</p>
+  <section id="oom-retry-mechanism">
+<h1>OOM Retry Mechanism<a class="headerlink" href="#oom-retry-mechanism" title="Link to this heading"></a></h1>
+<p>In GPU training, CUDA OOM (out-of-memory) is a common failure mode. bolt-lab provides a controllable automatic OOM retry mechanism to improve the completion rate of large-scale grid experiments.</p>
+<section id="trigger-conditions">
+<h2>1. Trigger Conditions<a class="headerlink" href="#trigger-conditions" title="Link to this heading"></a></h2>
+<p>If a subprocess raises a <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> and the error message contains:</p>
 <ul class="simple">
 <li><p>“CUDA out of memory”</p></li>
-<li><p>或 “out of memory”
-框架会将其判定为 OOM。</p></li>
+<li><p>or “out of memory”
+the framework will treat it as an OOM event.</p></li>
 </ul>
 </section>
-<section id="run">
-<h2>2. 可配置参数（run 节）<a class="headerlink" href="#run" title="Link to this heading"></a></h2>
+<section id="configurable-parameters-in-run">
+<h2>2. Configurable Parameters (in <code class="docutils literal notranslate"><span class="pre">run</span></code>)<a class="headerlink" href="#configurable-parameters-in-run" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>retry_on_oom（默认 true）
-是否启用 OOM 重试。</p></li>
-<li><p>max_retries（默认 2）
-最多重试次数。</p></li>
-<li><p>retry_backoff_sec（默认 15.0）
-每次重试前等待的秒数，用于释放显存与缓冲。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom</span></code> (default: true)<br />
+Whether to enable OOM retries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries</span></code> (default: 2)<br />
+Maximum number of retry attempts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec</span></code> (default: 15.0)<br />
+Seconds to wait before each retry, to allow GPU memory and buffers to be released.</p></li>
 </ul>
-<p>示例：
+<p>Example:
 run:
 retry_on_oom: true
 max_retries: 3
 retry_backoff_sec: 30</p>
 </section>
-<section id="id2">
-<h2>3. 重试行为说明<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="retry-behavior">
+<h2>3. Retry Behavior<a class="headerlink" href="#retry-behavior" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>OOM 发生后，框架会等待 backoff 秒数，然后重新启动该组合。</p></li>
-<li><p>若配置了多张 GPU，重试时可能会领取到不同的 GPU token，从而实现“换卡重试”的效果。</p></li>
-<li><p>若达到 max_retries 仍失败，则该组合会被视为失败并终止（需要人工排查或调整配置后再重跑）。</p></li>
+<li><p>After an OOM occurs, the framework waits for the backoff seconds and then restarts the combo.</p></li>
+<li><p>If multiple GPUs are configured, a retry may acquire a different GPU token, effectively enabling “retry on another GPU”.</p></li>
+<li><p>If the combo still fails after reaching <code class="docutils literal notranslate"><span class="pre">max_retries</span></code>, it is marked as failed and the pipeline stops for that combo (manual debugging or configuration adjustments are needed before rerunning).</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>4. 处理 OOM 的优先建议<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>如果同一组合持续 OOM，建议优先按以下顺序处理：</p>
+<section id="recommended-actions-to-handle-oom-priority-order">
+<h2>4. Recommended Actions to Handle OOM (Priority Order)<a class="headerlink" href="#recommended-actions-to-handle-oom-priority-order" title="Link to this heading"></a></h2>
+<p>If the same combo keeps hitting OOM, it is recommended to address it in the following order:</p>
 <ol class="arabic simple">
-<li><p>降低并发：减少 max_workers 或 slots_per_gpu</p></li>
-<li><p>降低训练开销：减小 batch / max_length / num_train_epochs</p></li>
-<li><p>调整模型或 backbone：更换更小的 backbone 或关闭部分耗显存功能</p></li>
-<li><p>使用更大显存的 GPU 或减少同卡任务数</p></li>
+<li><p>Reduce concurrency: decrease <code class="docutils literal notranslate"><span class="pre">max_workers</span></code> or <code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code></p></li>
+<li><p>Reduce training cost: lower batch size / <code class="docutils literal notranslate"><span class="pre">max_length</span></code> / <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code></p></li>
+<li><p>Adjust the model/backbone: switch to a smaller backbone or disable memory-heavy features</p></li>
+<li><p>Use a GPU with more memory, or reduce the number of tasks running on the same GPU</p></li>
 </ol>
 </section>
 </section>
@@ -158,8 +160,8 @@ retry_backoff_sec: 30</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="gpu_scheduler.html" class="btn btn-neutral float-left" title="GPU 并发调度" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="auto_summary.html" class="btn btn-neutral float-right" title="自动结果收集与汇总" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="gpu_scheduler.html" class="btn btn-neutral float-left" title="GPU Concurrency Scheduling" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="auto_summary.html" class="btn btn-neutral float-right" title="Automatic Result Collection and Summarization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

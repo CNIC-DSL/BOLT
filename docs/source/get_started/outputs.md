@@ -1,51 +1,56 @@
-# 输出目录结构与注意事项
+# Output Directory Structure and Notes
 
-本节说明 bolt-lab 的运行输出会写到哪里、运行后会生成哪些目录，以及推荐的使用方式，便于快速定位日志与结果。
+This section explains where **bolt-lab** writes its runtime outputs, what directories are typically created after an experiment, and recommended usage patterns to help you quickly locate logs and results.
 
-## 1. 工作目录（--output-dir）的含义
+## 1. Meaning of the Working Directory (`--output-dir`)
 
-运行时通过 --output-dir 指定一个“工作目录”。框架会在该目录下生成本次实验所需的运行环境与产出目录，并将日志、结果汇总、训练/评测产物统一写入该目录，方便迁移、打包与复现。
+During execution, you specify a **working directory** via `--output-dir`. The framework will create the runtime environment and output folders for the current experiment under this directory, and will write **logs, aggregated results, and training/evaluation artifacts** into it. This makes it easy to migrate, package, and reproduce runs.
 
-建议将 --output-dir 指向一个独立的运行根目录（例如 ~/tmp/exp_001），不要直接指向 outputs/ 或 logs/ 这样的子目录。
+It is recommended to point `--output-dir` to a dedicated experiment root directory (e.g., `~/tmp/exp_001`), rather than directly to subfolders such as `outputs/` or `logs/`.
 
-## 2. 运行后通常会生成的目录
+## 2. Directories Typically Created After a Run
 
-以 --output-dir ~/tmp 为例，运行后你会看到（示例结构）：
+Using `--output-dir ~/tmp` as an example, after running you will see something like the following (example structure):
 
 ~/tmp/
-  outputs/            训练/评测产物（模型、预测、缓存等）
-  results/            汇总与索引文件（例如 summary、seen_index 等）
-  logs/               运行日志（用于定位报错与阶段进度）
-  code/               运行时使用的代码副本（用于记录本次运行对应的代码状态）
-  configs/            运行时使用的配置副本（用于记录本次运行对应的配置状态）
-  data/               数据入口目录（可能为空或由你的数据准备流程填充）
-  pretrained_models/  模型入口目录（与 --model-dir 对应）
+  outputs/            Training/evaluation artifacts (models, predictions, caches, etc.)
+  results/            Aggregations and index files (e.g., summary, seen_index, etc.)
+  logs/               Runtime logs (for debugging errors and tracking stage progress)
+  code/               Snapshot of the code used for this run (records code state)
+  configs/            Snapshot of the config used for this run (records config state)
+  data/               Data entry directory (may be empty or filled by your data pipeline)
+  pretrained_models/  Model entry directory (corresponds to `--model-dir`)
 
-说明：
-- 优先关注 logs/、results/、outputs/ 三个目录。
-- code/、configs/ 等目录用于记录本次运行所使用的环境状态，便于复现与追踪。
+Notes:
+- Focus first on `logs/`, `results/`, and `outputs/`.
+- Directories such as `code/` and `configs/` are used to record the environment state for the run, making reproduction and tracking easier.
 
-## 3. 推荐的使用方式
+## 3. Recommended Usage
 
-3.1 配置文件的修改方式
-建议不要直接在工作目录下修改 configs/ 内的文件作为长期配置来源。
-更稳妥的做法是：
-- 将示例配置复制到你自己的目录进行修改；
-- 运行时用 --config 传入该配置文件的绝对路径。
+### 3.1 How to Modify Configuration Files
 
-这样可以避免不同实验之间相互覆盖，且更便于版本管理。
+It is recommended **not** to directly edit files under `configs/` inside the working directory as your long-term configuration source.
 
-3.2 先看哪里能最快定位问题
-- 运行报错、卡住、阶段失败：先查看 logs/，通常可以直接找到错误堆栈与失败阶段。
-- 关心实验汇总结果：查看 results/（通常包含 summary、索引等汇总文件）。
-- 关心模型与预测产物：查看 outputs/。
+A more robust approach:
+- Copy the example configs to your own directory and modify them there.
+- Pass the absolute path of that config file at runtime via `--config`.
 
-## 4. 常见问题与规避
+This avoids accidental overwrites between experiments and is easier to manage with version control.
 
-4.1 避免目录“套娃”
-请确保 --output-dir 是运行根目录。
-不建议将 --output-dir 设为 .../outputs，否则容易出现 outputs/outputs 的嵌套结构，后续查找与清理会变得困难。
+### 3.2 Where to Look First to Diagnose Issues
 
-4.2 关于 --model-dir（补充说明）
---model-dir 用于指定模型/缓存目录（用于预训练模型与相关缓存的读取/写入）。
-工作目录下的 pretrained_models/ 用于承载该入口，建议 --model-dir 指向一个稳定且可读写的位置，以减少重复下载与重复准备成本。
+- Runtime errors, hangs, or stage failures: check `logs/` first. You can usually find the error stack trace and the failed stage there.
+- Experiment summary results: check `results/` (typically contains summary files, indexes, etc.).
+- Model and prediction artifacts: check `outputs/`.
+
+## 4. Common Issues and How to Avoid Them
+
+### 4.1 Avoid Nested Output Directories
+
+Make sure `--output-dir` is the experiment root directory.
+Do not set `--output-dir` to something like `.../outputs`, otherwise you may end up with nested structures such as `outputs/outputs`, which makes searching and cleanup difficult.
+
+### 4.2 About `--model-dir` (Additional Notes)
+
+`--model-dir` is used to specify the model/cache directory (for reading/writing pretrained models and related caches).
+The `pretrained_models/` directory under the working directory serves as the container for this entry point. It is recommended to set `--model-dir` to a stable, readable/writable location to reduce repeated downloads and preparation costs.

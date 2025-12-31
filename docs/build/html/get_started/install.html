@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>安装与环境准备 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Installation and Environment Setup &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="快速开始" href="quick_start.html" />
+    <link rel="next" title="Quick Start" href="quick_start.html" />
     <link rel="prev" title="Introduction" href="../index.html" /> 
 </head>
 
@@ -47,39 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">安装与环境准备</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">环境要求</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">安装步骤（按顺序执行）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">可选快速自检（确认安装成功）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">常见问题</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation and Environment Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-steps-run-in-order">Installation Steps (run in order)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#optional-quick-self-check-verify-installation">Optional Quick Self-Check (verify installation)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">安装与环境准备</li>
+      <li class="breadcrumb-item active">Installation and Environment Setup</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/get_started/install.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,45 +108,67 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>安装与环境准备<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本节说明 bolt-lab 的环境要求与推荐安装步骤（已在 CUDA 12.6 + PyTorch cu126 组合上验证）。</p>
-<section id="id2">
-<h2>环境要求<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+  <section id="installation-and-environment-setup">
+<h1>Installation and Environment Setup<a class="headerlink" href="#installation-and-environment-setup" title="Link to this heading"></a></h1>
+<p>This section describes the environment requirements and the recommended installation steps for <strong>bolt-lab</strong> (verified with <strong>CUDA 12.6 + PyTorch cu126</strong>).</p>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Linux + NVIDIA GPU</p></li>
 <li><p>Python 3.10</p></li>
-<li><p>已安装 NVIDIA 驱动（可运行 nvidia-smi）</p></li>
-<li><p>如需安装 flash-attn：需要编译环境，并保证临时目录空间充足（建议设置 TMPDIR）</p></li>
+<li><p>NVIDIA driver installed (you can run <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code>)</p></li>
+<li><p>If you need to install <code class="docutils literal notranslate"><span class="pre">flash-attn</span></code>: a working build toolchain is required, and you must ensure sufficient free space in the temporary directory (recommended to set <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code>)</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>安装步骤（按顺序执行）<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>1）安装 bolt-lab（wheel 包）
-pip install bolt_lab-0.1.0-py3-none-any.whl</p>
-<p>2）安装 PyTorch（CUDA 12.6 对应 cu126）
-pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 –index-url https://download.pytorch.org/whl/cu126</p>
-<p>3）安装 NVCC（仅此项使用 conda）
-conda install -c nvidia cuda-nvcc -y</p>
-<p>4）安装其余 Python 依赖
-pip install -r requirements.txt</p>
-<p>5）安装 flash-attn（单独安装，避免构建隔离与缓存导致失败）
-mkdir -p ~/tmp/pip
-TMPDIR=~/tmp/pip
-pip install –no-build-isolation –no-cache-dir flash-attn==2.8.3</p>
+<section id="installation-steps-run-in-order">
+<h2>Installation Steps (run in order)<a class="headerlink" href="#installation-steps-run-in-order" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Install bolt-lab (wheel package)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>bolt_lab-0.1.0-py3-none-any.whl
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install PyTorch (CUDA 12.6 uses cu126)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span><span class="nv">torchvision</span><span class="o">==</span><span class="m">0</span>.23.0<span class="w"> </span><span class="nv">torchaudio</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu126
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Install NVCC (use conda <strong>only</strong> for this step)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="w"> </span>-y
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Install the remaining Python dependencies</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Install flash-attn (install separately to avoid build isolation and cache-related failures)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/tmp/pip
+<span class="nv">TMPDIR</span><span class="o">=</span>~/tmp/pip
+pip<span class="w"> </span>install<span class="w"> </span>--no-build-isolation<span class="w"> </span>--no-cache-dir<span class="w"> </span>flash-attn<span class="o">==</span><span class="m">2</span>.8.3
+</pre></div>
+</div>
 </section>
-<section id="id4">
-<h2>可选快速自检（确认安装成功）<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<p>python -c “import torch; print(torch.<strong>version</strong>); print(torch.cuda.is_available())”
-bolt-grid –help</p>
+<section id="optional-quick-self-check-verify-installation">
+<h2>Optional Quick Self-Check (verify installation)<a class="headerlink" href="#optional-quick-self-check-verify-installation" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import torch; print(torch.__version__); print(torch.cuda.is_available())&quot;</span>
+bolt-grid<span class="w"> </span>--help
+</pre></div>
+</div>
 </section>
-<section id="id5">
-<h2>常见问题<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<section id="troubleshooting">
+<h2>Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>torch.cuda.is_available() 为 False：
-优先检查 NVIDIA 驱动是否正常、以及 PyTorch 是否安装了 cu126 版本。</p></li>
-<li><p>flash-attn 安装失败：
-常见原因是临时目录空间不足（建议设置 TMPDIR）、torch/CUDA 不匹配、或编译环境缺失。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">torch.cuda.is_available()</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>:
+First check whether the NVIDIA driver works correctly, and whether you installed the <strong>cu126</strong> build of PyTorch.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">flash-attn</span></code> installation fails:
+Common causes include insufficient temporary disk space (recommended to set <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code>), a mismatch between torch/CUDA versions, or missing build tools.</p></li>
 </ul>
 </section>
 </section>
@@ -154,7 +178,7 @@ bolt-grid –help</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="../index.html" class="btn btn-neutral float-left" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="quick_start.html" class="btn btn-neutral float-right" title="快速开始" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quick_start.html" class="btn btn-neutral float-right" title="Quick Start" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

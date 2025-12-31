@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>配置文件（YAML）说明 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Configuration File (YAML) Guide &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="运行方式与常用操作" href="run_grid.html" />
-    <link rel="prev" title="核心概念" href="concepts.html" /> 
+    <link rel="next" title="Datasets Overview" href="datasets.html" />
+    <link rel="prev" title="Core Concepts" href="concepts.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,41 +47,43 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心概念</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">配置文件（YAML）说明</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. 顶层字段一览</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#grid">2. grid 字段建议</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#run">3. run 字段建议</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#paths">4. paths 字段建议</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#per-method-extra">5. per_method_extra：按方法注入参数</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">6. 最小可运行示例</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Core Concepts</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration File (YAML) Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#top-level-fields-overview">1. Top-Level Fields Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendations-for-the-grid-field">2. Recommendations for the <code class="docutils literal notranslate"><span class="pre">grid</span></code> Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendations-for-the-run-field">3. Recommendations for the <code class="docutils literal notranslate"><span class="pre">run</span></code> Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommendations-for-the-paths-field">4. Recommendations for the <code class="docutils literal notranslate"><span class="pre">paths</span></code> Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#per-method-extra-injecting-parameters-per-method">5. <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>: Injecting Parameters per Method</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#minimal-runnable-example">6. Minimal Runnable Example</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -98,7 +100,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">配置文件（YAML）说明</li>
+      <li class="breadcrumb-item active">Configuration File (YAML) Guide</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/user_guide/config_yaml.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -108,127 +110,134 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="yaml">
-<h1>配置文件（YAML）说明<a class="headerlink" href="#yaml" title="Link to this heading"></a></h1>
-<p>本页面向使用者说明：一个 YAML 配置应包含哪些字段、每个字段的含义是什么、以及如何从“小规模验证”逐步扩展到“大规模网格实验”。</p>
-<section id="id1">
-<h2>1. 顶层字段一览<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<p>一个可运行的配置文件通常包含以下顶层字段：</p>
+  <section id="configuration-file-yaml-guide">
+<h1>Configuration File (YAML) Guide<a class="headerlink" href="#configuration-file-yaml-guide" title="Link to this heading"></a></h1>
+<p>This page explains what fields a YAML configuration should contain, what each field means, and how to scale from “small verification runs” to “large grid experiments”.</p>
+<section id="top-level-fields-overview">
+<h2>1. Top-Level Fields Overview<a class="headerlink" href="#top-level-fields-overview" title="Link to this heading"></a></h2>
+<p>A runnable configuration file typically includes the following top-level fields:</p>
 <ul class="simple">
-<li><p>maps
-声明方法属于哪个任务（gcd 或 openset）。</p></li>
-<li><p>methods
-本次运行的方法列表。</p></li>
-<li><p>datasets
-本次运行的数据集列表。</p></li>
-<li><p>result_file
-汇总文件的命名后缀。最终会生成：</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">maps</span></code><br />
+Declares which task (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>) each method belongs to.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methods</span></code><br />
+The list of methods to run in this experiment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code><br />
+The list of datasets to run in this experiment.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_file</span></code><br />
+A naming suffix for summary/index files. The framework will generate:</p>
 <ul>
-<li><p>results/summary_{result_file}.csv</p></li>
-<li><p>results/seen_index_{result_file}.json</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/seen_index_{result_file}.json</span></code></p></li>
 </ul>
 </li>
-<li><p>grid
-网格搜索空间。每个维度为列表，框架做笛卡尔积生成 combos。</p></li>
-<li><p>run
-运行控制参数（GPU、并发、epochs、dry_run、OOM 重试等）。</p></li>
-<li><p>paths
-输出目录设置（results_dir、logs_dir）。</p></li>
-<li><p>per_method_extra
-按方法注入/覆写额外参数（用于方法特定超参或开关）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid</span></code><br />
+The grid search space. Each dimension is a list, and the framework takes the Cartesian product to generate combos.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run</span></code><br />
+Runtime control parameters (GPU selection, concurrency, epochs, dry-run, OOM retry, etc.).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">paths</span></code><br />
+Output directory settings (e.g., <code class="docutils literal notranslate"><span class="pre">results_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">logs_dir</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code><br />
+Per-method injection/override of extra parameters (method-specific hyperparameters or switches).</p></li>
 </ul>
-<p>缺少任一必需字段会导致配置无法运行。</p>
+<p>Missing any required field will cause the configuration to be non-runnable.</p>
 </section>
-<section id="grid">
-<h2>2. grid 字段建议<a class="headerlink" href="#grid" title="Link to this heading"></a></h2>
-<p>常用维度示例：</p>
+<section id="recommendations-for-the-grid-field">
+<h2>2. Recommendations for the <code class="docutils literal notranslate"><span class="pre">grid</span></code> Field<a class="headerlink" href="#recommendations-for-the-grid-field" title="Link to this heading"></a></h2>
+<p>Common dimension examples:</p>
 <ul class="simple">
-<li><p>known_cls_ratio: [0.75]</p></li>
-<li><p>labeled_ratio: [0.5]</p></li>
-<li><p>fold_types: [fold]</p></li>
-<li><p>fold_nums: [5]</p></li>
-<li><p>fold_idxs: [0]</p></li>
-<li><p>seeds: [2025]</p></li>
-<li><p>cluster_num_factor: [1.0]</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio:</span> <span class="pre">[0.75]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labeled_ratio:</span> <span class="pre">[0.5]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_types:</span> <span class="pre">[fold]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_nums:</span> <span class="pre">[5]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_idxs:</span> <span class="pre">[0]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seeds:</span> <span class="pre">[2025]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_num_factor:</span> <span class="pre">[1.0]</span></code></p></li>
 </ul>
-<p>建议实践：</p>
+<p>Recommended practice:</p>
 <ul class="simple">
-<li><p>首次验证流程时，fold_idxs 与 seeds 尽量各保留 1 个值。</p></li>
-<li><p>确认流程正确后，再逐步增加 seeds / folds / ratios 扩大规模。</p></li>
-</ul>
-</section>
-<section id="run">
-<h2>3. run 字段建议<a class="headerlink" href="#run" title="Link to this heading"></a></h2>
-<p>常用字段：</p>
-<ul class="simple">
-<li><p>gpus: [0,1,2,3]</p></li>
-<li><p>max_workers: 4</p></li>
-<li><p>slots_per_gpu: 1</p></li>
-<li><p>num_pretrain_epochs: 1</p></li>
-<li><p>num_train_epochs: 1</p></li>
-<li><p>dry_run: false</p></li>
-<li><p>retry_on_oom: true</p></li>
-<li><p>max_retries: 2</p></li>
-<li><p>retry_backoff_sec: 15</p></li>
-<li><p>only_collect: false</p></li>
-</ul>
-<p>建议实践：</p>
-<ul class="simple">
-<li><p>首次运行建议 dry_run=true，先检查组合数量与命令拼接是否符合预期。</p></li>
-<li><p>并发策略建议从“每卡 1 个任务”开始，再根据显存余量调整 slots_per_gpu。</p></li>
+<li><p>For the first pipeline verification, keep only one value for <code class="docutils literal notranslate"><span class="pre">fold_idxs</span></code> and one value for <code class="docutils literal notranslate"><span class="pre">seeds</span></code>.</p></li>
+<li><p>After confirming the pipeline works correctly, gradually increase <code class="docutils literal notranslate"><span class="pre">seeds</span></code> / <code class="docutils literal notranslate"><span class="pre">folds</span></code> / <code class="docutils literal notranslate"><span class="pre">ratios</span></code> to scale up.</p></li>
 </ul>
 </section>
-<section id="paths">
-<h2>4. paths 字段建议<a class="headerlink" href="#paths" title="Link to this heading"></a></h2>
-<p>常见设置：</p>
+<section id="recommendations-for-the-run-field">
+<h2>3. Recommendations for the <code class="docutils literal notranslate"><span class="pre">run</span></code> Field<a class="headerlink" href="#recommendations-for-the-run-field" title="Link to this heading"></a></h2>
+<p>Common fields:</p>
 <ul class="simple">
-<li><p>results_dir: results</p></li>
-<li><p>logs_dir: logs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">gpus:</span> <span class="pre">[0,1,2,3]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_workers:</span> <span class="pre">4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slots_per_gpu:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_train_epochs:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dry_run:</span> <span class="pre">false</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom:</span> <span class="pre">true</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries:</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec:</span> <span class="pre">15</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">only_collect:</span> <span class="pre">false</span></code></p></li>
 </ul>
-<p>通常保持为相对路径即可。相对路径会落在工作目录（–output-dir）下，便于整体归档。</p>
+<p>Recommended practice:</p>
+<ul class="simple">
+<li><p>For the first run, set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> to verify the number of generated combos and whether command construction matches your expectations.</p></li>
+<li><p>For concurrency, start with “one task per GPU”, then adjust <code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code> based on your available GPU memory headroom.</p></li>
+</ul>
 </section>
-<section id="per-method-extra">
-<h2>5. per_method_extra：按方法注入参数<a class="headerlink" href="#per-method-extra" title="Link to this heading"></a></h2>
-<p>per_method_extra 用于对某个方法单独设置参数，示例：</p>
+<section id="recommendations-for-the-paths-field">
+<h2>4. Recommendations for the <code class="docutils literal notranslate"><span class="pre">paths</span></code> Field<a class="headerlink" href="#recommendations-for-the-paths-field" title="Link to this heading"></a></h2>
+<p>Common settings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">results_dir:</span> <span class="pre">results</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logs_dir:</span> <span class="pre">logs</span></code></p></li>
+</ul>
+<p>In most cases, keeping these as relative paths is sufficient. Relative paths will be created under the working directory (<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>), which is convenient for archiving a run as a whole.</p>
+</section>
+<section id="per-method-extra-injecting-parameters-per-method">
+<h2>5. <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>: Injecting Parameters per Method<a class="headerlink" href="#per-method-extra-injecting-parameters-per-method" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> is used to set parameters for a specific method only. Example:</p>
 <p>per_method_extra:
 tan:
 backbone: bert-base-uncased
 ab:
 emb_name: sbert
 temperature: 0.07</p>
-<p>说明：</p>
+<p>Notes:</p>
 <ul class="simple">
-<li><p>per_method_extra 下的键必须与 methods 列表中的方法名一致。</p></li>
-<li><p>注入的字段会与基础 args 合并后传给方法执行脚本，并写入日志中的 ARGS_JSON，便于复现。</p></li>
+<li><p>Keys under <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> must match the method names listed in <code class="docutils literal notranslate"><span class="pre">methods</span></code>.</p></li>
+<li><p>Injected fields are merged with the base <code class="docutils literal notranslate"><span class="pre">args</span></code> and passed to the method execution script, and are also written into <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> in the logs for reproducibility.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>6. 最小可运行示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>maps:
-gcd: [tan]
-openset: []</p>
-<p>methods: [tan]
-datasets: [XTopic]
-result_file: demo</p>
-<p>grid:
-known_cls_ratio: [0.75]
-labeled_ratio: [0.5]
-fold_types: [fold]
-fold_nums: [5]
-fold_idxs: [0]
-seeds: [2025]
-cluster_num_factor: [1.0]</p>
-<p>run:
-gpus: [0]
-max_workers: 1
-slots_per_gpu: 1
-num_pretrain_epochs: 1
-num_train_epochs: 1
-dry_run: false</p>
-<p>paths:
-results_dir: results
-logs_dir: logs</p>
-<p>per_method_extra: {}</p>
+<section id="minimal-runnable-example">
+<h2>6. Minimal Runnable Example<a class="headerlink" href="#minimal-runnable-example" title="Link to this heading"></a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">maps</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gcd</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">openset</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
+
+<span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
+<span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">XTopic</span><span class="p p-Indicator">]</span>
+<span class="nt">result_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">demo</span>
+
+<span class="nt">grid</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">known_cls_ratio</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.75</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">labeled_ratio</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">fold</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_nums</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_idxs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">seeds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2025</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">cluster_num_factor</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1.0</span><span class="p p-Indicator">]</span>
+
+<span class="nt">run</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gpus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">max_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">slots_per_gpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">num_pretrain_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">num_train_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">dry_run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">paths</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">results_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">results</span>
+<span class="w">  </span><span class="nt">logs_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logs</span>
+
+<span class="nt">per_method_extra</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -236,8 +245,8 @@ logs_dir: logs</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="concepts.html" class="btn btn-neutral float-left" title="核心概念" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="run_grid.html" class="btn btn-neutral float-right" title="运行方式与常用操作" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="concepts.html" class="btn btn-neutral float-left" title="Core Concepts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="datasets.html" class="btn btn-neutral float-right" title="Datasets Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

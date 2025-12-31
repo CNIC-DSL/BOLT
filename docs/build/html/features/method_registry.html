@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>方法注册与执行流水线 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Method Registration and Execution Pipeline &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="GPU 并发调度" href="gpu_scheduler.html" />
-    <link rel="prev" title="YAML 实验规格" href="yaml_experiment_spec.html" /> 
+    <link rel="next" title="GPU Concurrency Scheduling" href="gpu_scheduler.html" />
+    <link rel="prev" title="YAML Experiment Specification" href="yaml_experiment_spec.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,40 +47,42 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">方法注册与执行流水线</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#method-task">1. 从 method 到 task</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#registry">2. Registry 的结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">3. 参数如何传入子进程</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#bert">4. BERT 模型选择规则（默认逻辑）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">5. 扩展：新增一个方法需要做什么</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Method Registration and Execution Pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#from-method-to-task">1. From Method to Task</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#registry-structure">2. Registry Structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-parameters-are-passed-to-subprocesses">3. How Parameters Are Passed to Subprocesses</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#bert-model-selection-rule-default-logic">4. BERT Model Selection Rule (Default Logic)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#extension-what-you-need-to-do-to-add-a-new-method">5. Extension: What You Need to Do to Add a New Method</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -97,7 +99,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">方法注册与执行流水线</li>
+      <li class="breadcrumb-item active">Method Registration and Execution Pipeline</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/features/method_registry.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -107,80 +109,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>方法注册与执行流水线<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>bolt-lab 通过“方法注册表（registry）”将 method 名称映射到可执行脚本、默认配置与执行阶段（stages）。</p>
-<p>本页说明：</p>
+  <section id="method-registration-and-execution-pipeline">
+<h1>Method Registration and Execution Pipeline<a class="headerlink" href="#method-registration-and-execution-pipeline" title="Link to this heading"></a></h1>
+<p>bolt-lab maps a <code class="docutils literal notranslate"><span class="pre">method</span></code> name to an executable script, default configuration, and execution stages via a <strong>method registry</strong>.</p>
+<p>This page explains:</p>
 <ul class="simple">
-<li><p>method 如何被解析为 gcd / openset</p></li>
-<li><p>stages 如何组织（单阶段或多阶段）</p></li>
-<li><p>每次运行时参数如何传入子进程</p></li>
+<li><p>how a method is resolved to <code class="docutils literal notranslate"><span class="pre">gcd</span></code> / <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
+<li><p>how stages are organized (single-stage or multi-stage)</p></li>
+<li><p>how parameters are passed to subprocesses for each run</p></li>
 </ul>
-<section id="method-task">
-<h2>1. 从 method 到 task<a class="headerlink" href="#method-task" title="Link to this heading"></a></h2>
-<p>YAML 中的 maps 声明了方法与任务类型的对应关系：</p>
+<section id="from-method-to-task">
+<h2>1. From Method to Task<a class="headerlink" href="#from-method-to-task" title="Link to this heading"></a></h2>
+<p>In YAML, <code class="docutils literal notranslate"><span class="pre">maps</span></code> declares the mapping between methods and task types:</p>
 <ul class="simple">
-<li><p>maps.gcd：属于 gcd 的方法集合</p></li>
-<li><p>maps.openset：属于 openset 的方法集合</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maps.gcd</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">gcd</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maps.openset</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
 </ul>
-<p>框架会将 methods 中的每个方法映射为 task（gcd 或 openset），并选择对应的 registry。</p>
+<p>The framework maps each method in <code class="docutils literal notranslate"><span class="pre">methods</span></code> to a task (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>) and selects the corresponding registry.</p>
 </section>
-<section id="registry">
-<h2>2. Registry 的结构<a class="headerlink" href="#registry" title="Link to this heading"></a></h2>
-<p>每个方法在 registry 中对应一条记录，包含：</p>
+<section id="registry-structure">
+<h2>2. Registry Structure<a class="headerlink" href="#registry-structure" title="Link to this heading"></a></h2>
+<p>Each method corresponds to one registry entry, which includes:</p>
 <ul class="simple">
-<li><p>task：gcd 或 openset</p></li>
-<li><p>stages：阶段列表</p></li>
-<li><p>config：该方法默认使用的配置文件路径（例如 configs/gcd/tan.yaml）</p></li>
-<li><p>output_base：该方法默认的输出根目录（例如 ./outputs/gcd/tan）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: <code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stages</span></code>: a list of stages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: the default config file path for the method (e.g., <code class="docutils literal notranslate"><span class="pre">configs/gcd/tan.yaml</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_base</span></code>: the default output root for the method (e.g., <code class="docutils literal notranslate"><span class="pre">./outputs/gcd/tan</span></code>)</p></li>
 </ul>
-<p>stages 是一个列表。每个 stage 包含：</p>
+<p><code class="docutils literal notranslate"><span class="pre">stages</span></code> is a list. Each stage typically contains:</p>
 <ul class="simple">
-<li><p>entry：该阶段调用的脚本入口（用于定位）</p></li>
-<li><p>cli_builder：用于拼接命令行参数的函数（最终生成子进程命令）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">entry</span></code>: the script entry point invoked by this stage (for locating/identifying the executable)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_builder</span></code>: a function that assembles command-line arguments (it ultimately generates the subprocess command)</p></li>
 </ul>
-<p>因此一个方法可以是：</p>
+<p>Therefore, a method can be:</p>
 <ul class="simple">
-<li><p>单阶段：stages 只有 1 项（大多数 baseline 属于该类型）</p></li>
-<li><p>多阶段：stages 有多项（例如先 pretrain 再 finetune 的流程）</p></li>
+<li><p>Single-stage: <code class="docutils literal notranslate"><span class="pre">stages</span></code> has only 1 item (most baselines fall into this category)</p></li>
+<li><p>Multi-stage: <code class="docutils literal notranslate"><span class="pre">stages</span></code> has multiple items (e.g., a pipeline like pretrain → finetune)</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>3. 参数如何传入子进程<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>每次运行会构造一份 args_json（包含 dataset/ratio/fold/seed/gpu/epochs 等关键字段），并以两种方式传递：</p>
+<section id="how-parameters-are-passed-to-subprocesses">
+<h2>3. How Parameters Are Passed to Subprocesses<a class="headerlink" href="#how-parameters-are-passed-to-subprocesses" title="Link to this heading"></a></h2>
+<p>For each run, the framework constructs an <code class="docutils literal notranslate"><span class="pre">args_json</span></code> containing key fields such as <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, ratios, fold, seed, GPU, epochs, etc., and passes it in two ways:</p>
 <ol class="arabic simple">
-<li><p>写入环境变量 ARGS_JSON（便于在日志中完整记录）</p></li>
-<li><p>通过命令行参数传入脚本（cli_builder 负责拼接）</p></li>
+<li><p>Write to the environment variable <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> (so it can be fully recorded in logs)</p></li>
+<li><p>Pass to the script via command-line arguments (assembled by <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code>)</p></li>
 </ol>
-<p>日志文件的开头通常会包含：</p>
+<p>At the beginning of a log file, you will typically see:</p>
 <ul class="simple">
-<li><p>CMD：实际执行命令</p></li>
-<li><p>ARGS_JSON：该组合的完整参数 JSON</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span></code>: the actual command executed</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>: the full parameter JSON for that combo</p></li>
 </ul>
-<p>这使得单次实验的复现与排查具备明确依据。</p>
+<p>This provides a clear basis for reproducing and debugging a single experiment run.</p>
 </section>
-<section id="bert">
-<h2>4. BERT 模型选择规则（默认逻辑）<a class="headerlink" href="#bert" title="Link to this heading"></a></h2>
-<p>在部分任务中，cli_builder 会按数据集自动选择中文或英文 BERT 目录。例如：</p>
+<section id="bert-model-selection-rule-default-logic">
+<h2>4. BERT Model Selection Rule (Default Logic)<a class="headerlink" href="#bert-model-selection-rule-default-logic" title="Link to this heading"></a></h2>
+<p>In some tasks, <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> automatically chooses the Chinese or English BERT directory based on the dataset. For example:</p>
 <ul class="simple">
-<li><p>ecdt / thucnews：使用 bert-base-chinese</p></li>
-<li><p>其他：使用 bert-base-uncased</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ecdt</span></code> / <code class="docutils literal notranslate"><span class="pre">thucnews</span></code>: use <code class="docutils literal notranslate"><span class="pre">bert-base-chinese</span></code></p></li>
+<li><p>otherwise: use <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code></p></li>
 </ul>
-<p>在使用 bolt-grid 时，建议通过 –model-dir 指向你本机稳定的预训练模型目录，使得多次实验可以复用缓存与权重文件。</p>
+<p>When using <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code>, it is recommended to point <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> to a stable pretrained model directory on your machine so that multiple experiments can reuse caches and weight files.</p>
 </section>
-<section id="id3">
-<h2>5. 扩展：新增一个方法需要做什么<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>一般需要完成以下事项：</p>
+<section id="extension-what-you-need-to-do-to-add-a-new-method">
+<h2>5. Extension: What You Need to Do to Add a New Method<a class="headerlink" href="#extension-what-you-need-to-do-to-add-a-new-method" title="Link to this heading"></a></h2>
+<p>In general, you need to complete the following:</p>
 <ol class="arabic simple">
-<li><p>在对应 registry（gcd 或 openset）中新增方法条目：</p>
+<li><p>Add a new method entry in the corresponding registry (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>):</p>
 <ul class="simple">
-<li><p>指定 task、config、output_base</p></li>
-<li><p>配置 stages 与 cli_builder</p></li>
+<li><p>specify <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code>, and <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
+<li><p>configure <code class="docutils literal notranslate"><span class="pre">stages</span></code> and <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code></p></li>
 </ul>
 </li>
-<li><p>确保方法脚本在执行结束后，将结果写入框架可收集的位置（见 auto_summary 页）</p></li>
-<li><p>在 YAML 的 maps 中将该方法加入对应任务集合，并在 methods 中引用该方法</p></li>
-<li><p>先用小网格 + dry_run 验证命令与参数，再扩大规模运行</p></li>
+<li><p>Ensure the method script writes results to the location the framework can collect (see the <code class="docutils literal notranslate"><span class="pre">auto_summary</span></code> page)</p></li>
+<li><p>Add the method to the corresponding task set in YAML <code class="docutils literal notranslate"><span class="pre">maps</span></code>, and reference it in <code class="docutils literal notranslate"><span class="pre">methods</span></code></p></li>
+<li><p>First validate commands and parameters with a small grid + <code class="docutils literal notranslate"><span class="pre">dry_run</span></code>, then scale up for large runs</p></li>
 </ol>
 </section>
 </section>
@@ -189,8 +191,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="yaml_experiment_spec.html" class="btn btn-neutral float-left" title="YAML 实验规格" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="gpu_scheduler.html" class="btn btn-neutral float-right" title="GPU 并发调度" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="yaml_experiment_spec.html" class="btn btn-neutral float-left" title="YAML Experiment Specification" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gpu_scheduler.html" class="btn btn-neutral float-right" title="GPU Concurrency Scheduling" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>输出目录结构与注意事项 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Output Directory Structure and Notes &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="YAML 实验规格" href="../features/yaml_experiment_spec.html" />
-    <link rel="prev" title="快速开始" href="quick_start.html" /> 
+    <link rel="next" title="YAML Experiment Specification" href="../features/yaml_experiment_spec.html" />
+    <link rel="prev" title="Pretrained Model Preparation (Pretrained Models)" href="pretrained_models.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,49 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">快速开始</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">输出目录结构与注意事项</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#output-dir">1. 工作目录（–output-dir）的含义</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2. 运行后通常会生成的目录</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">3. 推荐的使用方式</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">4. 常见问题与规避</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Output Directory Structure and Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#meaning-of-the-working-directory-output-dir">1. Meaning of the Working Directory (<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#directories-typically-created-after-a-run">2. Directories Typically Created After a Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-usage">3. Recommended Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-to-modify-configuration-files">3.1 How to Modify Configuration Files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#where-to-look-first-to-diagnose-issues">3.2 Where to Look First to Diagnose Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#common-issues-and-how-to-avoid-them">4. Common Issues and How to Avoid Them</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#avoid-nested-output-directories">4.1 Avoid Nested Output Directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#about-model-dir-additional-notes">4.2 About <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> (Additional Notes)</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +106,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">输出目录结构与注意事项</li>
+      <li class="breadcrumb-item active">Output Directory Structure and Notes</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/get_started/outputs.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,56 +116,64 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>输出目录结构与注意事项<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本节说明 bolt-lab 的运行输出会写到哪里、运行后会生成哪些目录，以及推荐的使用方式，便于快速定位日志与结果。</p>
-<section id="output-dir">
-<h2>1. 工作目录（–output-dir）的含义<a class="headerlink" href="#output-dir" title="Link to this heading"></a></h2>
-<p>运行时通过 –output-dir 指定一个“工作目录”。框架会在该目录下生成本次实验所需的运行环境与产出目录，并将日志、结果汇总、训练/评测产物统一写入该目录，方便迁移、打包与复现。</p>
-<p>建议将 –output-dir 指向一个独立的运行根目录（例如 ~/tmp/exp_001），不要直接指向 outputs/ 或 logs/ 这样的子目录。</p>
+  <section id="output-directory-structure-and-notes">
+<h1>Output Directory Structure and Notes<a class="headerlink" href="#output-directory-structure-and-notes" title="Link to this heading"></a></h1>
+<p>This section explains where <strong>bolt-lab</strong> writes its runtime outputs, what directories are typically created after an experiment, and recommended usage patterns to help you quickly locate logs and results.</p>
+<section id="meaning-of-the-working-directory-output-dir">
+<h2>1. Meaning of the Working Directory (<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>)<a class="headerlink" href="#meaning-of-the-working-directory-output-dir" title="Link to this heading"></a></h2>
+<p>During execution, you specify a <strong>working directory</strong> via <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>. The framework will create the runtime environment and output folders for the current experiment under this directory, and will write <strong>logs, aggregated results, and training/evaluation artifacts</strong> into it. This makes it easy to migrate, package, and reproduce runs.</p>
+<p>It is recommended to point <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> to a dedicated experiment root directory (e.g., <code class="docutils literal notranslate"><span class="pre">~/tmp/exp_001</span></code>), rather than directly to subfolders such as <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> or <code class="docutils literal notranslate"><span class="pre">logs/</span></code>.</p>
 </section>
-<section id="id2">
-<h2>2. 运行后通常会生成的目录<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>以 –output-dir ~/tmp 为例，运行后你会看到（示例结构）：</p>
+<section id="directories-typically-created-after-a-run">
+<h2>2. Directories Typically Created After a Run<a class="headerlink" href="#directories-typically-created-after-a-run" title="Link to this heading"></a></h2>
+<p>Using <code class="docutils literal notranslate"><span class="pre">--output-dir</span> <span class="pre">~/tmp</span></code> as an example, after running you will see something like the following (example structure):</p>
 <p>~/tmp/
-outputs/            训练/评测产物（模型、预测、缓存等）
-results/            汇总与索引文件（例如 summary、seen_index 等）
-logs/               运行日志（用于定位报错与阶段进度）
-code/               运行时使用的代码副本（用于记录本次运行对应的代码状态）
-configs/            运行时使用的配置副本（用于记录本次运行对应的配置状态）
-data/               数据入口目录（可能为空或由你的数据准备流程填充）
-pretrained_models/  模型入口目录（与 –model-dir 对应）</p>
-<p>说明：</p>
+outputs/            Training/evaluation artifacts (models, predictions, caches, etc.)
+results/            Aggregations and index files (e.g., summary, seen_index, etc.)
+logs/               Runtime logs (for debugging errors and tracking stage progress)
+code/               Snapshot of the code used for this run (records code state)
+configs/            Snapshot of the config used for this run (records config state)
+data/               Data entry directory (may be empty or filled by your data pipeline)
+pretrained_models/  Model entry directory (corresponds to <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>)</p>
+<p>Notes:</p>
 <ul class="simple">
-<li><p>优先关注 logs/、results/、outputs/ 三个目录。</p></li>
-<li><p>code/、configs/ 等目录用于记录本次运行所使用的环境状态，便于复现与追踪。</p></li>
+<li><p>Focus first on <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, and <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p></li>
+<li><p>Directories such as <code class="docutils literal notranslate"><span class="pre">code/</span></code> and <code class="docutils literal notranslate"><span class="pre">configs/</span></code> are used to record the environment state for the run, making reproduction and tracking easier.</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>3. 推荐的使用方式<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>3.1 配置文件的修改方式
-建议不要直接在工作目录下修改 configs/ 内的文件作为长期配置来源。
-更稳妥的做法是：</p>
+<section id="recommended-usage">
+<h2>3. Recommended Usage<a class="headerlink" href="#recommended-usage" title="Link to this heading"></a></h2>
+<section id="how-to-modify-configuration-files">
+<h3>3.1 How to Modify Configuration Files<a class="headerlink" href="#how-to-modify-configuration-files" title="Link to this heading"></a></h3>
+<p>It is recommended <strong>not</strong> to directly edit files under <code class="docutils literal notranslate"><span class="pre">configs/</span></code> inside the working directory as your long-term configuration source.</p>
+<p>A more robust approach:</p>
 <ul class="simple">
-<li><p>将示例配置复制到你自己的目录进行修改；</p></li>
-<li><p>运行时用 –config 传入该配置文件的绝对路径。</p></li>
+<li><p>Copy the example configs to your own directory and modify them there.</p></li>
+<li><p>Pass the absolute path of that config file at runtime via <code class="docutils literal notranslate"><span class="pre">--config</span></code>.</p></li>
 </ul>
-<p>这样可以避免不同实验之间相互覆盖，且更便于版本管理。</p>
-<p>3.2 先看哪里能最快定位问题</p>
+<p>This avoids accidental overwrites between experiments and is easier to manage with version control.</p>
+</section>
+<section id="where-to-look-first-to-diagnose-issues">
+<h3>3.2 Where to Look First to Diagnose Issues<a class="headerlink" href="#where-to-look-first-to-diagnose-issues" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>运行报错、卡住、阶段失败：先查看 logs/，通常可以直接找到错误堆栈与失败阶段。</p></li>
-<li><p>关心实验汇总结果：查看 results/（通常包含 summary、索引等汇总文件）。</p></li>
-<li><p>关心模型与预测产物：查看 outputs/。</p></li>
+<li><p>Runtime errors, hangs, or stage failures: check <code class="docutils literal notranslate"><span class="pre">logs/</span></code> first. You can usually find the error stack trace and the failed stage there.</p></li>
+<li><p>Experiment summary results: check <code class="docutils literal notranslate"><span class="pre">results/</span></code> (typically contains summary files, indexes, etc.).</p></li>
+<li><p>Model and prediction artifacts: check <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p></li>
 </ul>
 </section>
-<section id="id4">
-<h2>4. 常见问题与规避<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<p>4.1 避免目录“套娃”
-请确保 –output-dir 是运行根目录。
-不建议将 –output-dir 设为 …/outputs，否则容易出现 outputs/outputs 的嵌套结构，后续查找与清理会变得困难。</p>
-<p>4.2 关于 –model-dir（补充说明）
-–model-dir 用于指定模型/缓存目录（用于预训练模型与相关缓存的读取/写入）。
-工作目录下的 pretrained_models/ 用于承载该入口，建议 –model-dir 指向一个稳定且可读写的位置，以减少重复下载与重复准备成本。</p>
+</section>
+<section id="common-issues-and-how-to-avoid-them">
+<h2>4. Common Issues and How to Avoid Them<a class="headerlink" href="#common-issues-and-how-to-avoid-them" title="Link to this heading"></a></h2>
+<section id="avoid-nested-output-directories">
+<h3>4.1 Avoid Nested Output Directories<a class="headerlink" href="#avoid-nested-output-directories" title="Link to this heading"></a></h3>
+<p>Make sure <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> is the experiment root directory.
+Do not set <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> to something like <code class="docutils literal notranslate"><span class="pre">.../outputs</span></code>, otherwise you may end up with nested structures such as <code class="docutils literal notranslate"><span class="pre">outputs/outputs</span></code>, which makes searching and cleanup difficult.</p>
+</section>
+<section id="about-model-dir-additional-notes">
+<h3>4.2 About <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> (Additional Notes)<a class="headerlink" href="#about-model-dir-additional-notes" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> is used to specify the model/cache directory (for reading/writing pretrained models and related caches).
+The <code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code> directory under the working directory serves as the container for this entry point. It is recommended to set <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> to a stable, readable/writable location to reduce repeated downloads and preparation costs.</p>
+</section>
 </section>
 </section>
 
@@ -163,8 +181,8 @@ pretrained_models/  模型入口目录（与 –model-dir 对应）</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quick_start.html" class="btn btn-neutral float-left" title="快速开始" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../features/yaml_experiment_spec.html" class="btn btn-neutral float-right" title="YAML 实验规格" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="pretrained_models.html" class="btn btn-neutral float-left" title="Pretrained Model Preparation (Pretrained Models)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../features/yaml_experiment_spec.html" class="btn btn-neutral float-right" title="YAML Experiment Specification" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

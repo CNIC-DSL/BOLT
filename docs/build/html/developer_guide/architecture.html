@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>架构与执行流程 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Architecture and Execution Flow &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="新增方法" href="add_method.html" />
-    <link rel="prev" title="指标说明" href="../user_guide/metrics.html" /> 
+    <link rel="next" title="Adding a New Method" href="add_method.html" />
+    <link rel="prev" title="Metrics Guide" href="../user_guide/metrics.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,33 +47,60 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture and Execution Flow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#i-end-to-end-data-flow-from-yaml-to-summarized-results">I. End-to-End Data Flow (From YAML to Summarized Results)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#entry-point-bolt-grid">1) Entry Point: <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#runner-run-grid-py">2) Runner: <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#single-combo-execution-utils-run-combo">3) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">utils.run_combo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#result-collection-and-summarization-collect-latest-result-write-summary">4) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">write_summary()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-key-modules-and-responsibility-boundaries">II. Key Modules and Responsibility Boundaries</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#run-grid-py-scheduling-layer">1) <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> (Scheduling Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-gcd-py-cli-openset-py-method-registration-and-command-building">2) <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code> (Method Registration and Command Building)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#utils-py-execution-and-summarization-layer">3) <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> (Execution and Summarization Layer)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#iii-reproducibility-conventions">III. Reproducibility Conventions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#args-json-as-the-minimal-reproducibility-loop">1) <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> as the Minimal Reproducibility Loop</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#result-file-path-convention">2) Result File Path Convention</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#iv-common-debugging-techniques-for-developers">IV. Common Debugging Techniques for Developers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#dry-run">1) <code class="docutils literal notranslate"><span class="pre">dry_run</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#reproduce-from-stage-logs">2) Reproduce from Stage Logs</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -90,7 +117,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">架构与执行流程</li>
+      <li class="breadcrumb-item active">Architecture and Execution Flow</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/developer_guide/architecture.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -100,126 +127,163 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>架构与执行流程<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本文面向二次开发者，说明 bolt-lab 的核心执行链路、关键数据结构、以及各模块之间的责任边界。</p>
-<p>一、整体数据流（从 YAML 到结果汇总）</p>
-<p>1）入口：bolt-grid</p>
+  <section id="architecture-and-execution-flow">
+<h1>Architecture and Execution Flow<a class="headerlink" href="#architecture-and-execution-flow" title="Link to this heading"></a></h1>
+<p>This page is intended for developers who want to extend or modify the system. It explains bolt-lab’s core execution chain, key data structures, and the responsibility boundaries across modules.</p>
+<section id="i-end-to-end-data-flow-from-yaml-to-summarized-results">
+<h2>I. End-to-End Data Flow (From YAML to Summarized Results)<a class="headerlink" href="#i-end-to-end-data-flow-from-yaml-to-summarized-results" title="Link to this heading"></a></h2>
+<section id="entry-point-bolt-grid">
+<h3>1) Entry Point: <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code><a class="headerlink" href="#entry-point-bolt-grid" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>CLI 接收参数：–config、–output-dir、–model-dir</p></li>
-<li><p>将配置文件定位到实际路径后，交给 runner 执行（runner 会读取 YAML 并启动调度）</p></li>
+<li><p>The CLI accepts arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code></p></li>
+<li><p>After resolving the config file to a concrete path, it hands control to the runner (which reads the YAML and starts scheduling)</p></li>
 </ul>
-<p>2）runner：run_grid.py</p>
+</section>
+<section id="runner-run-grid-py">
+<h3>2) Runner: <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code><a class="headerlink" href="#runner-run-grid-py" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>读取 YAML 并校验必需字段：
-maps / methods / datasets / grid / run / paths / result_file / per_method_extra</p></li>
-<li><p>调用 set_paths(results_dir, logs_dir, result_file) 初始化：
-results/summary_{result_file}.csv
-results/seen_index_{result_file}.json
-logs/ 根目录</p></li>
-<li><p>将 grid 中每个维度展开为组合（combo），形成任务列表 combos</p></li>
-<li><p>建立 GPU token 池（Queue）：</p>
+<li><p>Reads the YAML and validates required fields:
+<code class="docutils literal notranslate"><span class="pre">maps</span> <span class="pre">/</span> <span class="pre">methods</span> <span class="pre">/</span> <span class="pre">datasets</span> <span class="pre">/</span> <span class="pre">grid</span> <span class="pre">/</span> <span class="pre">run</span> <span class="pre">/</span> <span class="pre">paths</span> <span class="pre">/</span> <span class="pre">result_file</span> <span class="pre">/</span> <span class="pre">per_method_extra</span></code></p></li>
+<li><p>Calls <code class="docutils literal notranslate"><span class="pre">set_paths(results_dir,</span> <span class="pre">logs_dir,</span> <span class="pre">result_file)</span></code> to initialize:</p>
 <ul>
-<li><p>run.gpus 指定可用 GPU 列表</p></li>
-<li><p>run.slots_per_gpu 决定每张 GPU 提供多少个 token</p></li>
-<li><p>token 总数 = len(gpus) * slots_per_gpu</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/seen_index_{result_file}.json</span></code></p></li>
+<li><p>the <code class="docutils literal notranslate"><span class="pre">logs/</span></code> root directory</p></li>
 </ul>
 </li>
-<li><p>使用 ThreadPoolExecutor 并发调度：</p>
+<li><p>Expands each dimension in <code class="docutils literal notranslate"><span class="pre">grid</span></code> into experiment combinations (combos), forming a task list <code class="docutils literal notranslate"><span class="pre">combos</span></code></p></li>
+<li><p>Builds a GPU token pool (a <code class="docutils literal notranslate"><span class="pre">Queue</span></code>):</p>
 <ul>
-<li><p>每个 worker 启动时领取一个 gpu_id</p></li>
-<li><p>执行完毕归还 gpu_id</p></li>
-<li><p>并发度 = min(max_workers, token 总数, combos 数)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.gpus</span></code> specifies the list of available GPUs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.slots_per_gpu</span></code> determines how many tokens each GPU provides</p></li>
+<li><p>total tokens = <code class="docutils literal notranslate"><span class="pre">len(gpus)</span> <span class="pre">*</span> <span class="pre">slots_per_gpu</span></code></p></li>
 </ul>
 </li>
-</ul>
-<p>3）单组合执行：utils.run_combo()</p>
-<ul class="simple">
-<li><p>根据 method 在两个 registry 中查找方法定义：</p>
+<li><p>Schedules tasks concurrently via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>:</p>
 <ul>
-<li><p>cli_gcd.METHOD_REGISTRY_GCD</p></li>
-<li><p>cli_openset.METHOD_REGISTRY_OPENSET</p></li>
-</ul>
-</li>
-<li><p>生成 args_json（make_base_args）：
-包含 method/dataset/ratio/fold/seed/gpu/epochs 等参数，并合并 per_method_extra 中该 method 的扩展字段</p></li>
-<li><p>执行 stages：</p>
-<ul>
-<li><p>每个 stage 由 cli_builder(args_json, stage_idx) 生成命令行数组</p></li>
-<li><p>run_stage() 负责：</p>
-<ul>
-<li><p>设置 ARGS_JSON 环境变量（用于记录与复现）</p></li>
-<li><p>设置 CUDA_VISIBLE_DEVICES（绑定到领取到的 gpu_id）</p></li>
-<li><p>将 CMD 与 ARGS_JSON 记录到 stage 日志开头</p></li>
-<li><p>启动子进程并等待返回码</p></li>
-</ul>
-</li>
-<li><p>任一 stage 返回码非 0 则该 combo 失败，后续阶段不会继续</p></li>
+<li><p>each worker acquires a <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code> when starting</p></li>
+<li><p>returns the <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code> when finished</p></li>
+<li><p>concurrency = <code class="docutils literal notranslate"><span class="pre">min(max_workers,</span> <span class="pre">total_tokens,</span> <span class="pre">number_of_combos)</span></code></p></li>
 </ul>
 </li>
 </ul>
-<p>4）结果收集与汇总：collect_latest_result() + write_summary()</p>
+</section>
+<section id="single-combo-execution-utils-run-combo">
+<h3>3) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">utils.run_combo()</span></code><a class="headerlink" href="#single-combo-execution-utils-run-combo" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>combo 全部 stage 成功后，框架会尝试读取：
-./results/{task}/{method}/results.csv
-并使用最后一行作为“最新结果”</p></li>
-<li><p>若读取成功，则追加写入：
-results/summary_{result_file}.csv</p></li>
-<li><p>若未找到结果文件或结果为空，会提示 Finished but no results found，不写 summary</p></li>
-</ul>
-<p>二、关键模块与职责边界</p>
-<p>1）run_grid.py（调度层）</p>
-<ul class="simple">
-<li><p>负责：解析 YAML、展开组合、并发调度、OOM 重试策略（可选）</p></li>
-<li><p>不负责：方法内部训练逻辑与指标计算</p></li>
-</ul>
-<p>2）cli_gcd.py / cli_openset.py（方法注册与命令构建）</p>
-<ul class="simple">
-<li><p>负责：将 method 映射到 stages，并为每个 stage 提供 cli_builder</p></li>
-<li><p>负责：定义默认 config 路径与默认 output_base</p></li>
-<li><p>不负责：执行过程中的结果写入（这由方法脚本完成）</p></li>
-</ul>
-<p>3）utils.py（运行与汇总层）</p>
-<ul class="simple">
-<li><p>负责：构造 args_json、运行 stage、组织日志目录、收集结果并写入 summary</p></li>
-<li><p>负责：为每个 stage 写入 CMD 与 ARGS_JSON（用于复现与排查）</p></li>
-</ul>
-<p>三、关于可复现性的约定</p>
-<p>1）ARGS_JSON 是复现的最小闭环</p>
-<ul class="simple">
-<li><p>每个 stage 日志开头都会包含：</p>
+<li><p>Looks up method definitions from the two registries:</p>
 <ul>
-<li><p>CMD（实际执行命令）</p></li>
-<li><p>ARGS_JSON（完整参数 JSON）
-因此“复现实验”通常可以从日志中直接拿到命令与参数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_gcd.METHOD_REGISTRY_GCD</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_openset.METHOD_REGISTRY_OPENSET</span></code></p></li>
+</ul>
+</li>
+<li><p>Builds <code class="docutils literal notranslate"><span class="pre">args_json</span></code> (<code class="docutils literal notranslate"><span class="pre">make_base_args</span></code>):</p>
+<ul>
+<li><p>includes key fields such as method/dataset/ratios/fold/seed/GPU/epochs</p></li>
+<li><p>merges method-specific extra fields from <code class="docutils literal notranslate"><span class="pre">per_method_extra[method]</span></code></p></li>
+</ul>
+</li>
+<li><p>Executes stages:</p>
+<ul>
+<li><p>each stage generates an argv command via <code class="docutils literal notranslate"><span class="pre">cli_builder(args_json,</span> <span class="pre">stage_idx)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_stage()</span></code> is responsible for:</p>
+<ul>
+<li><p>setting the <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> environment variable (for logging and reproducibility)</p></li>
+<li><p>setting <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> (binding to the acquired <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>)</p></li>
+<li><p>writing <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> at the beginning of the stage log</p></li>
+<li><p>launching the subprocess and waiting for the return code</p></li>
+</ul>
+</li>
+<li><p>if any stage returns a non-zero code, the combo fails and subsequent stages will not run</p></li>
 </ul>
 </li>
 </ul>
-<p>2）结果文件路径约定</p>
+</section>
+<section id="result-collection-and-summarization-collect-latest-result-write-summary">
+<h3>4) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">write_summary()</span></code><a class="headerlink" href="#result-collection-and-summarization-collect-latest-result-write-summary" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>自动汇总依赖以下约定：
-./results/{task}/{method}/results.csv
-方法脚本必须在运行结束时写入该文件，否则框架无法自动收集并汇总。</p></li>
+<li><p>After all stages succeed, the framework attempts to read:
+<code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code>
+and uses the last row as the “latest result”</p></li>
+<li><p>If successful, it appends one row to:
+<code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+<li><p>If the result file is missing or empty, it prints a message like “Finished but no results found” and does not write to the summary</p></li>
 </ul>
-<p>四、开发者常用调试手段</p>
-<p>1）dry_run</p>
+</section>
+</section>
+<section id="ii-key-modules-and-responsibility-boundaries">
+<h2>II. Key Modules and Responsibility Boundaries<a class="headerlink" href="#ii-key-modules-and-responsibility-boundaries" title="Link to this heading"></a></h2>
+<section id="run-grid-py-scheduling-layer">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> (Scheduling Layer)<a class="headerlink" href="#run-grid-py-scheduling-layer" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>在 YAML 的 run 中设置 dry_run=true，可只打印命令与 ARGS_JSON，不实际执行</p></li>
-<li><p>适合检查组合数、参数传递与命令拼接是否符合预期</p></li>
+<li><p>Responsible for: parsing YAML, expanding combos, concurrent scheduling, OOM retry policy (optional)</p></li>
+<li><p>Not responsible for: method-internal training logic or metric computation</p></li>
 </ul>
-<p>2）从 stage 日志复现</p>
+</section>
+<section id="cli-gcd-py-cli-openset-py-method-registration-and-command-building">
+<h3>2) <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code> (Method Registration and Command Building)<a class="headerlink" href="#cli-gcd-py-cli-openset-py-method-registration-and-command-building" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>找到失败 combo 的 stageX.log</p></li>
-<li><p>复制 CMD 与 ARGS_JSON，对照方法脚本的参数解析逻辑进行复现与定位</p></li>
+<li><p>Responsible for: mapping a method to stages, and providing <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> for each stage</p></li>
+<li><p>Responsible for: defining default config paths and default <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
+<li><p>Not responsible for: writing results during execution (this is handled by the method scripts)</p></li>
 </ul>
+</section>
+<section id="utils-py-execution-and-summarization-layer">
+<h3>3) <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> (Execution and Summarization Layer)<a class="headerlink" href="#utils-py-execution-and-summarization-layer" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Responsible for: constructing <code class="docutils literal notranslate"><span class="pre">args_json</span></code>, running stages, organizing log directories, collecting results, and writing the summary</p></li>
+<li><p>Responsible for: writing <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> for each stage (for reproducibility and debugging)</p></li>
+</ul>
+</section>
+</section>
+<section id="iii-reproducibility-conventions">
+<h2>III. Reproducibility Conventions<a class="headerlink" href="#iii-reproducibility-conventions" title="Link to this heading"></a></h2>
+<section id="args-json-as-the-minimal-reproducibility-loop">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> as the Minimal Reproducibility Loop<a class="headerlink" href="#args-json-as-the-minimal-reproducibility-loop" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>At the beginning of each stage log, you will see:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span></code> (the actual command executed)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> (the full parameter JSON)
+Therefore, reproducing an experiment can usually be done by directly copying the command and parameters from the logs.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="result-file-path-convention">
+<h3>2) Result File Path Convention<a class="headerlink" href="#result-file-path-convention" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Automatic summarization depends on the convention:
+<code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code>
+Method scripts must write this file at the end of execution; otherwise, the framework cannot automatically collect and summarize results.</p></li>
+</ul>
+</section>
+</section>
+<section id="iv-common-debugging-techniques-for-developers">
+<h2>IV. Common Debugging Techniques for Developers<a class="headerlink" href="#iv-common-debugging-techniques-for-developers" title="Link to this heading"></a></h2>
+<section id="dry-run">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">dry_run</span></code><a class="headerlink" href="#dry-run" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> under <code class="docutils literal notranslate"><span class="pre">run</span></code> in YAML to print commands and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> without actually executing anything</p></li>
+<li><p>Useful for checking combo counts, parameter passing, and whether command construction matches expectations</p></li>
+</ul>
+</section>
+<section id="reproduce-from-stage-logs">
+<h3>2) Reproduce from Stage Logs<a class="headerlink" href="#reproduce-from-stage-logs" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Locate <code class="docutils literal notranslate"><span class="pre">stageX.log</span></code> for the failed combo</p></li>
+<li><p>Copy <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>, and reproduce/debug by aligning with the method script’s argument parsing logic</p></li>
+</ul>
+</section>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="../user_guide/metrics.html" class="btn btn-neutral float-left" title="指标说明" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="add_method.html" class="btn btn-neutral float-right" title="新增方法" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="../user_guide/metrics.html" class="btn btn-neutral float-left" title="Metrics Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_method.html" class="btn btn-neutral float-right" title="Adding a New Method" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

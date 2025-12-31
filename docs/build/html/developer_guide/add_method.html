@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>新增方法 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Adding a New Method &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="接入新数据集" href="add_dataset.html" />
-    <link rel="prev" title="架构与执行流程" href="architecture.html" /> 
+    <link rel="next" title="Integrating a New Dataset" href="add_dataset.html" />
+    <link rel="prev" title="Architecture and Execution Flow" href="architecture.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,33 +47,44 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding a New Method</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#i-integration-overview">I. Integration Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-step-1-prepare-the-method-script-and-outputs">II. Step 1: Prepare the Method Script and Outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iii-step-2-add-a-method-configuration-file">III. Step 2: Add a Method Configuration File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iv-step-3-implement-cli-builder-command-builder-function">IV. Step 3: Implement <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> (Command Builder Function)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#v-step-4-register-the-method-in-method-registry">V. Step 4: Register the Method in <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vi-step-5-declare-it-in-yaml-and-test-run">VI. Step 5: Declare It in YAML and Test Run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#vii-common-integration-issues">VII. Common Integration Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -90,7 +101,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">新增方法</li>
+      <li class="breadcrumb-item active">Adding a New Method</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/developer_guide/add_method.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -100,122 +111,156 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>新增方法<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本文说明如何在 bolt-lab 中接入一个新方法（method），使其能够：</p>
+  <section id="adding-a-new-method">
+<h1>Adding a New Method<a class="headerlink" href="#adding-a-new-method" title="Link to this heading"></a></h1>
+<p>This page explains how to integrate a new method into bolt-lab so that it can:</p>
 <ul class="simple">
-<li><p>被 YAML 配置引用并进入网格调度</p></li>
-<li><p>正确执行（单阶段或多阶段）</p></li>
-<li><p>运行结束后被框架自动收集结果并写入 summary</p></li>
+<li><p>be referenced by YAML configs and enter grid scheduling</p></li>
+<li><p>execute correctly (single-stage or multi-stage)</p></li>
+<li><p>be automatically collected after completion and written into the summary</p></li>
 </ul>
-<p>一、接入路径概览</p>
-<p>新增方法通常涉及三个部分：
-1）方法脚本（真正训练/评测的代码）
-2）方法配置（configs 下的 YAML 配置）
-3）注册与命令构建（cli_gcd.py 或 cli_openset.py）</p>
-<p>二、步骤 1：准备方法脚本与输出</p>
-<p>1）放置位置</p>
+<section id="i-integration-overview">
+<h2>I. Integration Overview<a class="headerlink" href="#i-integration-overview" title="Link to this heading"></a></h2>
+<p>Adding a new method typically involves three parts:</p>
+<ol class="arabic simple">
+<li><p>Method script (the actual training/evaluation code)</p></li>
+<li><p>Method configuration (YAML under <code class="docutils literal notranslate"><span class="pre">configs/</span></code>)</p></li>
+<li><p>Registration and command construction (<code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> or <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code>)</p></li>
+</ol>
+</section>
+<section id="ii-step-1-prepare-the-method-script-and-outputs">
+<h2>II. Step 1: Prepare the Method Script and Outputs<a class="headerlink" href="#ii-step-1-prepare-the-method-script-and-outputs" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Location</p></li>
+</ol>
 <ul class="simple">
-<li><p>GCD 方法通常放在：code/gcd/…</p></li>
-<li><p>OpenSet 方法通常放在：code/openset/…</p></li>
+<li><p>GCD methods are typically placed under: <code class="docutils literal notranslate"><span class="pre">code/gcd/...</span></code></p></li>
+<li><p>OpenSet methods are typically placed under: <code class="docutils literal notranslate"><span class="pre">code/openset/...</span></code></p></li>
 </ul>
-<p>2）输出要求（强制）
-方法运行结束后必须写入：
-./results/{task}/{method}/results.csv</p>
-<p>要求：</p>
+<ol class="arabic simple" start="2">
+<li><p>Output requirements (mandatory)
+After the method finishes, it <strong>must</strong> write:
+./results/{task}/{method}/results.csv</p></li>
+</ol>
+<p>Requirements:</p>
 <ul class="simple">
-<li><p>CSV 至少包含一行结果</p></li>
-<li><p>建议包含 args 字段（JSON 字符串），用于后续去重与追溯</p></li>
-<li><p>指标列由方法决定，但建议与现有方法保持一致（便于横向对比）</p></li>
+<li><p>The CSV must contain at least one row of results</p></li>
+<li><p>It is recommended to include an <code class="docutils literal notranslate"><span class="pre">args</span></code> column (a JSON string) for deduplication and traceability</p></li>
+<li><p>Metric columns are method-dependent, but it is recommended to keep them consistent with existing methods (for fair horizontal comparison)</p></li>
 </ul>
-<p>三、步骤 2：新增方法配置文件</p>
-<p>为新方法新增默认配置：</p>
+</section>
+<section id="iii-step-2-add-a-method-configuration-file">
+<h2>III. Step 2: Add a Method Configuration File<a class="headerlink" href="#iii-step-2-add-a-method-configuration-file" title="Link to this heading"></a></h2>
+<p>Add a default config for the new method:</p>
 <ul class="simple">
-<li><p>GCD：configs/gcd/<method>.yaml</p></li>
-<li><p>OpenSet：configs/openset/<method>.yaml</p></li>
+<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">configs/gcd/&lt;method&gt;.yaml</span></code></p></li>
+<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">configs/openset/&lt;method&gt;.yaml</span></code></p></li>
 </ul>
-<p>建议：</p>
+<p>Recommendations:</p>
 <ul class="simple">
-<li><p>将通用参数放在顶层</p></li>
-<li><p>如对不同 dataset 需要不同参数，可增加 dataset_specific_configs 字段（可选）</p></li>
+<li><p>Put common parameters at the top level</p></li>
+<li><p>If different datasets require different parameters, add <code class="docutils literal notranslate"><span class="pre">dataset_specific_configs</span></code> (optional)</p></li>
 </ul>
-<p>四、步骤 3：实现 cli_builder（命令构建函数）</p>
-<p>在对应文件中新增命令构建函数：</p>
+</section>
+<section id="iv-step-3-implement-cli-builder-command-builder-function">
+<h2>IV. Step 3: Implement <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> (Command Builder Function)<a class="headerlink" href="#iv-step-3-implement-cli-builder-command-builder-function" title="Link to this heading"></a></h2>
+<p>Add a new command builder function in the corresponding file:</p>
 <ul class="simple">
-<li><p>GCD：cli_gcd.py</p></li>
-<li><p>OpenSet：cli_openset.py</p></li>
+<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code></p></li>
+<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code></p></li>
 </ul>
-<p>命令构建的基本原则：
-1）从 args_json 中读取通用字段：</p>
+<p>Basic principles for command construction:</p>
+<ol class="arabic simple">
+<li><p>Read common fields from <code class="docutils literal notranslate"><span class="pre">args_json</span></code>:</p></li>
+</ol>
 <ul class="simple">
-<li><p>dataset / known_cls_ratio / labeled_ratio</p></li>
-<li><p>fold_type / fold_num / fold_idx</p></li>
-<li><p>seed / gpu_id</p></li>
-<li><p>num_pretrain_epochs / num_train_epochs</p></li>
-<li><p>config（默认配置路径）
-2）将 method 特有参数也从 args_json 读取（来自 per_method_extra 或未来扩展字段）
-3）输出必须是 “argv 列表”，例如：
+<li><p><code class="docutils literal notranslate"><span class="pre">dataset</span></code> / <code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code> / <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_type</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_num</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seed</span></code> / <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs</span></code> / <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code> (default config path)</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>Read method-specific parameters from <code class="docutils literal notranslate"><span class="pre">args_json</span></code> as well (from <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> or future grid dimensions)</p></li>
+<li><p>Output must be an <strong>argv list</strong>, for example:
 [sys.executable, “code/xxx/run.py”, “–arg1”, “v1”, …]</p></li>
-</ul>
-<p>建议模式：</p>
+</ol>
+<p>Recommended pattern:</p>
 <ul class="simple">
-<li><p>若你的方法可复用通用参数集，可以复用已有的 _common_env / _common_flags / _epoch_flags 逻辑</p></li>
-<li><p>若需要额外 flag，可在 args_json 中定义 extra_flags（list），并在 cli_builder 中追加</p></li>
+<li><p>If your method can reuse common flags, reuse existing <code class="docutils literal notranslate"><span class="pre">_common_env</span></code> / <code class="docutils literal notranslate"><span class="pre">_common_flags</span></code> / <code class="docutils literal notranslate"><span class="pre">_epoch_flags</span></code> logic</p></li>
+<li><p>If extra flags are needed, define <code class="docutils literal notranslate"><span class="pre">extra_flags</span></code> (list) in <code class="docutils literal notranslate"><span class="pre">args_json</span></code> and append them in <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code></p></li>
 </ul>
-<p>五、步骤 4：在 METHOD_REGISTRY 中注册方法</p>
-<p>1）选择 registry</p>
+</section>
+<section id="v-step-4-register-the-method-in-method-registry">
+<h2>V. Step 4: Register the Method in <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code><a class="headerlink" href="#v-step-4-register-the-method-in-method-registry" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Choose the correct registry</p></li>
+</ol>
 <ul class="simple">
-<li><p>GCD：METHOD_REGISTRY_GCD（cli_gcd.py）</p></li>
-<li><p>OpenSet：METHOD_REGISTRY_OPENSET（cli_openset.py）</p></li>
+<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY_GCD</span></code> (in <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code>)</p></li>
+<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY_OPENSET</span></code> (in <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code>)</p></li>
 </ul>
-<p>2）新增条目结构</p>
+<ol class="arabic simple" start="2">
+<li><p>Add a new entry</p></li>
+</ol>
 <p>“<method>”: {
-“task”: “gcd” 或 “openset”,
+“task”: “gcd” or “openset”,
 “stages”: [
-{“entry”: “&lt;脚本路径&gt;”, “cli_builder”: &lt;函数名&gt;},
-…（多阶段时继续添加）
+{“entry”: “<script path>”, “cli_builder”: &lt;function_name&gt;},
+… (add more items for multi-stage methods)
 ],
 “config”: “configs/<task>/<method>.yaml”,
 “output_base”: “./outputs/<task>/<method>”,
 }</p>
-<p>说明：</p>
+<p>Notes:</p>
 <ul class="simple">
-<li><p>stags 数量决定该方法是单阶段还是多阶段</p></li>
-<li><p>entry 用于标识阶段入口（主要用于可读性与排查）</p></li>
-<li><p>output_base 会进入 args_json（用于输出目录组织）</p></li>
+<li><p>The number of <code class="docutils literal notranslate"><span class="pre">stages</span></code> determines whether the method is single-stage or multi-stage</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">entry</span></code> is used to identify the stage entry point (mainly for readability and debugging)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_base</span></code> is included in <code class="docutils literal notranslate"><span class="pre">args_json</span></code> (used for organizing output directories)</p></li>
 </ul>
-<p>六、步骤 5：在 YAML 中声明并试跑</p>
-<p>1）在 YAML 的 maps 中把方法加入对应任务集合：
+</section>
+<section id="vi-step-5-declare-it-in-yaml-and-test-run">
+<h2>VI. Step 5: Declare It in YAML and Test Run<a class="headerlink" href="#vi-step-5-declare-it-in-yaml-and-test-run" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Add the method into the corresponding task set under <code class="docutils literal notranslate"><span class="pre">maps</span></code>:
 maps:
 gcd: […, <method>]
-openset: […]</p>
-<p>2）在 methods 列表中引用该方法：
-methods: [<method>]</p>
-<p>3）首次建议使用最小网格并 dry_run</p>
+openset: […]</p></li>
+<li><p>Reference the method in <code class="docutils literal notranslate"><span class="pre">methods</span></code>:
+methods: [<method>]</p></li>
+<li><p>For the first run, use a minimal grid and <code class="docutils literal notranslate"><span class="pre">dry_run</span></code></p></li>
+</ol>
 <ul class="simple">
-<li><p>先 dry_run=true 检查命令与参数</p></li>
-<li><p>再 dry_run=false 真跑 1 个 seed + 1 个 fold</p></li>
+<li><p>Set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> first to verify commands and parameters</p></li>
+<li><p>Then set <code class="docutils literal notranslate"><span class="pre">dry_run=false</span></code> and run with 1 seed + 1 fold</p></li>
 </ul>
-<p>七、常见接入问题</p>
-<p>1）运行成功但 summary 没有新增</p>
+</section>
+<section id="vii-common-integration-issues">
+<h2>VII. Common Integration Issues<a class="headerlink" href="#vii-common-integration-issues" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Run succeeds but the summary has no new record</p></li>
+</ol>
 <ul class="simple">
-<li><p>优先检查：是否写出了 ./results/{task}/{method}/results.csv</p></li>
-<li><p>再检查：results.csv 是否有最后一行可读结果</p></li>
+<li><p>First check whether <code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code> was written</p></li>
+<li><p>Then check whether <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> contains a readable last-row result</p></li>
 </ul>
-<p>2）参数没传进去</p>
+<ol class="arabic simple" start="2">
+<li><p>Parameters are not passed through</p></li>
+</ol>
 <ul class="simple">
-<li><p>查看 stageX.log 开头的 ARGS_JSON</p></li>
-<li><p>确认 cli_builder 是否从 args_json 读取了对应字段</p></li>
-<li><p>如使用 per_method_extra 注入字段，确认 method 名称匹配且字段名一致</p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> at the beginning of <code class="docutils literal notranslate"><span class="pre">stageX.log</span></code></p></li>
+<li><p>Confirm that <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> reads the corresponding fields from <code class="docutils literal notranslate"><span class="pre">args_json</span></code></p></li>
+<li><p>If using <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>, confirm the method name matches and field names are consistent</p></li>
 </ul>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="architecture.html" class="btn btn-neutral float-left" title="架构与执行流程" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="add_dataset.html" class="btn btn-neutral float-right" title="接入新数据集" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="architecture.html" class="btn btn-neutral float-left" title="Architecture and Execution Flow" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_dataset.html" class="btn btn-neutral float-right" title="Integrating a New Dataset" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

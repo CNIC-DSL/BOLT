@@ -1,25 +1,26 @@
-# 接入新数据集
+# Integrating a New Dataset
 
-本文说明如何以“数据集名称（dataset 字符串）”为单位接入新数据集，使其能够被 YAML 引用并在各方法中正确加载。
+This page explains how to integrate a new dataset at the level of a **dataset name (a string identifier)**, so it can be referenced in YAML and correctly loaded by different methods.
 
-一、基本约定
+## I. Basic Conventions
 
-1）dataset 是一个字符串标识符
-- YAML 的 datasets: [...] 中写入 dataset 名称
-- 方法脚本与配置需要能够识别该名称并加载对应数据
+1) `dataset` is a string identifier
+- You write the dataset name in `datasets: [...]` in YAML
+- Method scripts and configurations must be able to recognize this name and load the corresponding data
 
-2）默认 data_dir
-- 框架构造 args_json 时会设置 data_dir=./data
-- 具体如何读数据由方法脚本决定：有的从 config 中读路径，有的从命令行参数读路径
+2) Default `data_dir`
+- When constructing `args_json`, the framework sets `data_dir=./data`
+- The exact data-reading logic is determined by the method script: some read paths from config, others read paths from CLI arguments
 
-二、推荐的落地方式
+## II. Recommended Implementation Approaches
 
-方式 A：以目录结构组织（推荐）
-1）在 ./data 下为新数据集建立目录，例如：
+### Option A: Organize by Directory Structure (Recommended)
+
+1) Create a directory for the new dataset under `./data`, for example:
 ./data/my_dataset/
 
-2）在方法配置中新增该数据集的专用配置（推荐）
-在 configs/<task>/<method>.yaml 中加入 dataset_specific_configs（如需要）：
+2) Add dataset-specific configuration in the method config (recommended)  
+In `configs/<task>/<method>.yaml`, add `dataset_specific_configs` if needed:
 
 dataset_specific_configs:
   my_dataset:
@@ -27,43 +28,43 @@ dataset_specific_configs:
     max_length: 128
     num_labels: 20
 
-优势：
-- 不需要在 runner 层加任何硬编码
-- 不同方法可以对同一 dataset 采用不同配置
+Advantages:
+- No hard-coded changes are needed in the runner layer
+- Different methods can use different configurations for the same dataset
 
-方式 B：方法脚本内部按 dataset 名称分发
-适用于数据加载逻辑复杂、且必须在代码侧控制的情况。
-建议将分发逻辑收敛到一个统一的数据加载模块，避免每个 baseline 重复实现。
+### Option B: Dispatch by Dataset Name Inside the Method Script
 
-三、与模型选择相关的注意事项
+This is suitable when data-loading logic is complex and must be controlled in code.
+It is recommended to consolidate dispatch logic into a unified data-loading module to avoid duplicating implementations across baselines.
 
-部分 cli_builder 会按 dataset 名称决定使用中文或英文 BERT。
-如果你接入的新数据集不是中文/英文的默认列表，建议明确：
-- 在配置中指定 backbone / bert_model 路径（如果方法支持）
-或
-- 在方法脚本中提供可配置的 bert_model 参数入口
+## III. Notes Related to Model Selection
 
-四、接入验证（建议流程）
+Some `cli_builder` implementations choose a Chinese or English BERT based on the dataset name.
+If your new dataset is not included in the default Chinese/English list, it is recommended to explicitly:
+- set `backbone` / `bert_model` paths in the config (if the method supports it), or
+- provide a configurable `bert_model` parameter entry in the method script
 
-1）选择一个最简单的方法（单阶段、日志清晰）
-2）只跑：
-- datasets: [my_dataset]
-- methods: [tan 或 ab 等]
-- seeds: [单个]
-- fold_idxs: [单个]
-- epochs 设为小值
-3）检查：
-- logs 下是否能看到正常的加载与训练过程
-- outputs 下是否产生预期产物
-- results/{task}/{method}/results.csv 是否产生并包含最后一行结果
-- summary_{result_file}.csv 是否新增记录
+## IV. Integration Verification (Recommended Workflow)
 
-五、常见问题
+1) Choose a simple method (single-stage, clear logs)
+2) Run only:
+- `datasets: [my_dataset]`
+- `methods: [tan or ab, etc.]`
+- `seeds: [single value]`
+- `fold_idxs: [single value]`
+- set epochs to a small value
+3) Check:
+- whether you see normal loading and training behavior under `logs/`
+- whether expected artifacts are produced under `outputs/`
+- whether `results/{task}/{method}/results.csv` is created and contains the final result row
+- whether `summary_{result_file}.csv` gets a new appended record
 
-1）找不到数据文件
-- 优先检查 data_path 是否正确（config / 参数是否生效）
-- 再检查方法脚本是否正确解析 dataset 名称并映射到数据目录
+## V. Common Issues
 
-2）不同方法对同一数据集行为不一致
-- 建议用 dataset_specific_configs 将关键参数显式写出来（max_length、num_labels、文本字段名等）
-- 避免依赖方法内部默认值导致差异难以追踪
+1) Data files not found
+- First check whether `data_path` is correct (and whether the config/arguments are actually taking effect)
+- Then check whether the method script correctly parses the dataset name and maps it to the data directory
+
+2) Inconsistent behavior across methods on the same dataset
+- Use `dataset_specific_configs` to explicitly set key parameters (`max_length`, `num_labels`, text field names, etc.)
+- Avoid relying on method-internal defaults, which can make differences hard to trace

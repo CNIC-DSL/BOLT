@@ -19,11 +19,11 @@ Bolt organizes experiments around:
 - **Dataset**: the target dataset identifier
 - **Grid**: combinatorial factors such as ratios, folds, seeds, and cluster factor
 
-The overall workflow is illustrated as follows:
+.. The overall workflow is illustrated as follows:
 
-.. image:: assets/pipeline.png
-   :width: 700
-   :align: center
+.. .. image:: assets/pipeline.png
+..    :width: 700
+..    :align: center
 
 .. raw:: html
 

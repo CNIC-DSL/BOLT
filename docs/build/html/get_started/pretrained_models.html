@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>预训练模型准备（Pretrained Models） &mdash; Bolt 0.1.0 documentation</title>
+  <title>Pretrained Model Preparation (Pretrained Models) &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="输出目录结构与注意事项" href="outputs.html" />
-    <link rel="prev" title="快速开始" href="quick_start.html" /> 
+    <link rel="next" title="Output Directory Structure and Notes" href="outputs.html" />
+    <link rel="prev" title="Quick Start" href="quick_start.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,41 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="quick_start.html">快速开始</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">预训练模型准备（Pretrained Models）</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. 必备模型列表</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2. 推荐目录结构</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">3. 下载方式（示例）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">4. 常见问题</a></li>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quick_start.html">Quick Start</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Pretrained Model Preparation (Pretrained Models)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#required-model-list">1. Required Model List</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-directory-layout">2. Recommended Directory Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download-methods-examples">3. Download Methods (Examples)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#troubleshooting">4. Troubleshooting</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">数据集介绍（Datasets）</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -98,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">预训练模型准备（Pretrained Models）</li>
+      <li class="breadcrumb-item active">Pretrained Model Preparation (Pretrained Models)</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/get_started/pretrained_models.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -108,77 +108,77 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="pretrained-models">
-<h1>预训练模型准备（Pretrained Models）<a class="headerlink" href="#pretrained-models" title="Link to this heading"></a></h1>
-<p>本项目运行时会从 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 指定的目录读取预训练模型与向量编码模型。为保证可复现与避免运行时自动下载失败，建议在首次运行前手动将以下模型下载到本地。</p>
-<section id="id1">
-<h2>1. 必备模型列表<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<p>需要用户自行下载并放入 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 的模型如下（目录名建议与下表一致）：</p>
+  <section id="pretrained-model-preparation-pretrained-models">
+<h1>Pretrained Model Preparation (Pretrained Models)<a class="headerlink" href="#pretrained-model-preparation-pretrained-models" title="Link to this heading"></a></h1>
+<p>During execution, this project reads pretrained models and embedding/encoder models from the directory specified by <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>. To ensure reproducibility and to avoid failures caused by automatic downloads at runtime, it is recommended to manually download the following models to your local machine before the first run.</p>
+<section id="required-model-list">
+<h2>1. Required Model List<a class="headerlink" href="#required-model-list" title="Link to this heading"></a></h2>
+<p>The following models must be downloaded by the user and placed under <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> (it is recommended to keep the directory names consistent with the list below):</p>
 <ol class="arabic simple">
 <li><p>bert-base-chinese</p></li>
 </ol>
 <ul class="simple">
-<li><p>用途：中文数据集相关方法的 PLM/backbone</p></li>
-<li><p>推荐来源：Hugging Face（google-bert/bert-base-chinese）</p></li>
+<li><p>Purpose: PLM/backbone for methods related to Chinese datasets</p></li>
+<li><p>Recommended source: Hugging Face (<code class="docutils literal notranslate"><span class="pre">google-bert/bert-base-chinese</span></code>)</p></li>
 </ul>
 <ol class="arabic simple" start="2">
 <li><p>bert-base-uncased</p></li>
 </ol>
 <ul class="simple">
-<li><p>用途：英文数据集相关方法的 PLM/backbone</p></li>
-<li><p>推荐来源：Hugging Face（google-bert/bert-base-uncased）</p></li>
+<li><p>Purpose: PLM/backbone for methods related to English datasets</p></li>
+<li><p>Recommended source: Hugging Face (<code class="docutils literal notranslate"><span class="pre">google-bert/bert-base-uncased</span></code>)</p></li>
 </ul>
 <ol class="arabic simple" start="3">
 <li><p>stsb-roberta-base</p></li>
 </ol>
 <ul class="simple">
-<li><p>用途：部分方法使用的句向量/语义编码模型（Sentence Transformer）</p></li>
-<li><p>推荐来源：Hugging Face（sentence-transformers/stsb-roberta-base-v2）
-说明：如你的配置/代码中固定写死目录名为 <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code>，可以将下载后的目录重命名为 <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code> 以保持兼容。</p></li>
+<li><p>Purpose: Sentence embedding / semantic encoder model used by some methods (Sentence Transformer)</p></li>
+<li><p>Recommended source: Hugging Face (<code class="docutils literal notranslate"><span class="pre">sentence-transformers/stsb-roberta-base-v2</span></code>)
+Note: If your configuration/code hard-codes the directory name as <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code>, you can rename the downloaded folder to <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code> to maintain compatibility.</p></li>
 </ul>
 <ol class="arabic simple" start="4">
 <li><p>Meta-Llama-3.1-8B-Instruct</p></li>
 </ol>
 <ul class="simple">
-<li><p>用途：LLM 相关方法（若启用）</p></li>
-<li><p>推荐来源：Hugging Face（meta-llama/Llama-3.1-8B-Instruct）
-说明：该模型通常需要在 Hugging Face 账号上完成许可协议确认/申请访问权限后才能下载。</p></li>
+<li><p>Purpose: LLM-related methods (if enabled)</p></li>
+<li><p>Recommended source: Hugging Face (<code class="docutils literal notranslate"><span class="pre">meta-llama/Llama-3.1-8B-Instruct</span></code>)
+Note: This model typically requires accepting a license agreement / requesting access via your Hugging Face account before you can download it.</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>2. 推荐目录结构<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>假设你将 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">/path/to/pretrained_models</span></code>，推荐组织如下：</p>
+<section id="recommended-directory-layout">
+<h2>2. Recommended Directory Layout<a class="headerlink" href="#recommended-directory-layout" title="Link to this heading"></a></h2>
+<p>Assume you set <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> to <code class="docutils literal notranslate"><span class="pre">/path/to/pretrained_models</span></code>. The recommended structure is:</p>
 <p>/path/to/pretrained_models/
 bert-base-chinese/
 bert-base-uncased/
 stsb-roberta-base/
 Meta-Llama-3.1-8B-Instruct/</p>
-<p>运行时示例：
+<p>Runtime example:
 bolt-grid –config grid_gcd.yaml –output-dir ~/tmp/exp_001 –model-dir /path/to/pretrained_models</p>
 </section>
-<section id="id3">
-<h2>3. 下载方式（示例）<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>方式 A：使用 huggingface-cli（推荐）</p>
+<section id="download-methods-examples">
+<h2>3. Download Methods (Examples)<a class="headerlink" href="#download-methods-examples" title="Link to this heading"></a></h2>
+<p>Method A: Use <code class="docutils literal notranslate"><span class="pre">huggingface-cli</span></code> (recommended)</p>
 <ol class="arabic simple">
-<li><p>安装并登录
+<li><p>Install and log in
 pip install -U huggingface_hub
 huggingface-cli login</p></li>
-<li><p>下载到指定目录
+<li><p>Download to the target directories
 huggingface-cli download google-bert/bert-base-chinese –local-dir /path/to/pretrained_models/bert-base-chinese
 huggingface-cli download google-bert/bert-base-uncased –local-dir /path/to/pretrained_models/bert-base-uncased
 huggingface-cli download sentence-transformers/stsb-roberta-base-v2 –local-dir /path/to/pretrained_models/stsb-roberta-base
 huggingface-cli download meta-llama/Llama-3.1-8B-Instruct –local-dir /path/to/pretrained_models/Meta-Llama-3.1-8B-Instruct</p></li>
 </ol>
-<p>方式 B：使用 git lfs（可选）
-适用于你希望以 git 仓库方式管理权重文件的场景。注意需要先安装 git-lfs，并保证网络与磁盘空间充足。</p>
+<p>Method B: Use <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code> (optional)
+This is suitable if you want to manage weight files as a Git repository. Make sure <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code> is installed, and ensure your network connection and disk space are sufficient.</p>
 </section>
-<section id="id4">
-<h2>4. 常见问题<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<section id="troubleshooting">
+<h2>4. Troubleshooting<a class="headerlink" href="#troubleshooting" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>找不到模型或下载被拒绝：
-优先确认是否需要登录 Hugging Face，以及是否需要在网页端接受许可协议（LLM 模型常见）。</p></li>
-<li><p>运行时仍然尝试联网下载：
-请检查配置/代码里引用的模型目录名是否与你本地目录一致（尤其注意大小写与连字符）。</p></li>
+<li><p>Model not found or download access denied:
+First confirm whether you need to log in to Hugging Face, and whether you must accept a license agreement on the website (common for LLM models).</p></li>
+<li><p>The program still tries to download online at runtime:
+Check whether the model directory names referenced in your configuration/code match your local folder names exactly (pay special attention to case sensitivity and hyphens).</p></li>
 </ul>
 </section>
 </section>
@@ -187,8 +187,8 @@ huggingface-cli download meta-llama/Llama-3.1-8B-Instruct –local-dir /path/to/
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="quick_start.html" class="btn btn-neutral float-left" title="快速开始" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="outputs.html" class="btn btn-neutral float-right" title="输出目录结构与注意事项" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quick_start.html" class="btn btn-neutral float-left" title="Quick Start" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="outputs.html" class="btn btn-neutral float-right" title="Output Directory Structure and Notes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

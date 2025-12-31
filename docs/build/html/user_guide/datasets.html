@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>数据集介绍（Datasets） &mdash; Bolt 0.1.0 documentation</title>
+  <title>Datasets Overview &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="运行方式与常用操作" href="run_grid.html" />
-    <link rel="prev" title="配置文件（YAML）说明" href="config_yaml.html" /> 
+    <link rel="next" title="Running and Common Operations" href="run_grid.html" />
+    <link rel="prev" title="Configuration File (YAML) Guide" href="config_yaml.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,39 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">预训练模型准备（Pretrained Models）</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">数据集介绍（Datasets）</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. 数据集列表（按论文描述整理）</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2. 在配置文件中的常用写法（缩写提示）</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#dataset-list-organized-based-on-the-paper-description">1. Dataset List (Organized Based on the Paper Description)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-usage-in-configuration-files-abbreviation-tips">2. Common Usage in Configuration Files (Abbreviation Tips)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +96,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">数据集介绍（Datasets）</li>
+      <li class="breadcrumb-item active">Datasets Overview</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/user_guide/datasets.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,104 +106,104 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="datasets">
-<h1>数据集介绍（Datasets）<a class="headerlink" href="#datasets" title="Link to this heading"></a></h1>
-<p>本项目的实验覆盖多种文本分类/意图识别数据集，包含英文与中文场景。本文对当前已支持的数据集做简要说明，并给出常用缩写与来源。</p>
-<p>说明：</p>
+  <section id="datasets-overview">
+<h1>Datasets Overview<a class="headerlink" href="#datasets-overview" title="Link to this heading"></a></h1>
+<p>This project covers a variety of text classification / intent recognition datasets, including both English and Chinese scenarios. This page briefly introduces the datasets currently supported, and provides common abbreviations and sources.</p>
+<p>Notes:</p>
 <ul class="simple">
-<li><p>文中“我们构建的版本”指论文实验设置中对原始数据集进行抽样/筛选后的版本（例如抽样 10,000 条样本）。</p></li>
-<li><p>具体如何下载与放置数据文件，请以项目的数据准备脚本或仓库说明为准；本页主要提供背景与来源。</p></li>
+<li><p>“Our constructed version” refers to the version used in the paper’s experimental setup, where the original dataset is sampled/filtered (e.g., sampling 10,000 examples).</p></li>
+<li><p>For how to download and place the data files, please follow the project’s data preparation scripts or repository instructions. This page mainly provides background and sources.</p></li>
 </ul>
-<section id="id1">
-<h2>1. 数据集列表（按论文描述整理）<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="dataset-list-organized-based-on-the-paper-description">
+<h2>1. Dataset List (Organized Based on the Paper Description)<a class="headerlink" href="#dataset-list-organized-based-on-the-paper-description" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p>20NG（20 Newsgroups）</p></li>
+<li><p>20NG (20 Newsgroups)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：约 20,000 篇新闻组帖子，近似均匀分布在 20 个类别。</p></li>
-<li><p>我们构建的版本：抽样 10,000 条文本用于实验。</p></li>
-<li><p>来源：https://people.csail.mit.edu/jrennie/20Newsgroups/</p></li>
+<li><p>Description: About 20,000 newsgroup posts, distributed approximately evenly across 20 categories.</p></li>
+<li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
+<li><p>Source: https://people.csail.mit.edu/jrennie/20Newsgroups/</p></li>
 </ul>
 <ol class="arabic simple" start="2">
 <li><p>THUCNews</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：大规模中文新闻分类语料，来源于 2005–2011 年间的新浪新闻 RSS 历史数据。</p></li>
-<li><p>我们构建的版本：抽样 10,000 条文本用于实验。</p></li>
-<li><p>来源：http://thuctc.thunlp.org/</p></li>
+<li><p>Description: A large-scale Chinese news classification corpus, collected from Sina News RSS history data between 2005 and 2011.</p></li>
+<li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
+<li><p>Source: http://thuctc.thunlp.org/</p></li>
 </ul>
 <ol class="arabic simple" start="3">
-<li><p>Yahoo（Yahoo! Answers Topic Classification）</p></li>
+<li><p>Yahoo (Yahoo! Answers Topic Classification)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：Yahoo! Answers 主题分类数据集，包含 10 个大类主题。</p></li>
-<li><p>我们构建的版本：抽样 10,000 条文本用于实验。</p></li>
-<li><p>来源：https://www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification/data</p></li>
+<li><p>Description: A topic classification dataset from Yahoo! Answers, containing 10 coarse-grained topic classes.</p></li>
+<li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
+<li><p>Source: https://www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification/data</p></li>
 </ul>
 <ol class="arabic simple" start="4">
-<li><p>BANK（BANKING77）</p></li>
+<li><p>BANK (BANKING77)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：英文银行客服查询（intent）数据集，包含 13,083 条语句，标注为 77 个细粒度意图类别。</p></li>
-<li><p>来源：https://huggingface.co/datasets/PolyAI/banking77</p></li>
+<li><p>Description: An English banking customer-service intent dataset with 13,083 utterances annotated with 77 fine-grained intent classes.</p></li>
+<li><p>Source: https://huggingface.co/datasets/PolyAI/banking77</p></li>
 </ul>
 <ol class="arabic simple" start="5">
-<li><p>S.O.（StackOverflow）</p></li>
+<li><p>S.O. (StackOverflow)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：来自 Stack Overflow 的短文本标题数据集，共 20,000 条，标注为 20 个技术主题标签。</p></li>
-<li><p>来源：https://github.com/jacoxu/StackOverflow</p></li>
+<li><p>Description: A short-text title dataset from Stack Overflow with 20,000 examples, labeled with 20 technical topic tags.</p></li>
+<li><p>Source: https://github.com/jacoxu/StackOverflow</p></li>
 </ul>
 <ol class="arabic simple" start="6">
-<li><p>CLINC（CLINC150）</p></li>
+<li><p>CLINC (CLINC150)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：意图分类数据集，覆盖 150 个 in-domain 意图类别，常用于评估 out-of-domain/开放集场景。</p></li>
-<li><p>来源：https://archive.ics.uci.edu/dataset/570/clinc150</p></li>
+<li><p>Description: An intent classification dataset covering 150 in-domain intents, commonly used to evaluate out-of-domain / open-set scenarios.</p></li>
+<li><p>Source: https://archive.ics.uci.edu/dataset/570/clinc150</p></li>
 </ul>
 <ol class="arabic simple" start="7">
-<li><p>HWU（HWU-64）</p></li>
+<li><p>HWU (HWU-64)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：英文多领域用户表达（news、IoT 等）意图检测数据集，覆盖 64 个意图，常用于对话系统研究。</p></li>
-<li><p>来源：https://service.tib.eu/ldmservice/en/dataset/hwu64</p></li>
+<li><p>Description: An English multi-domain intent detection dataset (e.g., news, IoT, etc.) covering 64 intents, commonly used in dialogue system research.</p></li>
+<li><p>Source: https://service.tib.eu/ldmservice/en/dataset/hwu64</p></li>
 </ul>
 <ol class="arabic simple" start="8">
-<li><p>ECDT（SMP-ECDT）</p></li>
+<li><p>ECDT (SMP-ECDT)</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：中文意图分类数据集（SMP-ECDT），论文中用于中文意图识别场景。</p></li>
-<li><p>来源：https://arxiv.org/pdf/1709.10217</p></li>
+<li><p>Description: A Chinese intent classification dataset (SMP-ECDT), used in the paper for Chinese intent recognition scenarios.</p></li>
+<li><p>Source: https://arxiv.org/pdf/1709.10217</p></li>
 </ul>
 <ol class="arabic simple" start="9">
 <li><p>TREC</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：开放域事实型问题分类数据集（Question Classification）。</p></li>
-<li><p>来源：https://huggingface.co/datasets/CogComp/trec</p></li>
+<li><p>Description: An open-domain factoid question classification dataset (Question Classification).</p></li>
+<li><p>Source: https://huggingface.co/datasets/CogComp/trec</p></li>
 </ul>
 <ol class="arabic simple" start="10">
 <li><p>M-CID</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：多语言 COVID-19 意图检测数据集，包含 6,871 条语句与 16 个意图；本工作仅使用其中英文语句构建实验版本。</p></li>
-<li><p>来源：https://openreview.net/pdf?id=Ku-nv600bNM</p></li>
+<li><p>Description: A multilingual COVID-19 intent detection dataset with 6,871 utterances and 16 intents. In this work, we only use the English utterances to construct the experimental version.</p></li>
+<li><p>Source: https://openreview.net/pdf?id=Ku-nv600bNM</p></li>
 </ul>
 <ol class="arabic simple" start="11">
 <li><p>DBpedia</p></li>
 </ol>
 <ul class="simple">
-<li><p>简介：从 Wikipedia 抽取的结构化知识库项目 DBpedia 的本体/类别相关文本分类数据集；论文实验中构建了抽样版本用于对比。</p></li>
-<li><p>我们构建的版本：抽样 10,000 条文本用于实验。</p></li>
-<li><p>来源：https://huggingface.co/datasets/DeveloperOats/DBPedia_Classes</p></li>
+<li><p>Description: A text classification dataset related to ontology/classes from DBpedia, a structured knowledge base extracted from Wikipedia. The paper constructs a sampled version for comparison.</p></li>
+<li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
+<li><p>Source: https://huggingface.co/datasets/DeveloperOats/DBPedia_Classes</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>2. 在配置文件中的常用写法（缩写提示）<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>在 YAML 中通常以字符串形式指定数据集名称，例如：
+<section id="common-usage-in-configuration-files-abbreviation-tips">
+<h2>2. Common Usage in Configuration Files (Abbreviation Tips)<a class="headerlink" href="#common-usage-in-configuration-files-abbreviation-tips" title="Link to this heading"></a></h2>
+<p>In YAML, datasets are typically specified as strings, for example:
 datasets: [20NG, THUCNews, Yahoo, BANK, S.O., CLINC, HWU, ECDT, TREC, M-CID, DBpedia]</p>
-<p>不同仓库版本对数据集名称的具体拼写可能存在差异（例如 “S.O.” vs “StackOverflow”）。
-如遇到 “找不到数据集” 的报错，建议先在代码的数据加载处确认实际支持的 dataset name 列表，并保持 YAML 中一致。</p>
+<p>Different repository versions may use slightly different spellings for dataset names (e.g., “S.O.” vs “StackOverflow”).
+If you encounter an error like “dataset not found”, it is recommended to first check the actual supported dataset name list in the data-loading code, and keep the YAML names consistent with it.</p>
 </section>
 </section>
 
@@ -211,8 +211,8 @@ datasets: [20NG, THUCNews, Yahoo, BANK, S.O., CLINC, HWU, ECDT, TREC, M-CID, DBp
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="config_yaml.html" class="btn btn-neutral float-left" title="配置文件（YAML）说明" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="run_grid.html" class="btn btn-neutral float-right" title="运行方式与常用操作" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="config_yaml.html" class="btn btn-neutral float-left" title="Configuration File (YAML) Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="run_grid.html" class="btn btn-neutral float-right" title="Running and Common Operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

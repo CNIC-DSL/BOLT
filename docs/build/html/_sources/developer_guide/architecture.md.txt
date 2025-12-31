@@ -1,87 +1,88 @@
-# 架构与执行流程
+# Architecture and Execution Flow
 
-本文面向二次开发者，说明 bolt-lab 的核心执行链路、关键数据结构、以及各模块之间的责任边界。
+This page is intended for developers who want to extend or modify the system. It explains bolt-lab’s core execution chain, key data structures, and the responsibility boundaries across modules.
 
-一、整体数据流（从 YAML 到结果汇总）
+## I. End-to-End Data Flow (From YAML to Summarized Results)
 
-1）入口：bolt-grid
-- CLI 接收参数：--config、--output-dir、--model-dir
-- 将配置文件定位到实际路径后，交给 runner 执行（runner 会读取 YAML 并启动调度）
+### 1) Entry Point: `bolt-grid`
+- The CLI accepts arguments: `--config`, `--output-dir`, `--model-dir`
+- After resolving the config file to a concrete path, it hands control to the runner (which reads the YAML and starts scheduling)
 
-2）runner：run_grid.py
-- 读取 YAML 并校验必需字段：
-  maps / methods / datasets / grid / run / paths / result_file / per_method_extra
-- 调用 set_paths(results_dir, logs_dir, result_file) 初始化：
-  results/summary_{result_file}.csv
-  results/seen_index_{result_file}.json
-  logs/ 根目录
-- 将 grid 中每个维度展开为组合（combo），形成任务列表 combos
-- 建立 GPU token 池（Queue）：
-  - run.gpus 指定可用 GPU 列表
-  - run.slots_per_gpu 决定每张 GPU 提供多少个 token
-  - token 总数 = len(gpus) * slots_per_gpu
-- 使用 ThreadPoolExecutor 并发调度：
-  - 每个 worker 启动时领取一个 gpu_id
-  - 执行完毕归还 gpu_id
-  - 并发度 = min(max_workers, token 总数, combos 数)
+### 2) Runner: `run_grid.py`
+- Reads the YAML and validates required fields:
+  `maps / methods / datasets / grid / run / paths / result_file / per_method_extra`
+- Calls `set_paths(results_dir, logs_dir, result_file)` to initialize:
+  - `results/summary_{result_file}.csv`
+  - `results/seen_index_{result_file}.json`
+  - the `logs/` root directory
+- Expands each dimension in `grid` into experiment combinations (combos), forming a task list `combos`
+- Builds a GPU token pool (a `Queue`):
+  - `run.gpus` specifies the list of available GPUs
+  - `run.slots_per_gpu` determines how many tokens each GPU provides
+  - total tokens = `len(gpus) * slots_per_gpu`
+- Schedules tasks concurrently via `ThreadPoolExecutor`:
+  - each worker acquires a `gpu_id` when starting
+  - returns the `gpu_id` when finished
+  - concurrency = `min(max_workers, total_tokens, number_of_combos)`
 
-3）单组合执行：utils.run_combo()
-- 根据 method 在两个 registry 中查找方法定义：
-  - cli_gcd.METHOD_REGISTRY_GCD
-  - cli_openset.METHOD_REGISTRY_OPENSET
-- 生成 args_json（make_base_args）：
-  包含 method/dataset/ratio/fold/seed/gpu/epochs 等参数，并合并 per_method_extra 中该 method 的扩展字段
-- 执行 stages：
-  - 每个 stage 由 cli_builder(args_json, stage_idx) 生成命令行数组
-  - run_stage() 负责：
-    - 设置 ARGS_JSON 环境变量（用于记录与复现）
-    - 设置 CUDA_VISIBLE_DEVICES（绑定到领取到的 gpu_id）
-    - 将 CMD 与 ARGS_JSON 记录到 stage 日志开头
-    - 启动子进程并等待返回码
-  - 任一 stage 返回码非 0 则该 combo 失败，后续阶段不会继续
+### 3) Single-Combo Execution: `utils.run_combo()`
+- Looks up method definitions from the two registries:
+  - `cli_gcd.METHOD_REGISTRY_GCD`
+  - `cli_openset.METHOD_REGISTRY_OPENSET`
+- Builds `args_json` (`make_base_args`):
+  - includes key fields such as method/dataset/ratios/fold/seed/GPU/epochs
+  - merges method-specific extra fields from `per_method_extra[method]`
+- Executes stages:
+  - each stage generates an argv command via `cli_builder(args_json, stage_idx)`
+  - `run_stage()` is responsible for:
+    - setting the `ARGS_JSON` environment variable (for logging and reproducibility)
+    - setting `CUDA_VISIBLE_DEVICES` (binding to the acquired `gpu_id`)
+    - writing `CMD` and `ARGS_JSON` at the beginning of the stage log
+    - launching the subprocess and waiting for the return code
+  - if any stage returns a non-zero code, the combo fails and subsequent stages will not run
 
-4）结果收集与汇总：collect_latest_result() + write_summary()
-- combo 全部 stage 成功后，框架会尝试读取：
-  ./results/{task}/{method}/results.csv
-  并使用最后一行作为“最新结果”
-- 若读取成功，则追加写入：
-  results/summary_{result_file}.csv
-- 若未找到结果文件或结果为空，会提示 Finished but no results found，不写 summary
+### 4) Result Collection and Summarization: `collect_latest_result()` + `write_summary()`
+- After all stages succeed, the framework attempts to read:
+  `./results/{task}/{method}/results.csv`
+  and uses the last row as the “latest result”
+- If successful, it appends one row to:
+  `results/summary_{result_file}.csv`
+- If the result file is missing or empty, it prints a message like “Finished but no results found” and does not write to the summary
 
-二、关键模块与职责边界
+## II. Key Modules and Responsibility Boundaries
 
-1）run_grid.py（调度层）
-- 负责：解析 YAML、展开组合、并发调度、OOM 重试策略（可选）
-- 不负责：方法内部训练逻辑与指标计算
+### 1) `run_grid.py` (Scheduling Layer)
+- Responsible for: parsing YAML, expanding combos, concurrent scheduling, OOM retry policy (optional)
+- Not responsible for: method-internal training logic or metric computation
 
-2）cli_gcd.py / cli_openset.py（方法注册与命令构建）
-- 负责：将 method 映射到 stages，并为每个 stage 提供 cli_builder
-- 负责：定义默认 config 路径与默认 output_base
-- 不负责：执行过程中的结果写入（这由方法脚本完成）
+### 2) `cli_gcd.py` / `cli_openset.py` (Method Registration and Command Building)
+- Responsible for: mapping a method to stages, and providing `cli_builder` for each stage
+- Responsible for: defining default config paths and default `output_base`
+- Not responsible for: writing results during execution (this is handled by the method scripts)
 
-3）utils.py（运行与汇总层）
-- 负责：构造 args_json、运行 stage、组织日志目录、收集结果并写入 summary
-- 负责：为每个 stage 写入 CMD 与 ARGS_JSON（用于复现与排查）
+### 3) `utils.py` (Execution and Summarization Layer)
+- Responsible for: constructing `args_json`, running stages, organizing log directories, collecting results, and writing the summary
+- Responsible for: writing `CMD` and `ARGS_JSON` for each stage (for reproducibility and debugging)
 
-三、关于可复现性的约定
+## III. Reproducibility Conventions
 
-1）ARGS_JSON 是复现的最小闭环
-- 每个 stage 日志开头都会包含：
-  - CMD（实际执行命令）
-  - ARGS_JSON（完整参数 JSON）
-因此“复现实验”通常可以从日志中直接拿到命令与参数。
+### 1) `ARGS_JSON` as the Minimal Reproducibility Loop
+- At the beginning of each stage log, you will see:
+  - `CMD` (the actual command executed)
+  - `ARGS_JSON` (the full parameter JSON)
+Therefore, reproducing an experiment can usually be done by directly copying the command and parameters from the logs.
 
-2）结果文件路径约定
-- 自动汇总依赖以下约定：
-  ./results/{task}/{method}/results.csv
-方法脚本必须在运行结束时写入该文件，否则框架无法自动收集并汇总。
+### 2) Result File Path Convention
+- Automatic summarization depends on the convention:
+  `./results/{task}/{method}/results.csv`
+Method scripts must write this file at the end of execution; otherwise, the framework cannot automatically collect and summarize results.
 
-四、开发者常用调试手段
+## IV. Common Debugging Techniques for Developers
 
-1）dry_run
-- 在 YAML 的 run 中设置 dry_run=true，可只打印命令与 ARGS_JSON，不实际执行
-- 适合检查组合数、参数传递与命令拼接是否符合预期
+### 1) `dry_run`
+- Set `dry_run=true` under `run` in YAML to print commands and `ARGS_JSON` without actually executing anything
+- Useful for checking combo counts, parameter passing, and whether command construction matches expectations
 
-2）从 stage 日志复现
-- 找到失败 combo 的 stageX.log
-- 复制 CMD 与 ARGS_JSON，对照方法脚本的参数解析逻辑进行复现与定位
+### 2) Reproduce from Stage Logs
+- Locate `stageX.log` for the failed combo
+- Copy `CMD` and `ARGS_JSON`, and reproduce/debug by aligning with the method script’s argument parsing logic

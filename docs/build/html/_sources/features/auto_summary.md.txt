@@ -1,55 +1,55 @@
-# 自动结果收集与汇总
+# Automatic Result Collection and Summarization
 
-bolt-lab 在每个实验组合结束后，会自动收集该组合对应的结果记录，并追加写入统一的汇总表，便于后续对比与分析。
+After each experiment combo finishes, **bolt-lab** automatically collects the corresponding result record and appends it to a unified summary table, making later comparison and analysis easier.
 
-## 1. 结果文件约定
+## 1. Result File Convention
 
-框架默认从以下位置读取单方法的结果文件：
+By default, the framework reads per-method result files from:
 ./results/{task}/{method}/results.csv
 
-其中：
-- task 为 gcd 或 openset
-- method 为方法名（例如 tan、plm_ood、ab 等）
+Where:
+- `task` is `gcd` or `openset`
+- `method` is the method name (e.g., `tan`, `plm_ood`, `ab`, etc.)
 
-框架会读取该 CSV 的最后一行作为“最新结果记录”。
+The framework reads the **last row** of this CSV as the “latest result record”.
 
-说明：
-- 如果 results.csv 不存在或为空，框架不会写入汇总表，并会打印提示信息。
-- 因此，每个方法脚本需要保证在运行结束后写入上述位置，且包含关键指标列。
+Notes:
+- If `results.csv` does not exist or is empty, the framework will not write anything to the summary table and will print a message.
+- Therefore, each method script must ensure it writes to the location above after finishing, and that the CSV includes the key metric columns.
 
-## 2. 汇总文件位置与命名
+## 2. Summary File Location and Naming
 
-汇总文件写入到 YAML 的 paths.results_dir 下：
+The summary file is written under `paths.results_dir` from the YAML:
 {results_dir}/summary_{result_file}.csv
 
-同时会生成索引文件：
+An index file is also generated:
 {results_dir}/seen_index_{result_file}.json
 
-其中 result_file 来自 YAML 顶层字段 result_file。
+Here, `result_file` comes from the top-level YAML field `result_file`.
 
-## 3. 汇总表包含哪些字段
+## 3. What Fields Are Included in the Summary Table
 
-汇总表至少包含：
-- method、dataset
-- known_cls_ratio、labeled_ratio、cluster_num_factor、seed
-- 指标列（随任务类型不同而变化）
-- args：一份 JSON 字符串，记录本次运行的关键参数（用于复现与去重）
+At minimum, the summary table includes:
+- `method`, `dataset`
+- `known_cls_ratio`, `labeled_ratio`, `cluster_num_factor`, `seed`
+- metric columns (vary by task type)
+- `args`: a JSON string recording key run parameters (used for reproducibility and deduplication)
 
-一般情况下：
-- GCD 常见指标包括 ACC、H-Score、K-ACC、N-ACC、ARI、NMI 等
-- OpenSet 常见指标包括 F1、K-F1、N-F1 等
+In general:
+- Common GCD metrics include `ACC`, `H-Score`, `K-ACC`, `N-ACC`, `ARI`, `NMI`, etc.
+- Common OpenSet metrics include `F1`, `K-F1`, `N-F1`, etc.
 
-## 4. 常见问题：为什么没有写入 summary
+## 4. Common Issue: Why Nothing Was Written to the Summary
 
-按以下顺序排查：
-1) 子任务是否执行失败
-   先查看 logs/ 下该组合的 stage 日志，确认是否有错误堆栈或非 0 返回码。
-2) results.csv 是否生成
-   确认 ./results/{task}/{method}/results.csv 是否存在，且 CSV 至少有一行结果数据。
-3) 结果列是否完整
-   若方法脚本写出的列与框架期望列差异较大，可能导致汇总缺失或指标为空。建议在方法侧统一列名，或在方法侧补齐汇总所需字段。
+Troubleshoot in the following order:
+1) Did the sub-task fail?
+   Check the stage logs for that combo under `logs/` and confirm whether there is an error stack trace or any non-zero return code.
+2) Was `results.csv` generated?
+   Confirm that `./results/{task}/{method}/results.csv` exists and that the CSV has at least one row of result data.
+3) Are the result columns complete?
+   If the columns written by the method script differ significantly from what the framework expects, the summary may be missing fields or metrics may be empty. It is recommended to standardize column names on the method side, or to fill in the required fields in the method outputs.
 
-## 5. 使用建议
+## 5. Usage Tips
 
-- 进行方法对比时，直接使用 summary_{result_file}.csv 作为分析入口。
-- 若要区分多次大实验，建议通过改变 result_file 生成不同的汇总文件，避免相互覆盖。
+- When comparing methods, use `summary_{result_file}.csv` directly as the primary analysis entry point.
+- If you want to distinguish multiple large runs, change `result_file` to generate separate summary files and avoid overwriting each other.

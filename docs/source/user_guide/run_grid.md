@@ -1,92 +1,92 @@
-# 运行方式与常用操作
+# Running and Common Operations
 
-本页说明如何启动运行、如何控制规模与并发，以及建议的工作流程。
+This page explains how to start runs, how to control scale and concurrency, and a recommended workflow.
 
-## 1. 基本运行命令
+## 1. Basic Run Command
 
-安装完成后，在任意目录均可运行：
+After installation, you can run from any directory:
 
 bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
 
-参数说明：
-- --config
-  配置文件名称或绝对路径。
-  传入类似 grid_gcd.yaml 时，会从包内自带的 configs 目录查找同名配置；
-  也可以传入你自行复制修改后的配置文件绝对路径。
+Argument details:
+- `--config`  
+  A configuration filename or an absolute path.  
+  If you pass something like `grid_gcd.yaml`, the framework will look for a config with the same name under the package’s built-in `configs` directory.  
+  You can also pass the absolute path to a config file that you copied and modified yourself.
 
-- --output-dir
-  工作目录。框架会在该目录下生成 outputs/、results/、logs/ 等产出。
+- `--output-dir`  
+  The working directory. The framework will create outputs such as `outputs/`, `results/`, and `logs/` under this directory.
 
-- --model-dir
-  模型/缓存目录。建议指向一个稳定且可读写的位置，用于存放预训练模型与缓存。
+- `--model-dir`  
+  The model/cache directory. It is recommended to point to a stable, readable/writable location to store pretrained models and caches.
 
-## 2. 建议的运行流程
+## 2. Recommended Workflow
 
-步骤 1：先复制一份配置文件到你的工作目录进行修改
-不要把示例配置当作唯一来源长期直接修改。保留一份可版本管理的“你的配置副本”。
+Step 1: Copy a config file to your working directory and modify it  
+Do not treat the example config as the only long-term source. Keep your own version-controlled copy.
 
-步骤 2：将网格缩小到最小规模，验证流程
-建议首次只保留：
-- 1 个 dataset
-- 1 个 method
-- 1 个 seed
-- 1 个 fold_idx
-- epochs 设为较小值
+Step 2: Shrink the grid to a minimal size to validate the pipeline  
+For the first run, keep only:
+- 1 dataset
+- 1 method
+- 1 seed
+- 1 `fold_idx`
+- Set epochs to a small value
 
-步骤 3：使用新的输出目录运行
-例如：
+Step 3: Run with a new output directory  
+For example:
 bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models
 
-建议每次大实验使用独立 output-dir，便于归档、对比与清理。
+It is recommended to use an independent `output-dir` for each large experiment to make archiving, comparison, and cleanup easier.
 
-## 3. dry_run：只打印不执行（建议首次使用）
+## 3. `dry_run`: Print Only, Do Not Execute (Recommended for the First Use)
 
-在 YAML 的 run 中设置：
+Set the following in `run` inside your YAML:
 run:
   dry_run: true
 
-dry_run 会打印每个组合将要执行的命令与关键参数，用于：
-- 核对组合数是否正确
-- 核对方法入口、数据集、fold/seed 是否符合预期
-- 避免大规模启动后才发现配置错误
+`dry_run` prints the command and key parameters that would be executed for each combo, which helps you:
+- Verify the number of generated combos
+- Verify method entry points, datasets, and fold/seed settings
+- Avoid discovering configuration issues only after launching a large run
 
-## 4. only_collect：仅收集与写汇总（按需）
+## 4. `only_collect`: Collect and Update Summary Only (As Needed)
 
-在 YAML 的 run 中设置：
+Set the following in `run` inside your YAML:
 run:
   only_collect: true
 
-该模式用于你确信输出结果已存在，只希望框架重新收集并更新 summary 的场景。
-若结果文件不存在，则不会凭空产生结果记录。
+This mode is useful when you are confident the outputs already exist and you only want the framework to re-collect results and update the summary.
+If result files do not exist, it will not “create” result records out of nothing.
 
-## 5. 并发与 GPU 配置建议
+## 5. Concurrency and GPU Configuration Tips
 
-- 典型默认：多卡每卡 1 个任务
+- Typical default: multiple GPUs, one task per GPU
   run:
     gpus: [0,1,2,3]
     max_workers: 4
     slots_per_gpu: 1
 
-- 单卡串行：最稳妥
+- Single-GPU serial: the most stable option
   run:
     gpus: [0]
     max_workers: 1
     slots_per_gpu: 1
 
-- 单卡并发：仅在显存充足时使用
+- Single-GPU concurrent: only use when you have enough GPU memory
   run:
     gpus: [0]
     max_workers: 2
     slots_per_gpu: 2
 
-并发的实际生效上限由三者共同决定：
-min(max_workers, GPU 总槽位数, 组合数)
+The effective concurrency upper bound is determined jointly by:
+min(max_workers, total GPU slots, number of combos)
 
-## 6. OOM 重试（可选）
+## 6. OOM Retry (Optional)
 
-在 YAML 的 run 中可设置：
-- retry_on_oom: true
-- max_retries: 2
-- retry_backoff_sec: 15
+In `run` inside your YAML, you can set:
+- `retry_on_oom: true`
+- `max_retries: 2`
+- `retry_backoff_sec: 15`
 
-适合大规模网格实验，但若某组合持续 OOM，仍应从降低并发、降低 batch/长度、减少 epochs 等方向调整配置。
+This is useful for large grid experiments. However, if a combo keeps running into OOM, you should still adjust the configuration by reducing concurrency, lowering batch size/sequence length, reducing epochs, etc.

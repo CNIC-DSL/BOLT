@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>扩展网格维度 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Extending Grid Dimensions &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,7 +22,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="接入新数据集" href="add_dataset.html" /> 
+    <link rel="prev" title="Integrating a New Dataset" href="add_dataset.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -46,33 +46,48 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Extending Grid Dimensions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#i-path-a-inject-via-per-method-extra-recommended-first">I. Path A: Inject via <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> (Recommended First)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#ii-path-b-add-a-real-grid-dimension-code-changes-required">II. Path B: Add a Real Grid Dimension (Code Changes Required)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#step-1-add-a-new-dimension-list-under-grid-in-yaml">Step 1: Add a new dimension list under <code class="docutils literal notranslate"><span class="pre">grid</span></code> in YAML</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-modify-the-combo-expansion-logic-in-run-grid-py">Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args">Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">utils.make_base_args</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-4-update-the-duplicate-skip-matching-fields-if-you-rely-on-this-mechanism">Step 4: Update the duplicate-skip matching fields (if you rely on this mechanism)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-5-ensure-result-collection-and-the-summary-reflect-this-dimension">Step 5: Ensure result collection and the summary reflect this dimension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#iii-recommended-development-and-verification-order">III. Recommended Development and Verification Order</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#iv-common-issues">IV. Common Issues</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -89,7 +104,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">扩展网格维度</li>
+      <li class="breadcrumb-item active">Extending Grid Dimensions</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/developer_guide/add_grid_dimension.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -99,107 +114,135 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>扩展网格维度<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>本文说明如何增加一个新的可扫描维度（grid dimension），例如 backbone、temperature、reg_loss 等。</p>
-<p>在当前实现中，你有两种实现路径：</p>
+  <section id="extending-grid-dimensions">
+<h1>Extending Grid Dimensions<a class="headerlink" href="#extending-grid-dimensions" title="Link to this heading"></a></h1>
+<p>This page explains how to add a new sweepable dimension (a grid dimension), such as <code class="docutils literal notranslate"><span class="pre">backbone</span></code>, <code class="docutils literal notranslate"><span class="pre">temperature</span></code>, <code class="docutils literal notranslate"><span class="pre">reg_loss</span></code>, etc.</p>
+<p>In the current implementation, there are two possible paths:</p>
 <ul class="simple">
-<li><p>路径 A：该维度仅与某个 method 相关，使用 per_method_extra 即可（无需改 runner）</p></li>
-<li><p>路径 B：该维度需要参与全局网格笛卡尔积，必须改 runner 与 args_json（需要改代码）</p></li>
+<li><p>Path A: The dimension is only relevant to one (or a few) methods — use <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> (no runner changes needed)</p></li>
+<li><p>Path B: The dimension must participate in the global Cartesian product — you must modify the runner and <code class="docutils literal notranslate"><span class="pre">args_json</span></code> (code changes required)</p></li>
 </ul>
-<p>一、路径 A：用 per_method_extra 注入（推荐优先）</p>
-<p>适用场景：</p>
+<section id="i-path-a-inject-via-per-method-extra-recommended-first">
+<h2>I. Path A: Inject via <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> (Recommended First)<a class="headerlink" href="#i-path-a-inject-via-per-method-extra-recommended-first" title="Link to this heading"></a></h2>
+<p>Applicable when:</p>
 <ul class="simple">
-<li><p>新参数只对某一个/少数方法有效</p></li>
-<li><p>不要求该参数参与“全局组合数计算”</p></li>
-<li><p>你希望以最小改动完成接入</p></li>
+<li><p>The new parameter only affects one or a small number of methods</p></li>
+<li><p>You do not require this parameter to participate in the “global combo count calculation”</p></li>
+<li><p>You want to integrate it with minimal changes</p></li>
 </ul>
-<p>做法：
-1）在 YAML 中为目标方法增加 per_method_extra：
+<p>How to do it:</p>
+<ol class="arabic simple">
+<li><p>Add <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> for the target method(s) in YAML:
 per_method_extra:
 plm_ood:
 reg_loss: cosine
 tan:
-backbone: ./pretrained_models/bert-base-uncased</p>
-<p>2）在 cli_builder 或方法脚本中从 args_json 读取该字段并转成命令行参数</p>
+backbone: ./pretrained_models/bert-base-uncased</p></li>
+<li><p>Read the field from <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> or the method script and convert it into CLI arguments</p></li>
+</ol>
 <ul class="simple">
-<li><p>args_json 会在 make_base_args 中合并 method_specs[method] 的字段</p></li>
-<li><p>日志里的 ARGS_JSON 会记录该字段，便于复现</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args_json</span></code> merges fields from <code class="docutils literal notranslate"><span class="pre">method_specs[method]</span></code> in <code class="docutils literal notranslate"><span class="pre">make_base_args</span></code></p></li>
+<li><p>The field will be recorded in <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> in logs for reproducibility</p></li>
 </ul>
-<p>优点：</p>
+<p>Advantages:</p>
 <ul class="simple">
-<li><p>不需要改 run_grid.py 的组合生成逻辑</p></li>
-<li><p>不会影响其他方法</p></li>
+<li><p>No need to change the combo-generation logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></p></li>
+<li><p>Does not affect other methods</p></li>
 </ul>
-<p>二、路径 B：增加真正的 grid 维度（需要改代码）</p>
-<p>适用场景：</p>
+</section>
+<section id="ii-path-b-add-a-real-grid-dimension-code-changes-required">
+<h2>II. Path B: Add a Real Grid Dimension (Code Changes Required)<a class="headerlink" href="#ii-path-b-add-a-real-grid-dimension-code-changes-required" title="Link to this heading"></a></h2>
+<p>Applicable when:</p>
 <ul class="simple">
-<li><p>该参数需要参与网格展开，形成完整的笛卡尔积组合</p></li>
-<li><p>你希望在 summary 中按该维度进行对比分析</p></li>
-<li><p>该维度对多个方法通用，且希望统一控制</p></li>
+<li><p>The parameter must participate in grid expansion to form a full Cartesian-product combo set</p></li>
+<li><p>You want to compare and analyze results by this dimension in the summary table</p></li>
+<li><p>The dimension is shared across multiple methods and you want unified control</p></li>
 </ul>
-<p>你需要完成以下改动：</p>
-<p>步骤 1：在 YAML 的 grid 中增加新维度列表
-例如：
+<p>You need to make the following changes:</p>
+<section id="step-1-add-a-new-dimension-list-under-grid-in-yaml">
+<h3>Step 1: Add a new dimension list under <code class="docutils literal notranslate"><span class="pre">grid</span></code> in YAML<a class="headerlink" href="#step-1-add-a-new-dimension-list-under-grid-in-yaml" title="Link to this heading"></a></h3>
+<p>Example:
 grid:
 …
 backbone: [“bert-base-uncased”, “bert-base-chinese”]</p>
-<p>步骤 2：修改 run_grid.py 的组合展开逻辑
-当前 run_grid.py 是显式读取并展开固定维度（known_cls_ratio、labeled_ratio、fold_*、seeds、cluster_num_factor）。
-因此你需要：</p>
+</section>
+<section id="step-2-modify-the-combo-expansion-logic-in-run-grid-py">
+<h3>Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code><a class="headerlink" href="#step-2-modify-the-combo-expansion-logic-in-run-grid-py" title="Link to this heading"></a></h3>
+<p>Currently, <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> explicitly reads and expands fixed dimensions (<code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_*</span></code>, <code class="docutils literal notranslate"><span class="pre">seeds</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>).
+Therefore you need to:</p>
 <ul class="simple">
-<li><p>读取 grid[“backbone”] 到本地变量</p></li>
-<li><p>在嵌套循环中加入 backbone 这一层</p></li>
-<li><p>将 backbone 作为 combo 元组的一部分传入 worker / run_combo</p></li>
+<li><p>read <code class="docutils literal notranslate"><span class="pre">grid[&quot;backbone&quot;]</span></code> into a local variable</p></li>
+<li><p>add a <code class="docutils literal notranslate"><span class="pre">backbone</span></code> layer into the nested loops</p></li>
+<li><p>include <code class="docutils literal notranslate"><span class="pre">backbone</span></code> as part of the combo tuple and pass it into <code class="docutils literal notranslate"><span class="pre">worker</span></code> / <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
 </ul>
-<p>步骤 3：在 utils.make_base_args 中把新维度写入 args_json
-例如：
+</section>
+<section id="step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args">
+<h3>Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">utils.make_base_args</span></code><a class="headerlink" href="#step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args" title="Link to this heading"></a></h3>
+<p>Example:
 args_json[“backbone”] = backbone</p>
-<p>确保：</p>
+<p>Make sure:</p>
 <ul class="simple">
-<li><p>cli_builder 能读取该字段并传入方法脚本</p></li>
-<li><p>ARGS_JSON 中包含该字段（便于复现）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> can read the field and pass it to the method script</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> contains the field (for reproducibility)</p></li>
 </ul>
-<p>步骤 4：更新“重复运行跳过”的匹配字段（如你依赖该机制）
-当前实现会从 results.csv 中读取历史记录并按若干字段过滤。
-如果 backbone 是区分实验的重要维度，应将其纳入匹配字段集合，避免不同 backbone 被误判为同一组合。</p>
-<p>步骤 5：确保结果收集与 summary 中能体现该维度
-建议方法在写入 results.csv 时把 backbone 记录在 args 字段中（JSON），这样 summary 侧可追溯。</p>
-<p>三、建议的开发与验证顺序</p>
-<p>1）先用路径 A（per_method_extra）把方法跑通并能写出 results.csv 与 summary
-2）确认该维度确实需要全局网格化，再走路径 B
-3）每次改动后用最小网格验证：</p>
+</section>
+<section id="step-4-update-the-duplicate-skip-matching-fields-if-you-rely-on-this-mechanism">
+<h3>Step 4: Update the duplicate-skip matching fields (if you rely on this mechanism)<a class="headerlink" href="#step-4-update-the-duplicate-skip-matching-fields-if-you-rely-on-this-mechanism" title="Link to this heading"></a></h3>
+<p>The current implementation reads historical records from <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> and filters by several fields.
+If <code class="docutils literal notranslate"><span class="pre">backbone</span></code> is an important dimension that distinguishes experiments, include it in the matching field set to avoid treating different backbones as the same combo.</p>
+</section>
+<section id="step-5-ensure-result-collection-and-the-summary-reflect-this-dimension">
+<h3>Step 5: Ensure result collection and the summary reflect this dimension<a class="headerlink" href="#step-5-ensure-result-collection-and-the-summary-reflect-this-dimension" title="Link to this heading"></a></h3>
+<p>It is recommended that the method records <code class="docutils literal notranslate"><span class="pre">backbone</span></code> in the <code class="docutils literal notranslate"><span class="pre">args</span></code> field (JSON) when writing <code class="docutils literal notranslate"><span class="pre">results.csv</span></code>, so the summary remains traceable.</p>
+</section>
+</section>
+<section id="iii-recommended-development-and-verification-order">
+<h2>III. Recommended Development and Verification Order<a class="headerlink" href="#iii-recommended-development-and-verification-order" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Start with Path A (<code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>) to get the method running and writing <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> and the summary correctly</p></li>
+<li><p>Only proceed to Path B if the dimension truly needs to be global/grid-expanded</p></li>
+<li><p>After each change, validate with a minimal grid:</p></li>
+</ol>
 <ul class="simple">
 <li><p>1 method</p></li>
 <li><p>1 dataset</p></li>
 <li><p>1 seed</p></li>
 <li><p>1 fold</p></li>
-<li><p>1~2 个新维度取值
-确保组合数与 summary 记录符合预期</p></li>
+<li><p>1–2 values for the new dimension
+Ensure the combo count and summary records match expectations</p></li>
 </ul>
-<p>四、常见问题</p>
-<p>1）组合数不符合预期</p>
+</section>
+<section id="iv-common-issues">
+<h2>IV. Common Issues<a class="headerlink" href="#iv-common-issues" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>Combo count is not as expected</p></li>
+</ol>
 <ul class="simple">
-<li><p>检查 run_grid.py 中新维度是否真的进入嵌套循环</p></li>
-<li><p>检查 combos 元组是否携带了该值并传到了 run_combo</p></li>
+<li><p>Check whether the new dimension actually enters the nested loops in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></p></li>
+<li><p>Check whether the combo tuple carries this value and passes it into <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
 </ul>
-<p>2）参数传递丢失</p>
+<ol class="arabic simple" start="2">
+<li><p>Parameter passing is missing</p></li>
+</ol>
 <ul class="simple">
-<li><p>查看 stage 日志开头 ARGS_JSON 是否包含该字段</p></li>
-<li><p>如 ARGS_JSON 有但方法行为未变化，检查 cli_builder 是否把它转成了实际命令行参数</p></li>
+<li><p>Check whether <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> at the beginning of stage logs includes the field</p></li>
+<li><p>If <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> includes it but behavior does not change, check whether <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> converts it into real CLI arguments</p></li>
 </ul>
-<p>3）summary 无法区分不同取值</p>
+<ol class="arabic simple" start="3">
+<li><p>The summary cannot distinguish different values</p></li>
+</ol>
 <ul class="simple">
-<li><p>确认 results.csv 的 args 中记录了该字段</p></li>
-<li><p>如依赖“重复运行跳过”机制，确认该字段被纳入匹配逻辑</p></li>
+<li><p>Confirm that the field is recorded in the <code class="docutils literal notranslate"><span class="pre">args</span></code> (JSON) column in <code class="docutils literal notranslate"><span class="pre">results.csv</span></code></p></li>
+<li><p>If you rely on the “skip duplicated combos” mechanism, confirm that the field is included in the matching logic</p></li>
 </ul>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="add_dataset.html" class="btn btn-neutral float-left" title="接入新数据集" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="add_dataset.html" class="btn btn-neutral float-left" title="Integrating a New Dataset" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>

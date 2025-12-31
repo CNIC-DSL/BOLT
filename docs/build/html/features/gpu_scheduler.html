@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPU 并发调度 &mdash; Bolt 0.1.0 documentation</title>
+  <title>GPU Concurrency Scheduling &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="OOM 重试机制" href="oom_retry.html" />
-    <link rel="prev" title="方法注册与执行流水线" href="method_registry.html" /> 
+    <link rel="next" title="OOM Retry Mechanism" href="oom_retry.html" />
+    <link rel="prev" title="Method Registration and Execution Pipeline" href="method_registry.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">GPU 并发调度</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">1. 关键参数</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">2. 运行时行为</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">3. 推荐配置示例</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#dry-run">4. dry_run 用于并发前检查</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">GPU Concurrency Scheduling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#key-parameters">1. Key Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#runtime-behavior">2. Runtime Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-configuration-examples">3. Recommended Configuration Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#use-dry-run-to-check-before-enabling-concurrency">4. Use <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> to Check Before Enabling Concurrency</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">可复现性与重复运行控制</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">GPU 并发调度</li>
+      <li class="breadcrumb-item active">GPU Concurrency Scheduling</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/features/gpu_scheduler.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,62 +108,62 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="gpu">
-<h1>GPU 并发调度<a class="headerlink" href="#gpu" title="Link to this heading"></a></h1>
-<p>bolt-lab 的并发模型以“GPU token（令牌）池”为核心：每个并发任务启动前会领取一个 token，任务结束后归还 token，从而控制并发量与 GPU 绑定关系。</p>
-<section id="id1">
-<h2>1. 关键参数<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+  <section id="gpu-concurrency-scheduling">
+<h1>GPU Concurrency Scheduling<a class="headerlink" href="#gpu-concurrency-scheduling" title="Link to this heading"></a></h1>
+<p>bolt-lab’s concurrency model is built around a <strong>GPU token pool</strong>: before a task starts, it acquires a token; after the task finishes, it returns the token. This controls both the concurrency level and the GPU binding behavior.</p>
+<section id="key-parameters">
+<h2>1. Key Parameters<a class="headerlink" href="#key-parameters" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>run.gpus
-指定可用 GPU 列表。例如 [0,1,2]。</p></li>
-<li><p>run.slots_per_gpu（默认 1）
-每张 GPU 提供多少个 token。slots_per_gpu=2 表示允许同一张 GPU 同时跑 2 个任务（适用于小模型/小 batch）。</p></li>
-<li><p>run.max_workers
-最大并发 worker 数。最终有效并发取决于：
-有效并发 = min(max_workers, GPU token 总数, 组合数)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.gpus</span></code><br />
+Specifies the list of available GPUs, e.g., <code class="docutils literal notranslate"><span class="pre">[0,1,2]</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.slots_per_gpu</span></code> (default: 1)<br />
+How many tokens each GPU provides. <code class="docutils literal notranslate"><span class="pre">slots_per_gpu=2</span></code> means the same GPU is allowed to run 2 tasks concurrently (useful for small models / small batch sizes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.max_workers</span></code><br />
+The maximum number of concurrent workers. The effective concurrency is:
+effective_concurrency = min(max_workers, total_GPU_tokens, number_of_combos)</p></li>
 </ul>
 </section>
-<section id="id2">
-<h2>2. 运行时行为<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<section id="runtime-behavior">
+<h2>2. Runtime Behavior<a class="headerlink" href="#runtime-behavior" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p>每个组合（combo）开始执行前，从 token 池中领取一个 gpu_id。</p></li>
-<li><p>子进程启动时，会设置 CUDA_VISIBLE_DEVICES 绑定到领取到的 gpu_id。</p></li>
-<li><p>组合执行结束后，归还 token，供后续组合继续使用。</p></li>
+<li><p>Before a combo starts, it acquires a <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code> from the token pool.</p></li>
+<li><p>When the subprocess launches, it sets <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> to bind to the acquired <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>.</p></li>
+<li><p>After the combo finishes, it returns the token so later combos can reuse it.</p></li>
 </ul>
-<p>该机制具有以下特性：</p>
+<p>This mechanism has the following properties:</p>
 <ul class="simple">
-<li><p>能够保证并发数量受控，不会无限并发占满显存</p></li>
-<li><p>多 GPU 情况下会自然地分配任务到不同 GPU 上</p></li>
-<li><p>通过 slots_per_gpu 可以在显存允许时提升吞吐</p></li>
+<li><p>Concurrency is bounded, preventing unlimited parallelism that could exhaust GPU memory</p></li>
+<li><p>With multiple GPUs, tasks are naturally distributed across different GPUs</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code> can increase throughput when GPU memory allows</p></li>
 </ul>
 </section>
-<section id="id3">
-<h2>3. 推荐配置示例<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="recommended-configuration-examples">
+<h2>3. Recommended Configuration Examples<a class="headerlink" href="#recommended-configuration-examples" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p>单卡、严格串行（最稳妥）
+<li><p>Single GPU, strictly serial (most stable)
 run:
 gpus: [0]
 max_workers: 1
 slots_per_gpu: 1</p></li>
-<li><p>多卡、每卡 1 个任务（常用默认）
+<li><p>Multiple GPUs, one task per GPU (common default)
 run:
 gpus: [0,1,2,3]
 max_workers: 4
 slots_per_gpu: 1</p></li>
-<li><p>单卡多任务（仅在显存充足时使用）
+<li><p>Multiple tasks on a single GPU (only when memory is sufficient)
 run:
 gpus: [0]
 max_workers: 2
 slots_per_gpu: 2</p></li>
 </ol>
 </section>
-<section id="dry-run">
-<h2>4. dry_run 用于并发前检查<a class="headerlink" href="#dry-run" title="Link to this heading"></a></h2>
-<p>首次配置并发时，建议先设置 dry_run=true：</p>
+<section id="use-dry-run-to-check-before-enabling-concurrency">
+<h2>4. Use <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> to Check Before Enabling Concurrency<a class="headerlink" href="#use-dry-run-to-check-before-enabling-concurrency" title="Link to this heading"></a></h2>
+<p>When configuring concurrency for the first time, it is recommended to set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> first:</p>
 <ul class="simple">
-<li><p>仅打印将要执行的命令与参数</p></li>
-<li><p>用于确认方法入口、数据集、fold/seed 等组合是否符合预期</p></li>
-<li><p>避免大规模组合启动后才发现配置错误</p></li>
+<li><p>It only prints the commands and parameters that would be executed</p></li>
+<li><p>It helps confirm whether method entry points, datasets, fold/seed combos, etc. match your expectations</p></li>
+<li><p>It avoids discovering configuration errors only after launching a large number of combos</p></li>
 </ul>
 </section>
 </section>
@@ -170,8 +172,8 @@ slots_per_gpu: 2</p></li>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="method_registry.html" class="btn btn-neutral float-left" title="方法注册与执行流水线" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="oom_retry.html" class="btn btn-neutral float-right" title="OOM 重试机制" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="method_registry.html" class="btn btn-neutral float-left" title="Method Registration and Execution Pipeline" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="oom_retry.html" class="btn btn-neutral float-right" title="OOM Retry Mechanism" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

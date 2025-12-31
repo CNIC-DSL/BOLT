@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>可复现性与重复运行控制 &mdash; Bolt 0.1.0 documentation</title>
+  <title>Reproducibility and Duplicate-Run Control &mdash; Bolt 0.1.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -22,8 +22,8 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="核心概念" href="../user_guide/concepts.html" />
-    <link rel="prev" title="自动结果收集与汇总" href="auto_summary.html" /> 
+    <link rel="next" title="Core Concepts" href="../user_guide/concepts.html" />
+    <link rel="prev" title="Automatic Result Collection and Summarization" href="auto_summary.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,39 +47,41 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">安装与环境准备</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">快速开始</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">输出目录结构与注意事项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/outputs.html">Output Directory Structure and Notes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
 <ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML 实验规格</a></li>
-<li class="toctree-l1"><a class="reference internal" href="method_registry.html">方法注册与执行流水线</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU 并发调度</a></li>
-<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM 重试机制</a></li>
-<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">自动结果收集与汇总</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">可复现性与重复运行控制</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id2">1. 可复现性的基础要素</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">2. 输出隔离的推荐做法</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">3. 避免重复运行：已有记录的跳过</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">4. 如何强制重跑</a></li>
+<li class="toctree-l1"><a class="reference internal" href="yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Reproducibility and Duplicate-Run Control</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#core-elements-of-reproducibility">1. Core Elements of Reproducibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#recommended-practice-output-isolation">2. Recommended Practice: Output Isolation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#avoiding-duplicate-runs-skipping-existing-records">3. Avoiding Duplicate Runs: Skipping Existing Records</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#how-to-force-a-rerun">4. How to Force a Rerun</a></li>
 </ul>
 </li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">核心概念</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">配置文件（YAML）说明</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">运行方式与常用操作</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">输出与日志定位</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">指标说明</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../user_guide/metrics.html">Metrics Guide</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">架构与执行流程</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">新增方法</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">接入新数据集</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">扩展网格维度</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
 </ul>
 
         </div>
@@ -96,7 +98,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">可复现性与重复运行控制</li>
+      <li class="breadcrumb-item active">Reproducibility and Duplicate-Run Control</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/features/reproducibility.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -106,66 +108,66 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="id1">
-<h1>可复现性与重复运行控制<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
-<p>大规模网格实验常见需求包括：</p>
+  <section id="reproducibility-and-duplicate-run-control">
+<h1>Reproducibility and Duplicate-Run Control<a class="headerlink" href="#reproducibility-and-duplicate-run-control" title="Link to this heading"></a></h1>
+<p>Common needs in large-scale grid experiments include:</p>
 <ul class="simple">
-<li><p>能够准确复现实验</p></li>
-<li><p>避免重复运行同一组合</p></li>
-<li><p>能够在需要时强制重跑</p></li>
+<li><p>being able to reproduce experiments accurately</p></li>
+<li><p>avoiding repeated runs of the same combo</p></li>
+<li><p>forcing reruns when needed</p></li>
 </ul>
-<p>本页说明 bolt-lab 在这三方面的设计与推荐实践。</p>
-<section id="id2">
-<h2>1. 可复现性的基础要素<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
-<p>每个实验组合由以下参数共同定义：</p>
+<p>This page explains bolt-lab’s design and recommended practices for these three aspects.</p>
+<section id="core-elements-of-reproducibility">
+<h2>1. Core Elements of Reproducibility<a class="headerlink" href="#core-elements-of-reproducibility" title="Link to this heading"></a></h2>
+<p>Each experiment combo is jointly defined by:</p>
 <ul class="simple">
 <li><p>method / dataset</p></li>
-<li><p>known_cls_ratio / labeled_ratio / cluster_num_factor</p></li>
-<li><p>fold_type / fold_num / fold_idx</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code> / <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code> / <code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_type</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_num</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
 <li><p>seed</p></li>
-<li><p>训练轮数（num_pretrain_epochs / num_train_epochs）</p></li>
-<li><p>以及 per_method_extra 注入的额外参数（如 backbone、reg_loss、extra_flags 等）</p></li>
+<li><p>training epochs (<code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs</span></code> / <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>)</p></li>
+<li><p>extra parameters injected via <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">backbone</span></code>, <code class="docutils literal notranslate"><span class="pre">reg_loss</span></code>, <code class="docutils literal notranslate"><span class="pre">extra_flags</span></code>, etc.)</p></li>
 </ul>
-<p>运行时，这些信息会被记录为 ARGS_JSON，并写入对应 stage 的日志开头，作为复现依据。</p>
+<p>At runtime, this information is recorded as <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> and written at the beginning of the corresponding stage logs, serving as the basis for reproduction.</p>
 </section>
-<section id="id3">
-<h2>2. 输出隔离的推荐做法<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
-<p>建议每次大实验使用独立的 –output-dir，例如：</p>
+<section id="recommended-practice-output-isolation">
+<h2>2. Recommended Practice: Output Isolation<a class="headerlink" href="#recommended-practice-output-isolation" title="Link to this heading"></a></h2>
+<p>It is recommended to use a dedicated <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> for each large experiment, for example:</p>
 <ul class="simple">
-<li><p>~/tmp/exp_gcd_001</p></li>
-<li><p>~/tmp/exp_openset_20251225</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~/tmp/exp_gcd_001</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~/tmp/exp_openset_20251225</span></code></p></li>
 </ul>
-<p>这样可以确保：</p>
+<p>This ensures:</p>
 <ul class="simple">
-<li><p>logs/results/outputs 互不干扰</p></li>
-<li><p>运行环境与配置副本与本次实验对应</p></li>
-<li><p>便于整体打包、迁移与归档</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logs/results/outputs</span></code> do not interfere with each other</p></li>
+<li><p>the runtime environment and config snapshots correspond to this specific experiment</p></li>
+<li><p>the whole run can be packaged, moved, and archived easily</p></li>
 </ul>
-<p>同时建议：</p>
+<p>Additional recommendations:</p>
 <ul class="simple">
-<li><p>将使用的 YAML 配置保存在版本管理中（或与 output-dir 一起归档）</p></li>
-<li><p>使用固定的 –model-dir 复用模型缓存</p></li>
+<li><p>Keep the YAML config you used under version control (or archive it together with the output directory)</p></li>
+<li><p>Use a fixed <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> to reuse model caches</p></li>
 </ul>
 </section>
-<section id="id4">
-<h2>3. 避免重复运行：已有记录的跳过<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
-<p>当框架检测到某方法已有 results.csv，并且其中存在与当前组合参数匹配的记录时，会跳过该组合的执行，以避免重复计算。</p>
-<p>建议将“是否跳过重复组合”的判断视为默认行为：在大规模实验中能显著节省时间与资源。</p>
+<section id="avoiding-duplicate-runs-skipping-existing-records">
+<h2>3. Avoiding Duplicate Runs: Skipping Existing Records<a class="headerlink" href="#avoiding-duplicate-runs-skipping-existing-records" title="Link to this heading"></a></h2>
+<p>When the framework detects that a method already has a <code class="docutils literal notranslate"><span class="pre">results.csv</span></code>, and that the file contains a record matching the current combo parameters, it will skip executing that combo to avoid duplicate computation.</p>
+<p>Treat “skip duplicated combos” as the default behavior: it can significantly save time and resources in large-scale experiments.</p>
 </section>
-<section id="id5">
-<h2>4. 如何强制重跑<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
-<p>若你需要重跑同一组合（例如代码更新、修复 bug、改了方法实现），建议使用以下方式之一：</p>
+<section id="how-to-force-a-rerun">
+<h2>4. How to Force a Rerun<a class="headerlink" href="#how-to-force-a-rerun" title="Link to this heading"></a></h2>
+<p>If you need to rerun the same combo (e.g., after code updates, bug fixes, or method implementation changes), use one of the following approaches:</p>
 <ol class="arabic simple">
-<li><p>更换 result_file
-通过更换 YAML 的 result_file，生成新的 summary 与索引文件，便于与旧结果区分。</p></li>
-<li><p>使用新的 –output-dir
-将本次运行输出写入新的工作目录，避免覆盖旧目录下的产物与日志。</p></li>
-<li><p>清理目标方法的 results.csv
-在明确知道影响范围的情况下，可以清理：
+<li><p>Change <code class="docutils literal notranslate"><span class="pre">result_file</span></code><br />
+By changing the YAML field <code class="docutils literal notranslate"><span class="pre">result_file</span></code>, you generate new summary and index files, making it easy to distinguish from old results.</p></li>
+<li><p>Use a new <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code><br />
+Write outputs to a new working directory to avoid overwriting artifacts and logs under the old directory.</p></li>
+<li><p>Clean the target method’s <code class="docutils literal notranslate"><span class="pre">results.csv</span></code><br />
+If you clearly understand the impact scope, you can remove:
 ./results/{task}/{method}/results.csv
-然后重跑对应组合，使框架重新收集结果。</p></li>
+Then rerun the target combos so the framework collects results again.</p></li>
 </ol>
-<p>在实际使用中，优先推荐前两种方式（更安全、可追踪）。</p>
+<p>In practice, the first two approaches are recommended (safer and more traceable).</p>
 </section>
 </section>
 
@@ -173,8 +175,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="auto_summary.html" class="btn btn-neutral float-left" title="自动结果收集与汇总" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="../user_guide/concepts.html" class="btn btn-neutral float-right" title="核心概念" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="auto_summary.html" class="btn btn-neutral float-left" title="Automatic Result Collection and Summarization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../user_guide/concepts.html" class="btn btn-neutral float-right" title="Core Concepts" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

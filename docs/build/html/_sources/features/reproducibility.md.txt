@@ -1,58 +1,58 @@
-# 可复现性与重复运行控制
+# Reproducibility and Duplicate-Run Control
 
-大规模网格实验常见需求包括：
-- 能够准确复现实验
-- 避免重复运行同一组合
-- 能够在需要时强制重跑
+Common needs in large-scale grid experiments include:
+- being able to reproduce experiments accurately
+- avoiding repeated runs of the same combo
+- forcing reruns when needed
 
-本页说明 bolt-lab 在这三方面的设计与推荐实践。
+This page explains bolt-lab’s design and recommended practices for these three aspects.
 
-## 1. 可复现性的基础要素
+## 1. Core Elements of Reproducibility
 
-每个实验组合由以下参数共同定义：
+Each experiment combo is jointly defined by:
 - method / dataset
-- known_cls_ratio / labeled_ratio / cluster_num_factor
-- fold_type / fold_num / fold_idx
+- `known_cls_ratio` / `labeled_ratio` / `cluster_num_factor`
+- `fold_type` / `fold_num` / `fold_idx`
 - seed
-- 训练轮数（num_pretrain_epochs / num_train_epochs）
-- 以及 per_method_extra 注入的额外参数（如 backbone、reg_loss、extra_flags 等）
+- training epochs (`num_pretrain_epochs` / `num_train_epochs`)
+- extra parameters injected via `per_method_extra` (e.g., `backbone`, `reg_loss`, `extra_flags`, etc.)
 
-运行时，这些信息会被记录为 ARGS_JSON，并写入对应 stage 的日志开头，作为复现依据。
+At runtime, this information is recorded as `ARGS_JSON` and written at the beginning of the corresponding stage logs, serving as the basis for reproduction.
 
-## 2. 输出隔离的推荐做法
+## 2. Recommended Practice: Output Isolation
 
-建议每次大实验使用独立的 --output-dir，例如：
-- ~/tmp/exp_gcd_001
-- ~/tmp/exp_openset_20251225
+It is recommended to use a dedicated `--output-dir` for each large experiment, for example:
+- `~/tmp/exp_gcd_001`
+- `~/tmp/exp_openset_20251225`
 
-这样可以确保：
-- logs/results/outputs 互不干扰
-- 运行环境与配置副本与本次实验对应
-- 便于整体打包、迁移与归档
+This ensures:
+- `logs/results/outputs` do not interfere with each other
+- the runtime environment and config snapshots correspond to this specific experiment
+- the whole run can be packaged, moved, and archived easily
 
-同时建议：
-- 将使用的 YAML 配置保存在版本管理中（或与 output-dir 一起归档）
-- 使用固定的 --model-dir 复用模型缓存
+Additional recommendations:
+- Keep the YAML config you used under version control (or archive it together with the output directory)
+- Use a fixed `--model-dir` to reuse model caches
 
-## 3. 避免重复运行：已有记录的跳过
+## 3. Avoiding Duplicate Runs: Skipping Existing Records
 
-当框架检测到某方法已有 results.csv，并且其中存在与当前组合参数匹配的记录时，会跳过该组合的执行，以避免重复计算。
+When the framework detects that a method already has a `results.csv`, and that the file contains a record matching the current combo parameters, it will skip executing that combo to avoid duplicate computation.
 
-建议将“是否跳过重复组合”的判断视为默认行为：在大规模实验中能显著节省时间与资源。
+Treat “skip duplicated combos” as the default behavior: it can significantly save time and resources in large-scale experiments.
 
-## 4. 如何强制重跑
+## 4. How to Force a Rerun
 
-若你需要重跑同一组合（例如代码更新、修复 bug、改了方法实现），建议使用以下方式之一：
+If you need to rerun the same combo (e.g., after code updates, bug fixes, or method implementation changes), use one of the following approaches:
 
-1) 更换 result_file
-通过更换 YAML 的 result_file，生成新的 summary 与索引文件，便于与旧结果区分。
+1) Change `result_file`  
+By changing the YAML field `result_file`, you generate new summary and index files, making it easy to distinguish from old results.
 
-2) 使用新的 --output-dir
-将本次运行输出写入新的工作目录，避免覆盖旧目录下的产物与日志。
+2) Use a new `--output-dir`  
+Write outputs to a new working directory to avoid overwriting artifacts and logs under the old directory.
 
-3) 清理目标方法的 results.csv
-在明确知道影响范围的情况下，可以清理：
+3) Clean the target method’s `results.csv`  
+If you clearly understand the impact scope, you can remove:
 ./results/{task}/{method}/results.csv
-然后重跑对应组合，使框架重新收集结果。
+Then rerun the target combos so the framework collects results again.
 
-在实际使用中，优先推荐前两种方式（更安全、可追踪）。
+In practice, the first two approaches are recommended (safer and more traceable).

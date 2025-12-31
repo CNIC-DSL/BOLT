@@ -1,41 +1,41 @@
-# OOM 重试机制
+# OOM Retry Mechanism
 
-在 GPU 训练中，CUDA OOM（显存不足）属于常见失败原因。bolt-lab 提供了可控的 OOM 自动重试机制，用于提高大规模网格实验的完成率。
+In GPU training, CUDA OOM (out-of-memory) is a common failure mode. bolt-lab provides a controllable automatic OOM retry mechanism to improve the completion rate of large-scale grid experiments.
 
-## 1. 触发条件
+## 1. Trigger Conditions
 
-当子任务抛出 RuntimeError 且错误信息包含：
+If a subprocess raises a `RuntimeError` and the error message contains:
 - "CUDA out of memory"
-- 或 "out of memory"
-框架会将其判定为 OOM。
+- or "out of memory"
+the framework will treat it as an OOM event.
 
-## 2. 可配置参数（run 节）
+## 2. Configurable Parameters (in `run`)
 
-- retry_on_oom（默认 true）
-  是否启用 OOM 重试。
+- `retry_on_oom` (default: true)  
+  Whether to enable OOM retries.
 
-- max_retries（默认 2）
-  最多重试次数。
+- `max_retries` (default: 2)  
+  Maximum number of retry attempts.
 
-- retry_backoff_sec（默认 15.0）
-  每次重试前等待的秒数，用于释放显存与缓冲。
+- `retry_backoff_sec` (default: 15.0)  
+  Seconds to wait before each retry, to allow GPU memory and buffers to be released.
 
-示例：
+Example:
 run:
   retry_on_oom: true
   max_retries: 3
   retry_backoff_sec: 30
 
-## 3. 重试行为说明
+## 3. Retry Behavior
 
-- OOM 发生后，框架会等待 backoff 秒数，然后重新启动该组合。
-- 若配置了多张 GPU，重试时可能会领取到不同的 GPU token，从而实现“换卡重试”的效果。
-- 若达到 max_retries 仍失败，则该组合会被视为失败并终止（需要人工排查或调整配置后再重跑）。
+- After an OOM occurs, the framework waits for the backoff seconds and then restarts the combo.
+- If multiple GPUs are configured, a retry may acquire a different GPU token, effectively enabling “retry on another GPU”.
+- If the combo still fails after reaching `max_retries`, it is marked as failed and the pipeline stops for that combo (manual debugging or configuration adjustments are needed before rerunning).
 
-## 4. 处理 OOM 的优先建议
+## 4. Recommended Actions to Handle OOM (Priority Order)
 
-如果同一组合持续 OOM，建议优先按以下顺序处理：
-1) 降低并发：减少 max_workers 或 slots_per_gpu
-2) 降低训练开销：减小 batch / max_length / num_train_epochs
-3) 调整模型或 backbone：更换更小的 backbone 或关闭部分耗显存功能
-4) 使用更大显存的 GPU 或减少同卡任务数
+If the same combo keeps hitting OOM, it is recommended to address it in the following order:
+1) Reduce concurrency: decrease `max_workers` or `slots_per_gpu`
+2) Reduce training cost: lower batch size / `max_length` / `num_train_epochs`
+3) Adjust the model/backbone: switch to a smaller backbone or disable memory-heavy features
+4) Use a GPU with more memory, or reduce the number of tasks running on the same GPU
