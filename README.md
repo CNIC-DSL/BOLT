@@ -71,7 +71,7 @@ BOLT/
 git clone https://github.com/yourusername/BOLT.git
 cd BOLT
 
-conda create -n bolt python=3.9
+conda create -n bolt python=3.10
 conda activate bolt
 pip install -r requirements.txt
 ```
@@ -79,7 +79,7 @@ pip install -r requirements.txt
 2.	(Optional) Create a conda environment and install dependencies:
 
 ```bash
-conda create -n bolt python=3.9
+conda create -n bolt python=3.10
 conda activate bolt
 pip install -r requirements.txt
 ```
@@ -87,3 +87,26 @@ pip install -r requirements.txt
 3.	Run experiments under code/gcd/ or code/openset/.
 
 4.	Use notebooks in data/ for dataset preparation and statistics.
+
+
+## 📚 Documentation
+
+The rendered documentation is already included in this repository.
+
+### Quick access
+- **Rendered HTML (recommended):** `docs/build/html/index.html`
+- **Sphinx sources (if needed):** `docs/source/`
+
+### How to read
+- Open `docs/build/html/index.html` as the entry page and navigate via the sidebar / table of contents.
+- If you prefer reading source files directly on GitHub, start from `docs/source/index.*` and follow the TOC links.
+
+
+### 📸 Documentation Preview
+
+> The following screenshots show four representative documentation pages.
+
+|  |  |
+|---|---|
+| ![Documentation page 1](assets/docs_preview/1.png) | ![Documentation page 2](assets/docs_preview/2.png) |
+| ![Documentation page 3](assets/docs_preview/3.png) | ![Documentation page 4](assets/docs_preview/4.png) |

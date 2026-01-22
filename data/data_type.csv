@@ -2,6 +2,7 @@ dataset,Dataset,Language,Text Domain,Scenario,Special,URL
 20NG,20NG,EN,Usenet News,Topic Classification,"20 newsgroups, 20 classes","people.csail.mit.edu/jrennie/20Newsgroups/"
 thucnews,THUCNews,CN,Sina News,Topic Classification,"Chinese news classification","thuctc.thunlp.org/"  
 Yahoo,Yahoo,EN,Yahoo pages,Topic Classification,"web page topic categorization","www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification"  
+X-Topic,X-Topic,Multilingual,Twitter pages,Topic Classification,"ontology / entity classes","huggingface.co/datasets/cardiffnlp/tweet_topic_multilingual"  
 banking,BANKING77,EN,Online banking queries,Intent Detection,"fine-grained banking intents","huggingface.co/datasets/PolyAI/banking77"
 clinc,CLINC150,EN,Conversational queries,Intent Detection,"includes out-of-scope cases","archive.ics.uci.edu/ml/datasets/CLINC150"  
 stackoverflow,StackOverflow,EN,Programming queries,Intent Detection,"question intent classification","github.com/fanolabs/NID_ACLARR2022"  
