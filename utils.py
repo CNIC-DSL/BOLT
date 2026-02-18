@@ -105,7 +105,8 @@ def compare_common_keys(dict1: dict, dict2: dict, common_keys) -> bool:
 #     SEEN_JSON = RESULTS_DIR / f"seen_index_{result_file}.json"
 #     LOG_DIR = Path(logs_dir)
 #     LOG_DIR.mkdir(parents=True, exist_ok=True)
-def set_paths(results_dir: str, logs_dir: str, result_file: str, workdir: str, data_dir: str, model_dir: str):
+# def set_paths(results_dir: str, logs_dir: str, result_file: str, workdir: str, data_dir: str, model_dir: str):
+def set_paths(results_dir, logs_dir, result_file, workdir=".", data_dir="./data", model_dir="./pretrained_models"):
     global RESULTS_DIR, SUMMARY_CSV, SEEN_JSON, LOG_DIR, WORKDIR, DATA_DIR, MODEL_DIR
     WORKDIR = Path(workdir).resolve()
     DATA_DIR = Path(data_dir).resolve()

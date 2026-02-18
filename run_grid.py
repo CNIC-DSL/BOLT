@@ -8,7 +8,7 @@ import time
 import traceback
 import yaml
 
-from utils import (
+from .utils import (
     run_combo,
     set_paths,
 )
@@ -184,7 +184,7 @@ def main():
         for fu in as_completed(futures):
             _ = fu.result()
 
-    from utils import SUMMARY_CSV
+    from .utils import SUMMARY_CSV
 
     print("[DONE] 汇总文件：", SUMMARY_CSV)
 
