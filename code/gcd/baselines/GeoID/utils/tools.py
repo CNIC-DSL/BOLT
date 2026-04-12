@@ -78,19 +78,24 @@ def clustering_accuracy_score(y_true, y_pred, known_lab):
     old_acc = 0
     total_old_instances = 0
     for i in known_lab:
-        old_acc += w[ind_map[i], i]
+        if i in ind_map:
+            old_acc += w[ind_map[i], i]
         total_old_instances += sum(w[:, i])
-    old_acc /= total_old_instances
+    if total_old_instances == 0: old_acc = 0.0
+    else: old_acc /= total_old_instances
 
     new_acc = 0
     total_new_instances = 0
     for i in range(len(np.unique(y_true))):
         if i not in known_lab:
-            new_acc += w[ind_map[i], i]
+            if i in ind_map:
+                new_acc += w[ind_map[i], i]
             total_new_instances += sum(w[:, i])
-    new_acc /= total_new_instances
+    if total_new_instances == 0: new_acc = 0.0
+    else: new_acc /= total_new_instances
 
-    h_score = 2 * old_acc * new_acc / (old_acc + new_acc)
+    if old_acc == 0 or new_acc == 0: h_score = 0.0
+    else: h_score = 2 * old_acc * new_acc / (old_acc + new_acc)
 
     metrics = {
         "ACC": round(acc * 100, 2),

@@ -1,0 +1,82 @@
+dataset: "banking"
+known_cls_ratio: 0.25
+
+seed: 42
+gpu_id: "0"
+data_dir: "data"
+save_results_path: "results/gcd/tlsa"
+bert_model: "./pretrained_models/bert-base-uncased"
+labeled_ratio: 0.1
+fold_idx: 0
+
+# Model
+proj_dim: 256
+temperature: 0.07
+feat_dim: 768
+
+# Training
+train_batch_size: 64
+eval_batch_size: 64
+num_pretrain_epochs: 10
+num_train_epochs: 50
+lr_encoder: !!float 2e-5
+lr_proj: !!float 1e-3
+weight_decay: 0.01
+
+# Phase-2 dataloader switches
+use_known_labeled_data: true
+use_novel_clustered_data: true
+
+# Confidence buckets
+high_conf_ratio: 0.15
+high_conf_ratio_end: 0.4
+low_conf_ratio: 0.25
+num_high_sample: 8
+num_mid_sample: 12
+num_low_sample: 16
+
+# Label refinement
+label_refine_start_epoch: 1
+
+# Loss
+hardneg_weight: 0.5
+hardneg_topk: 5
+
+# LLM
+api_key: "YOUR_API_KEY"
+api_base: "https://uni-api.cstcloud.cn/v1"
+llm_model_name: "deepseek-v3:671b-gw"
+
+dataset_specific_configs:
+  clinc:
+    max_seq_length: 30
+  stackoverflow:
+    max_seq_length: 45
+  banking:
+    max_seq_length: 55
+  hwu:
+    max_seq_length: 55
+  mcid:
+    max_seq_length: 65
+  ecdt:
+    max_seq_length: 65
+  thucnews:
+    max_seq_length: 256
+  20NG:
+    max_seq_length: 256
+    train_batch_size: 8
+    eval_batch_size: 32
+  DBPedia:
+    max_seq_length: 256
+    train_batch_size: 16
+    eval_batch_size: 32
+  TREC:
+    max_seq_length: 40
+  Yahoo:
+    max_seq_length: 128
+  AGNews:
+    max_seq_length: 128
+  X-Topic:
+    max_seq_length: 128
+    train_batch_size: 16
+    eval_batch_size: 32

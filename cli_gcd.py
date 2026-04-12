@@ -260,6 +260,51 @@ def cli_simple_openset(entry: str) -> CliBuilder:
     return _f
 
 
+def cli_tlsa(args_json: Dict[str, Any], stage: int) -> List[str]:
+    return [
+        sys.executable,
+        "code/gcd/baselines/TLSA/main.py",
+        *_common_env(args_json),
+        "--gpu_id",
+        str(args_json["gpu_id"]),
+        *_epoch_flags(args_json, is_pretrain=False),
+        "--save_results_path",
+        "./results/gcd/tlsa",
+        "--output_dir",
+        str(args_json["result_dir"]),
+        "--use_known_labeled_data",
+        "--use_novel_clustered_data",
+    ]
+
+
+def cli_llm4openssl(args_json: Dict[str, Any], stage: int) -> List[str]:
+    argv = [
+        sys.executable,
+        "code/gcd/baselines/LLM4OpenSSL/bolt_run.py",
+        "--config", str(args_json["config"]),
+        "--dataset", args_json["dataset"],
+        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
+        "--labeled_ratio", str(args_json["labeled_ratio"]),
+        "--seed", str(args_json["seed"]),
+        "--gpu_id", str(args_json["gpu_id"]),
+        "--fold_idx", str(args_json["fold_idx"]),
+        "--fold_num", str(args_json["fold_num"]),
+        "--fold_type", str(args_json["fold_type"]),
+        "--output_dir", str(args_json["result_dir"]),
+        "--save_results_path", str(args_json.get("save_results_path", "results/gcd/llm4openssl")),
+        "--num_train_epochs", str(args_json.get("num_train_epochs", 12)),
+    ]
+    for key in [
+        "model_name_or_path", "per_device_train_batch_size", "per_device_eval_batch_size",
+        "gradient_accumulation_steps", "learning_rate", "linear_learning_rate",
+        "num_semi_warmup_epochs", "num_gen_warmup_epochs", "is_semi", "is_mlp",
+        "cca_loss_func", "cca_k", "cca_loss_weight",
+    ]:
+        if key in args_json:
+            argv += [f"--{key}", str(args_json[key])]
+    return argv
+
+
 METHOD_REGISTRY_GCD: Dict[str, Dict[str, Any]] = {
     "tan": {
         "task": "gcd",
@@ -334,5 +379,24 @@ METHOD_REGISTRY_GCD: Dict[str, Dict[str, Any]] = {
         ],
         "config": "configs/gcd/plm_gcd.yaml",
         "output_base": "./outputs/gcd/plm_gcd",
+    },
+    "tlsa": {
+        "task": "gcd",
+        "stages": [
+            {"entry": "code/gcd/baselines/TLSA/main.py", "cli_builder": cli_tlsa},
+        ],
+        "config": "configs/gcd/tlsa.yaml",
+        "output_base": "./outputs/gcd/tlsa",
+    },
+    "llm4openssl": {
+        "task": "gcd",
+        "stages": [
+            {
+                "entry": "code/gcd/baselines/LLM4OpenSSL/bolt_run.py",
+                "cli_builder": cli_llm4openssl,
+            }
+        ],
+        "config": "configs/gcd/llm4openssl.yaml",
+        "output_base": "./outputs/gcd/llm4openssl",
     },
 }

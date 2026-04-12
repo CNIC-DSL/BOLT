@@ -53,7 +53,7 @@ parser.add_argument(
     help="Metric name from compute_metrics to select best model.",
 )
 parser.add_argument(
-    "--fold_type", type=str, default="fold", help="", choices=["imbalance_fold", "fold"]
+    "--fold_type", type=str, default="fold", help="", choices=["imbalance_fold", "fold", "sim_fold"]
 )
 
 

@@ -27,7 +27,7 @@ update_per_epoch: 5
 
 api_key: "YOUR_API_KEY"
 api_base: "https://uni-api.cstcloud.cn/v1"
-llm_model_name: "deepseek-v3:671b"
+llm_model_name: "deepseek-v3:671b-gw"
 
 dataset_specific_configs:
   clinc:

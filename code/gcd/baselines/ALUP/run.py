@@ -81,7 +81,7 @@ def parse_arguments():
         type=str,
         default="fold",
         help="",
-        choices=["imbalance_fold", "fold"],
+        choices=["imbalance_fold", "fold", "sim_fold"],
     )
     parser.add_argument("--gpu_id", type=int, default=None, help="Which GPU to use")
     parser.add_argument(

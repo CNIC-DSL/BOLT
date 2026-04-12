@@ -1,0 +1,750 @@
+import math
+from model import CLBert
+from init_parameter import init_model
+from dataloader import Data
+from mtp import PretrainModelManager
+from utils.tools import *
+from utils.memory import MemoryBank, fill_memory_bank
+from utils.neighbor_dataset import NeighborsDataset
+from model import BertForModel
+from model import DistillLoss
+from transformers import logging, WEIGHTS_NAME
+from torch.utils.data import DataLoader
+from torch.utils.data._utils.collate import default_collate
+import warnings
+from scipy.spatial import distance as dist
+from sklearn.neighbors import NearestNeighbors
+import re
+import time
+import openai
+import traceback
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import SystemMessage, HumanMessage
+# from together import Together
+warnings.filterwarnings('ignore')
+logging.set_verbosity_error()
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+class ModelManager:
+    def __init__(self, args, data, pretrained_model=None):
+        set_seed(args.seed)
+        self.args = args
+        n_gpu = torch.cuda.device_count()
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.num_labels = data.num_labels
+        self.model = CLBert(args, args.bert_model, device=self.device, num_labels=data.num_labels)
+
+        if n_gpu > 1:
+            self.model = nn.DataParallel(self.model)
+
+        # Pretraining
+        if pretrained_model is None:
+            pretrained_model = BertForModel(args.pretrain_dir, num_labels=data.num_labels)
+            # if os.path.exists(args.pretrain_dir):
+            #     pretrained_model = self.restore_model(args, pretrained_model)
+        self.pretrained_model = pretrained_model
+        self.load_pretrained_model()
+
+        if args.cluster_num_factor > 1:
+            self.num_labels = self.predict_k(args, data)
+        else:
+            self.num_labels = data.num_labels
+
+        self.num_train_optimization_steps = int(len(data.train_semi_dataset) / args.train_batch_size) * args.num_train_epochs
+
+        self.optimizer, self.scheduler = self.get_optimizer(args)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
+        self.generator = view_generator(self.tokenizer, args.rtr_prob, args.seed)
+        args.num_training_rounds = math.ceil(args.num_train_epochs / args.update_per_epoch)
+        args.current_training_round = 0
+        print('\nNumber of Training Rounds: ', args.num_training_rounds)
+
+    def custom_collate(self, batch):
+        batch_dict = {}
+        for key in batch[0]:
+            if key in ['pos_cluster_idx', 'neg_cluster_idx']:
+                batch_dict[key] = [d[key] for d in batch]
+            else:
+                batch_dict[key] = default_collate([d[key] for d in batch])
+        return batch_dict
+
+    def get_neighbor_dataset(self, args, data, indices, query_index, pred, p, cluster_name=None, init=False):
+        if init or not args.feedback_cache:
+            self.di_all, self.di_all_pos_cluster_idx, self.di_all_neg_cluster_idx = {}, {}, {}
+        else:
+            print('\nLoad LLM feedback from cache')
+            self.di_all = self.dataset.di_all
+            self.di_all_pos_cluster_idx = self.dataset.di_all_pos_cluster_idx
+            self.di_all_neg_cluster_idx = self.dataset.di_all_neg_cluster_idx
+        self.num_cached_feedback = len(self.di_all)
+        print('\n Number of Loaded LLM feedback: ', len(self.di_all))
+
+        dataset = NeighborsDataset(args, data.train_semi_dataset, indices, query_index, pred, p, cluster_name=cluster_name,
+                                   di_all=self.di_all, di_all_pos_cluster_idx=self.di_all_pos_cluster_idx, di_all_neg_cluster_idx=self.di_all_neg_cluster_idx)
+        self.train_dataloader = DataLoader(dataset, batch_size=args.train_batch_size, shuffle=True, collate_fn=self.custom_collate)
+        self.dataset = dataset
+
+    def get_neighbor_inds(self, args, data, km):
+        memory_bank = MemoryBank(args, len(data.train_semi_dataset), args.feat_dim, len(data.all_label_list), 0.1)
+        fill_memory_bank(data.train_semi_dataloader, self.model, memory_bank)
+        indices, query_index, p = memory_bank.mine_nearest_neighbors(args.topk, km.labels_, km.cluster_centers_)
+        return indices, query_index, p
+
+    def get_adjacency(self, args, inds, neighbors, targets):
+        """get adjacency matrix"""
+        adj = torch.zeros(inds.shape[0], inds.shape[0])
+        for b1, n in enumerate(neighbors):
+            adj[b1][b1] = 1
+            for b2, j in enumerate(inds):
+                if j in n:
+                    adj[b1][b2] = 1 # if in neighbors
+                if (targets[b1] == targets[b2]) and (inds[b1] <= args.num_labeled_examples) and (inds[b2] <= args.num_labeled_examples):
+                    adj[b1][b2] = 1 # if same labels
+        return adj
+
+    def evaluation(self, args, data, save_results=True, plot_cm=True):
+        """final clustering evaluation on test set"""
+        print('\n### Evaluation ###\n')
+        # get features
+        feats_test, labels, logits = self.get_features_labels(data.test_dataloader, self.model, args, return_logit=True)
+        feats_test = feats_test.cpu().numpy()
+
+        save_path = args.save_results_path
+        os.makedirs(save_path, exist_ok=True)
+        file_name = f'hidden_states_TEST_{args.dataset}_kcr_{args.known_cls_ratio}.npy'
+        output_file = os.path.join(save_path, file_name)
+        np.save(output_file, feats_test)
+        print(f"\nHidden states successfully saved to: {output_file}")
+
+
+
+        # clustering result
+        km = KMeans(n_clusters = self.num_labels, random_state=args.seed).fit(feats_test)
+        y_pred = km.labels_
+        print("\n--- Generating Category Names for Test Set Clusters ---")
+        feats_test_gpu = torch.tensor(feats_test).to(self.device)
+        cluster_name_list = self.category_characterization(data, km, feats_test_gpu)
+        cluster_name_map = {i: name for i, name in enumerate(cluster_name_list)}
+        predicted_cluster_names = [cluster_name_map.get(cluster_id, "Unnamed_Cluster") for cluster_id in y_pred]
+
+        y_true = labels.cpu().numpy()
+        results = clustering_score(y_true, y_pred, data.known_lab)
+
+        print("----------------- Evaluation Results -----------------")
+        print(f"Overall ACC: {results['ACC']:.2f}")
+        print(f"H-Score:     {results['H-Score']:.2f}")
+        print(f"Known ACC:   {results['K-ACC']:.2f}")
+        print(f"Novel ACC:   {results['N-ACC']:.2f}")
+        print(f"NMI:         {results['NMI']:.2f}")
+        print(f"ARI:         {results['ARI']:.2f}")
+        print("------------------------------------------------------")
+
+        self.test_results = results
+
+        # save results
+        if save_results:
+            self.save_results(args, result_source='clustering')
+            self.save_instance_predictions(args, data, predicted_cluster_names, y_pred, feats_test)
+
+    def evaluate_and_save_train_set_results(self, args, data):
+        """
+        Evaluate on the training set and save hidden_states and detailed predictions.
+        """
+        print('\n### Evaluating and Saving on Training Set ###\n')
+
+        # 1. Get features for the entire training set (labeled + unlabeled)
+        feats_gpu, labels, _ = self.get_features_labels(data.train_semi_dataloader, self.model, args, return_logit=True)
+        feats_train = feats_gpu.cpu().numpy()
+
+        # 2. Save training set hidden_states to a new .npy file
+        save_path = args.save_results_path
+        os.makedirs(save_path, exist_ok=True)
+        file_name_npy = f'hidden_states_TRAIN_{args.dataset}_kcr_{args.known_cls_ratio}.npy'
+        output_file_npy = os.path.join(save_path, file_name_npy)
+        np.save(output_file_npy, feats_train)
+        print(f"Training set hidden states successfully saved to: {output_file_npy}")
+
+        # 3. Perform K-Means clustering on training set features
+        km = KMeans(n_clusters = self.num_labels, random_state=args.seed).fit(feats_train)
+        y_pred_train = km.labels_
+
+        # 4. Generate names for these clusters
+        cluster_name_list = self.category_characterization(data, km, feats_gpu)
+        cluster_name_map = {i: name for i, name in enumerate(cluster_name_list)}
+        predicted_cluster_names_train = [cluster_name_map.get(cluster_id, "Unnamed_Cluster") for cluster_id in y_pred_train]
+
+        # 5. Save detailed instance_predictions CSV file
+        train_examples = data.train_labeled_examples + data.train_unlabeled_examples
+
+        output_data = []
+        for i, example in enumerate(train_examples):
+            output_data.append({
+                "dataset": args.dataset,
+                "known_cls_ratio": args.known_cls_ratio,
+                "guid": example.guid,
+                "text": example.text_a,
+                "true_label": example.label,
+                "predicted_cluster_id": y_pred_train[i],
+                "predicted_cluster_name": predicted_cluster_names_train[i]
+            })
+
+        df_output = pd.DataFrame(output_data)
+        file_name_csv = f'instance_predictions_TRAIN_{args.experiment_name}.csv'
+        output_file_csv = os.path.join(save_path, file_name_csv)
+        df_output.to_csv(output_file_csv, index=False, encoding='utf-8-sig')
+        print(f"Training set instance-level predictions successfully saved to: {output_file_csv}")
+
+
+    def save_instance_predictions(self, args, data, predicted_names, y_pred, hidden_states_array):
+        """
+        Save detailed predictions for each test sample to a CSV file.
+        """
+        test_examples = data.test_examples
+
+        output_data = []
+        for i, example in enumerate(test_examples):
+            output_data.append({
+                "dataset": args.dataset,
+                "known_cls_ratio": args.known_cls_ratio,
+                "guid": example.guid,
+                "text": example.text_a,
+                "true_label": example.label,
+                "predicted_cluster_id": y_pred[i],
+                "predicted_cluster_name": predicted_names[i],
+            })
+
+        df_output = pd.DataFrame(output_data)
+
+        save_path = args.save_results_path
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        file_name = f'instance_predictions_TEST_{args.experiment_name}.csv'
+        output_file = os.path.join(save_path, file_name)
+
+        df_output.to_csv(output_file, index=False, encoding='utf-8-sig')
+        print(f"\nInstance-level predictions have been successfully saved to: {output_file}")
+
+    def train(self, args, data):
+        args.evaluation_epoch = 0
+        # self.evaluation(args, data, save_results=False, plot_cm=False)
+
+        if isinstance(self.model, nn.DataParallel):
+            criterion = self.model.module.loss_cl
+            ce = self.model.module.loss_ce
+        else:
+            criterion = self.model.loss_cl
+            ce = self.model.loss_ce
+
+        if args.weight_ce_unsup > 0:
+            cluster_criterion = DistillLoss(
+                                args.warmup_teacher_temp_epochs,
+                                args.num_train_epochs,
+                                args.warmup_teacher_temp,
+                                args.teacher_temp,
+                            )
+
+        # Obtain initial features, labels, logits
+        feats_gpu, labels, logits = self.get_features_labels(data.train_semi_dataloader, self.model, args, return_logit=True)
+        feats = feats_gpu.cpu().numpy()
+
+        # Perform K-Means Clustering and extract cluster centers
+        km = KMeans(n_clusters = self.num_labels, random_state=args.seed).fit(feats)
+
+        # Category Characterization
+        if self.args.weight_cluster_instance_cl > 0:
+            cluster_name = self.category_characterization(data, km, feats_gpu)
+            print('len(cluster_name)',len(cluster_name))
+
+            label_names = list(args.label_map_semi.keys())
+            print('label_names',label_names)
+        else:
+            cluster_name = None
+
+        # Get Neighbor Dataset
+        args.current_training_round += 1
+        print('\nCurrent Training Round: ', args.current_training_round)
+        indices, query_index, p = self.get_neighbor_inds(args, data, km)
+        self.get_neighbor_dataset(args, data, indices, query_index, km.labels_, p, cluster_name=cluster_name, init=True)
+
+
+        # Training
+        labelediter = iter(data.train_labeled_dataloader)
+        for epoch in range(int(args.num_train_epochs)):
+            print(f'\n\nTraining Epoch: [{epoch+1}/{args.num_train_epochs}]')
+            self.model.train()
+            tr_loss = 0
+            nb_tr_examples, nb_tr_steps = 0, 0
+
+            for _, batch in enumerate(self.train_dataloader):
+                # 1. load data
+                anchor = tuple(t.to(self.device) for t in batch["anchor"]) # anchor data
+                neighbor = tuple(t.to(self.device) for t in batch["neighbor"]) # neighbor data
+                pos_neighbors = batch["possible_neighbors"] # all possible neighbor inds for anchor
+                data_inds = batch["index"] # data ind
+
+                # 2. get adjacency matrix
+                adjacency = self.get_adjacency(args, data_inds, pos_neighbors, batch["target"]) # (bz,bz)
+
+                # 3. get augmentations
+                if args.view_strategy == "rtr":
+                    X_an = {"input_ids":self.generator.random_token_replace(anchor[0].cpu()).to(self.device), "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                    X_ng = {"input_ids":self.generator.random_token_replace(neighbor[0].cpu()).to(self.device), "attention_mask":neighbor[1], "token_type_ids":neighbor[2]}
+                    X_an_2 = {"input_ids":self.generator.random_token_replace(anchor[0].cpu()).to(self.device), "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                elif args.view_strategy == "shuffle":
+                    X_an = {"input_ids":self.generator.shuffle_tokens(anchor[0].cpu()).to(self.device), "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                    X_ng = {"input_ids":self.generator.shuffle_tokens(neighbor[0].cpu()).to(self.device), "attention_mask":neighbor[1], "token_type_ids":neighbor[2]}
+                    X_an_2 = {"input_ids":self.generator.shuffle_tokens(anchor[0].cpu()).to(self.device), "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                elif args.view_strategy == "none":
+                    X_an = {"input_ids":anchor[0], "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                    X_ng = {"input_ids":neighbor[0], "attention_mask":neighbor[1], "token_type_ids":neighbor[2]}
+                    X_an_2 = {"input_ids":anchor[0], "attention_mask":anchor[1], "token_type_ids":anchor[2]}
+                else:
+                    raise NotImplementedError(f"View strategy {args.view_strategy} not implemented!")
+
+                # 4. compute loss and update parameters
+                with torch.set_grad_enabled(True):
+                    pstr = ''
+                    out_an = self.model(X_an)
+                    out_ng = self.model(X_ng)
+                    out_an_2 = self.model(X_an_2)
+
+                    ## Contrastive Loss
+                    f_pos = torch.stack([out_an["features"], out_ng["features"]], dim=1) # shape required by SupConLoss: [bs, n_views, feat_dim]
+                    loss_cl = criterion(f_pos, mask=adjacency, temperature=args.temp)
+
+                    loss_cl_cluster_instance = 0
+                    # Cluster-Instance Alignment Loss
+                    if args.weight_cluster_instance_cl > 0:
+                        pos_cluster_idx_noisy = batch["pos_cluster_idx"] # positive cluster description
+                        neg_cluster_idx_noisy = batch["neg_cluster_idx"] # negative cluster description
+
+                        # only take valid cluster idx: None is invalid
+                        pos_cluster_idx = [i for i in pos_cluster_idx_noisy if i is not None]
+                        neg_cluster_idx = [i for i in neg_cluster_idx_noisy if i is not None]
+
+                        # tokenize all cluster descriptions
+                        all_cluster_des_t =  self.tokenizer(cluster_name, padding=True, truncation=True, return_tensors="pt", max_length=64) # shape: [num_clusters, seq_len]
+
+                        # Feed all cluster descriptions at once to the model
+                        X_all_cluster_des = {
+                            "input_ids": all_cluster_des_t["input_ids"].to(self.device),
+                            "attention_mask": all_cluster_des_t["attention_mask"].to(self.device),
+                            "token_type_ids": all_cluster_des_t["token_type_ids"].to(self.device)
+                        }
+                        feat_all_cluster_des = self.model(X_all_cluster_des)["features"]
+
+                        # only take the features corresponding to query with valid cluster descriptions
+                        an_w_cluster_des_feat = out_an["features"]
+                        an_w_cluster_des_feat = an_w_cluster_des_feat[[i for i in range(len(pos_cluster_idx_noisy)) if pos_cluster_idx_noisy[i] is not None]] # torch.Size([..., 768])
+
+                        pos_cluster_feat = [feat_all_cluster_des[i] for i in pos_cluster_idx]   # torch.Size([768]) x ...
+                        neg_cluster_feat = [feat_all_cluster_des[i] for i in neg_cluster_idx]   # torch.Size([..., 768]) x ...
+
+                        # compute cluster description and instance alignment loss
+                        if len(an_w_cluster_des_feat) > 0 and len(pos_cluster_feat) > 0:
+                            for i in range(len(an_w_cluster_des_feat)):
+                                # compute similarity scores
+                                sim_positive = F.cosine_similarity(an_w_cluster_des_feat[i].unsqueeze(0), pos_cluster_feat[i].unsqueeze(0), dim=1) / args.temp
+                                sim_negatives = F.cosine_similarity(an_w_cluster_des_feat[i].unsqueeze(0), neg_cluster_feat[i], dim=1) / args.temp
+
+                                # calculate the numerator (similarity of positive pair)
+                                numerator = torch.exp(sim_positive)
+
+                                # calculate the denominator (sum of similarities with all negatives)
+                                denominator = torch.exp(sim_negatives).sum()
+
+                                # compute the alignment loss
+                                loss = -torch.log(numerator / denominator)
+                                loss_cl_cluster_instance += loss
+                            # normalize the loss
+                            loss_cl_cluster_instance /= len(an_w_cluster_des_feat)
+
+
+                    ## Parametric Classification Loss
+                    cluster_loss = 0
+                    if args.weight_ce_unsup > 0:
+                        # Unsupervised Self-Distillation Loss for All Data
+                        student_out = torch.cat([out_an["logits"], out_an_2["logits"]], dim=0)  # shape required by DistillLoss: [n_viewsxbs, n_cls]
+                        teacher_out = student_out.detach()
+
+                        cluster_loss = cluster_criterion(student_out, teacher_out, epoch)
+                        avg_probs = (student_out / 0.1).softmax(dim=1).mean(dim=0)
+                        me_max_loss = - torch.sum(torch.log(avg_probs**(-avg_probs))) + math.log(float(len(avg_probs)))
+                        pstr += f'un_ce_loss: {cluster_loss.item():.2f} '
+                        pstr += f'reg_loss: {me_max_loss.item():.4f} '
+                        cluster_loss += args.memax_weight * me_max_loss
+
+
+                    # Supervised Classification Loss for Labeled Data
+                    try:
+                        batch = next(labelediter)
+                    except StopIteration:
+                        labelediter = iter(data.train_labeled_dataloader)
+                        batch = next(labelediter)
+                    batch = tuple(t.to(self.device) for t in batch)
+                    X_an = {"input_ids":batch[0], "attention_mask":batch[1], "token_type_ids":batch[2]}
+
+                    logits = self.model(X_an)["logits"]
+                    loss_ce_sup = ce(logits, batch[3])
+
+
+                    loss_ce = args.sup_weight * loss_ce_sup
+                    loss_ce += args.weight_ce_unsup * cluster_loss
+
+                    loss = loss_ce * args.ce_weight + loss_cl * args.cl_weight + loss_cl_cluster_instance * args.weight_cluster_instance_cl
+                    pstr += f'sup_ce_loss: {loss_ce_sup.item():.2f} '
+                    pstr += f'\t loss_ce: {loss_ce.item():.2f} '
+                    pstr += f'loss_cl: {loss_cl.item():.2f} '
+                    pstr += f'loss_cl_cluster_instance: {loss_cl_cluster_instance.item():.2f} ' if loss_cl_cluster_instance != 0 else ""
+                    pstr += f'loss: {loss.item():.2f} '
+
+                    tr_loss += loss.item()
+
+                    loss.backward()
+                    nn.utils.clip_grad_norm_(self.model.parameters(), args.grad_clip)
+                    self.optimizer.step()
+                    self.scheduler.step()
+                    self.optimizer.zero_grad()
+                    nb_tr_examples += anchor[0].size(0)
+                    nb_tr_steps += 1
+
+                    if _ % args.print_freq == 0:
+                        print(pstr)
+
+            loss = tr_loss / nb_tr_steps
+            print('train_loss',loss)
+            self.dataset.count = 0
+
+            args.evaluation_epoch = epoch
+            # update neighbors every several epochs
+            if ((epoch + 1) % args.update_per_epoch) == 0 and ((epoch + 1) != int(args.num_train_epochs)):
+                self.evaluation(args, data, save_results=False, plot_cm=False)
+
+                # Obtain initial features, labels, logits
+                feats_gpu, labels, logits = self.get_features_labels(data.train_semi_dataloader, self.model, args, return_logit=True)
+                feats = feats_gpu.cpu().numpy()
+
+                # Perform K-Means Clustering and extract cluster centers
+                km = KMeans(n_clusters = self.num_labels, random_state=args.seed).fit(feats)
+
+                if self.args.weight_cluster_instance_cl > 0:
+                    # Category Characterization
+                    cluster_name = self.category_characterization(data, km, feats_gpu)
+                    # print('\nAll Category Names and description:', cluster_name)
+                    print('len(cluster_name)',len(cluster_name))
+                    label_names = list(args.label_map_semi.keys())
+                    print('label_names',label_names)
+                else:
+                    cluster_name = None
+
+                # Get Neighbor Dataset
+                indices, query_index, p = self.get_neighbor_inds(args, data, km)
+                self.get_neighbor_dataset(args, data, indices, query_index, km.labels_, p, cluster_name=cluster_name)
+
+
+
+    def category_characterization(self, data, km, feats_gpu):
+        print('\n\n### Category Characterization ###\n')
+        print('Sampling Strategy:', self.args.interpret_sampling_strategy)
+        print('Number of Representatives:', self.args.interpret_num_representatives)
+        print('LLM Interpretation Model:', self.args.llm)
+
+        # Sample representative examples from each cluster
+        interpret_num_representatives = self.args.interpret_num_representatives
+        cluster_centers = torch.tensor(km.cluster_centers_)
+
+        # Ensure km.labels_ is a torch tensor
+        km_labels = torch.tensor(km.labels_, dtype=torch.long)
+
+        # 1. Sample K samples nearest to each cluster center
+        if self.args.interpret_sampling_strategy == 'nearest_center':
+            dis = self.EuclideanDistances(feats_gpu.cpu(), cluster_centers).T
+            _, index = torch.sort(dis, dim=1)
+            index = index[:, :interpret_num_representatives]
+        # 2. Randomly sample K samples from each cluster
+        elif self.args.interpret_sampling_strategy == 'random':
+            index = []
+            for i in range(self.num_labels):
+                index.append(torch.where(km_labels == i)[0])
+            index = [torch.randperm(len(i))[:interpret_num_representatives] for i in index]
+        # 3. Perform sub-clustering using KMeans for each cluster to obtain K sub-clusters and sample 1 samples nearest to each sub-cluster center, similar to the first strategy
+        elif self.args.interpret_sampling_strategy == 'nearest_sub_kmeans_centriods':
+            # for each cluster, perform sub-clustering using KMeans
+            index = []
+            for i in range(self.num_labels):
+                cluster_feats = feats_gpu[km_labels == i]
+                # handle case where there are fewer samples than the number of representatives
+                if cluster_feats.size(0) < interpret_num_representatives:
+                    interpret_num_representatives = cluster_feats.size(0)
+                sub_km = KMeans(n_clusters=interpret_num_representatives, random_state=self.args.seed).fit(cluster_feats.cpu().numpy())
+                sub_cluster_centers = torch.tensor(sub_km.cluster_centers_).to(feats_gpu.device)
+                dis = self.EuclideanDistances(cluster_feats, sub_cluster_centers).T
+                _, sub_index = torch.sort(dis, dim=1)
+                sub_indices = sub_index[:, :1].flatten()
+                original_indices = torch.where(km_labels == i)[0]
+                index.append(original_indices[sub_indices])
+            print('Sub-Cluster Index:', index)
+        else:
+            raise NotImplementedError(f"Sampling strategy {self.args.interpret_sampling_strategy} not implemented!")
+
+        # Assign Names and Description to Clusters:
+        cluster_name = []
+        example_count = 0
+        for i in range(len(index)):
+            query = []
+            for j in index[i]:
+                query.append(data.train_semi_dataset.__getitem__(j)[0])
+            llm_feedback = self.query_llm(query, example_count)
+            cluster_name.append(llm_feedback)
+
+            if example_count < 5:
+                query_text = []
+                query_labels = []
+                for j in index[i]:
+                    query_text.append(self.tokenizer.decode(data.train_semi_dataset.__getitem__(j)[0], skip_special_tokens=True, clean_up_tokenization_spaces=True))
+                    query_label_index = data.train_semi_dataset.__getitem__(j)[3].item()
+                    query_label_name = args.get_label_name_semi[query_label_index]
+                    query_labels.append(query_label_name)
+                print(f'\nCategory Characterization Examples: {i}')
+                print('Query Text:\n', query_text)
+                print('Query Ground Truth Labels:\n', query_labels)
+                print('LLM Generated Category Name and Description:\n', llm_feedback)
+            example_count += 1
+
+        self.cluster_reprsentatives = index
+
+        # print('\nAll Category Names and description:', cluster_name)
+        print('Total Number of category characterization:', len(cluster_name))
+        # print('Total Number of words in category characterization:', sum([len(name.split()) for name in cluster_name]))
+
+        return cluster_name
+
+
+    def query_llm(self, query, example_count):
+        texts = [self.tokenizer.decode(utt, skip_special_tokens=True, clean_up_tokenization_spaces=True) for utt in query]
+
+        prompt_text = f"Given the following texts, return a category name and a short category description to summarize the common topic or category of these texts in the format (Category Name: [category_name], Description: [description]) without explanation. \n"
+
+        if getattr(self.args, 'flag_demo', False) and hasattr(self.args, 'prompt_demo'):
+             prompt_text += "Examples of Some Known Category Names: \n" + str(list(self.args.label_map_train.keys())) + "\n"
+             prompt_text += self.args.prompt_demo
+
+        for i, text in enumerate(texts, 1):
+            prompt_text += f"Text {i}: {text}\n"
+
+        if example_count < 1:
+            print(f'\n--- Category Characterization Prompt ---\n{prompt_text}\n--------------------------------------')
+
+        api_key = os.getenv("LLM_API_KEY") or os.getenv("OPENAI_API_KEY") or self.args.api_key
+        api_base = os.getenv("LLM_BASE_URL") or getattr(self.args, 'api_base', None)
+        model_name = os.getenv("LLM_MODEL") or self.args.llm
+
+        if not api_key:
+            print("[FATAL in GCDLLMs.py] LLM_API_KEY is not set.")
+            return "LLM_CONFIG_MISSING"
+
+        max_retries = 3
+        retry_delay = 2 # seconds
+
+        for attempt in range(max_retries):
+            try:
+                llm = ChatOpenAI(
+                    model=model_name,
+                    openai_api_key=api_key,
+                    openai_api_base=api_base,
+                    temperature=0.0,
+                    max_retries=5,
+                    timeout=120,
+                )
+
+                messages = [
+                    SystemMessage(content="You are an AI assistant that strictly follows instructions."),
+                    HumanMessage(content=prompt_text),
+                ]
+
+                response = llm.invoke(messages)
+                return response.content
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"[RETRY] LLM naming query attempt {attempt + 1} failed: {e}. Retrying in {retry_delay}s...")
+                    time.sleep(retry_delay)
+                    retry_delay *= 2
+                else:
+                    print(f"[FATAL] LLM naming query failed after {max_retries} attempts: {e}")
+                    traceback.print_exc()
+                    return "LLM_QUERY_ERROR"
+
+
+    def get_optimizer(self, args):
+        num_warmup_steps = int(args.warmup_proportion*self.num_train_optimization_steps)
+        param_optimizer = list(self.model.named_parameters())
+        no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
+        optimizer_grouped_parameters = [
+            {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
+            {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
+        ]
+        optimizer = AdamW(optimizer_grouped_parameters, lr=args.lr)
+        scheduler = get_linear_schedule_with_warmup(optimizer,
+                                                    num_warmup_steps=num_warmup_steps,
+                                                    num_training_steps=self.num_train_optimization_steps)
+        return optimizer, scheduler
+
+    def load_pretrained_model(self):
+        """load the backbone of pretrained model"""
+        if isinstance(self.pretrained_model, nn.DataParallel):
+            pretrained_dict = self.pretrained_model.module.backbone.state_dict()
+        else:
+            pretrained_dict = self.pretrained_model.backbone.state_dict()
+        if isinstance(self.model, nn.DataParallel):
+            self.model.module.backbone.load_state_dict(pretrained_dict, strict=False)
+        else:
+            self.model.backbone.load_state_dict(pretrained_dict, strict=False)
+
+    def get_features_labels(self, dataloader, model, args, return_logit=False):
+        model.eval()
+        total_features = torch.empty((0,args.feat_dim)).to(self.device)
+        total_labels = torch.empty(0,dtype=torch.long).to(self.device)
+        total_logits = torch.empty((0,self.num_labels)).to(self.device)
+
+        for _, batch in enumerate(dataloader):
+            batch = tuple(t.to(self.device) for t in batch)
+            input_ids, input_mask, segment_ids, label_ids = batch
+            X = {"input_ids":input_ids, "attention_mask": input_mask, "token_type_ids": segment_ids}
+            with torch.no_grad():
+                outputs = model(X, output_hidden_states=True)
+                feature = outputs["hidden_states"]
+                logit = outputs['logits']
+
+            total_features = torch.cat((total_features, feature))
+            total_labels = torch.cat((total_labels, label_ids))
+            total_logits = torch.cat((total_logits, logit))
+
+        if return_logit:
+            return total_features, total_labels, total_logits
+        else:
+            return total_features, total_labels
+
+    def save_results(self, args, result_source=None):
+        if not hasattr(self, 'test_results'):
+            print("Warning: 'test_results' not found. Skipping saving results.")
+            return
+
+        config_to_save = {
+            'method': getattr(args, 'running_method', 'Glean'),
+            'dataset': args.dataset,
+            'known_cls_ratio': args.known_cls_ratio,
+            'labeled_ratio': getattr(args, 'labeled_ratio', 0.1),
+            'seed': args.seed,
+            'llm': args.llm
+        }
+
+        full_results = {**config_to_save, **self.test_results}
+
+        save_path = args.save_results_path
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+
+        file_name = f'results_{args.experiment_name}.csv'
+        results_file = os.path.join(save_path, file_name)
+
+        new_df = pd.DataFrame([full_results])
+
+        if not os.path.exists(results_file):
+            new_df.to_csv(results_file, index=False)
+        else:
+            try:
+                old_df = pd.read_csv(results_file)
+                combined_df = pd.concat([old_df, new_df], ignore_index=True)
+                combined_df.to_csv(results_file, index=False)
+            except Exception as e:
+                print(f"Warning: Could not append to CSV due to {e}. Overwriting file.")
+                new_df.to_csv(results_file, index=False)
+
+        print(f"Results successfully saved to {results_file}")
+
+    def restore_model(self, args, model):
+        output_model_file = os.path.join(args.pretrain_dir, WEIGHTS_NAME)
+        model.load_state_dict(torch.load(output_model_file))
+        return model
+
+    def EuclideanDistances(self, a, b):
+        sq_a = a**2
+        sum_sq_a = torch.sum(sq_a,dim=1).unsqueeze(1)  # m->[m, 1]
+        sq_b = b**2
+        sum_sq_b = torch.sum(sq_b,dim=1).unsqueeze(0)  # n->[1, n]
+        bt = b.t()
+        return torch.sqrt(sum_sq_a+sum_sq_b-2*a.mm(bt))
+
+    def predict_k(self, args, data):
+        feats, _ = self.get_features_labels(data.train_semi_dataloader, self.pretrained_model, args)
+        feats = feats.cpu().numpy()
+        km = KMeans(n_clusters = data.num_labels).fit(feats)
+        y_pred = km.labels_
+
+        pred_label_list = np.unique(y_pred)
+        drop_out = len(feats) / data.num_labels * 0.9
+        print('drop',drop_out)
+
+        cnt = 0
+        for label in pred_label_list:
+            num = len(y_pred[y_pred == label])
+            if num < drop_out:
+                cnt += 1
+
+        num_labels = len(pred_label_list) - cnt
+        print('pred_num',num_labels)
+
+        return num_labels
+
+if __name__ == '__main__':
+
+    print('\nParameters Initialization...')
+    parser = init_model()
+    args = parser.parse_args()
+
+    args.bert_model = './pretrained_models/bert-base-chinese' if args.dataset in ['ecdt', 'thucnews'] else args.bert_model
+    args.tokenizer = './pretrained_models/bert-base-chinese' if args.dataset in ['ecdt', 'thucnews'] else args.tokenizer
+
+
+    print('\nData Initialization...')
+    data = Data(args)
+
+    # Pretraining
+    if os.path.exists(args.pretrain_dir):
+        args.disable_pretrain = True # disable internal pretrain
+    else:
+        args.disable_pretrain = False
+
+    if not args.disable_pretrain:
+        print('\n\nPre-training begin...')
+        manager_p = PretrainModelManager(args, data)
+        manager_p.train(args, data)
+        print('Pre-training finished!')
+        manager = ModelManager(args, data, manager_p.model)
+    else:
+        manager = ModelManager(args, data)
+
+    if args.report_pretrain:
+        method = args.method
+        args.method = 'pretrain'
+        manager.evaluation(args, data) # evaluate when report performance on pretrain
+        args.method = method
+
+
+    print('\n\nTraining begin...')
+    print('architecture: ', args.architecture)
+    manager.train(args,data)
+    print('Training finished!')
+
+    manager.evaluate_and_save_train_set_results(args, data)
+
+    print('Evaluation begin...')
+    manager.evaluation(args, data)
+    print('Evaluation finished!')
+    if args.save_model:
+        print('Saving Model ...')
+        manager.model.save_backbone(args.save_model_path)
+    print('\n Number of All LLM feedback: ',len(manager.di_all))
+    print("Finished!")

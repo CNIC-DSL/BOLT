@@ -132,7 +132,7 @@ def init_model():
         type=str,
         default="fold",
         help="",
-        choices=["imbalance_fold", "fold"],
+        choices=["imbalance_fold", "fold", "sim_fold"],
     )
 
     return parser

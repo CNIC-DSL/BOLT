@@ -98,6 +98,19 @@ class LoopModelManager:
 
         return adj
 
+    def eval_for_es(self, args, data):
+        """Evaluate on dev set (known classes only) for early stopping."""
+        feats_eval, labels_eval = self.get_features_labels(
+            data.eval_dataloader, self.model, args
+        )
+        feats_eval = feats_eval.cpu().numpy()
+        km = KMeans(n_clusters=data.n_known_cls, random_state=args.seed).fit(feats_eval)
+        y_pred = km.labels_
+        y_true = labels_eval.cpu().numpy()
+        results = clustering_score(y_true, y_pred, data.known_lab)
+        print("eval_for_es results", results)
+        return results
+
     def evaluation(self, args, data, save_results=True, plot_cm=True):
 
         feats_test, labels = self.get_features_labels(
@@ -249,11 +262,10 @@ class LoopModelManager:
             print("train_loss", loss)
             self.dataset.count = 0
 
-            results = self.evaluation(args, data, save_results=False, plot_cm=False)
-            score = results.get(metric_name, None)
+            es_results = self.eval_for_es(args, data)
+            score = es_results.get(metric_name, None)
             if score is None:
-
-                score = results["NMI"]
+                score = es_results["NMI"]
             if score > best_score + es_min_delta:
                 best_score = score
                 best_model = copy.deepcopy(self.model)

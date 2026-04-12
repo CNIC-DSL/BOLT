@@ -101,7 +101,7 @@ def init_model():
 
     parser.add_argument("--fold_num", default=5, type=int, help="Total number of folds for cross-validation.")
     parser.add_argument("--fold_idx", default=0, type=int, help="The index of the current fold.")
-    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold'])
+    parser.add_argument("--fold_type", type=str, default="fold", help="", choices=['imbalance_fold', 'fold', 'sim_fold'])
 
     parser.add_argument("--max_seq_length", default=256, type=int,
                         help="The maximum total input sequence length. Set via dataset_specific_configs in YAML.")

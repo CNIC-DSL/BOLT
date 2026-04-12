@@ -1,23 +1,25 @@
 maps:
-  gcd: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
+  gcd: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan, tlsa, llm4openssl]
   openset: [ab, adb, deepunk, doc, dyen, knncon, plm_ood, scl]
 
 methods: [alup, deepaligned, dpn, geoid, loop, plm_gcd, sdc, tan]
 result_file: summary_gcd
 
 datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt, X-Topic]
+# datasets: [banking]
 grid:
   known_cls_ratio: [0.25, 0.5, 0.75]
   labeled_ratio: [0.1, 0.5, 1.0]
   fold_idxs: [0, 1, 2, 3]
   fold_types: [fold]
+  # fold_types: [sim_fold]
   fold_nums: [5]
   seeds: [2025]
   cluster_num_factor: [1.0]
 
 run:
-  gpus: [0,1,2]
-  max_workers: 3
+  gpus: [0,1,2,3]
+  max_workers: 4
   num_pretrain_epochs: 100
   num_train_epochs: 50
   max_seq_length: 128

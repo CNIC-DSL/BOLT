@@ -31,7 +31,7 @@ parser.add_argument("--train_batch_size", type=int, default=128)
 parser.add_argument("--output_dir", type=str, default="./outputs/openset/doc")
 parser.add_argument("--save_results_path", type=str, default="./outputs/openset/doc")
 parser.add_argument(
-    "--fold_type", type=str, default="fold", help="", choices=["imbalance_fold", "fold"]
+    "--fold_type", type=str, default="fold", help="", choices=["imbalance_fold", "fold", "sim_fold"]
 )
 
 

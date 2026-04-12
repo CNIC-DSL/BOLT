@@ -22,9 +22,9 @@ lr: !!float 1e-3
 warmup_proportion: 0.2
 wait_patient: 20
 grad_clip: 1.0
-es_metric: "ACC"        
-es_patience: 10
-es_min_delta: 0.0
+es_metric: "ACC"
+es_patience: 5
+es_min_delta: 0.1
 
 method: "GeoID" 
 cluster_num_factor: 1.0

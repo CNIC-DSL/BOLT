@@ -220,6 +220,12 @@ class ALManager:
             self.test_dataset, sampler=test_sampler, batch_size=args.eval_batch_size
         )
 
+        self.eval_dataset = new_data.eval_dataset
+        eval_sampler = SequentialSampler(self.eval_dataset)
+        self.eval_dataloader = DataLoader(
+            self.eval_dataset, sampler=eval_sampler, batch_size=args.eval_batch_size
+        )
+
     def al_finetune(self, args):
 
         self.logger.info("Start active learning finetune ...")
@@ -308,32 +314,19 @@ class ALManager:
             self.logger.info(
                 "***** Epoch: %s: Train loss: %f *****", str(epoch), tr_loss
             )
-            results = self.test(
-                test_dataloader=self.test_dataloader,
-                model=self.model,
-                num_labels=self.num_labels,
-                args=args,
-            )
 
-            if (
-                results["ACC"] + results["ARI"] + results["NMI"]
-                > best_metrics["ACC"] + best_metrics["ARI"] + best_metrics["NMI"]
-            ):
-
-                best_metrics.update(results)
-
-                best_metrics["Epoch"] = epoch
-                best_model = copy.deepcopy(self.model)
-
+            # Early stopping based on dev set (known classes only)
+            es_results = self.eval_for_es(self.model, args)
             curr_score = (
-                (results["ACC"] + results["ARI"] + results["NMI"])
+                (es_results["ACC"] + es_results["ARI"] + es_results["NMI"])
                 if monitor_sum
-                else results["ACC"]
+                else es_results["ACC"]
             )
 
             if curr_score > best_score_scalar + min_delta:
                 best_score_scalar = curr_score
                 wait = 0
+                best_model = copy.deepcopy(self.model)
             else:
                 wait += 1
                 self.logger.info(
@@ -345,6 +338,21 @@ class ALManager:
                     )
                     self.model = best_model
                     break
+
+            # Also run test for logging (but NOT for model selection)
+            results = self.test(
+                test_dataloader=self.test_dataloader,
+                model=self.model,
+                num_labels=self.num_labels,
+                args=args,
+            )
+
+            if (
+                results["ACC"] + results["ARI"] + results["NMI"]
+                > best_metrics["ACC"] + best_metrics["ARI"] + best_metrics["NMI"]
+            ):
+                best_metrics.update(results)
+                best_metrics["Epoch"] = epoch
 
             self.logger.info("***** Curr and Best model metrics *****")
             self.logger.info(
@@ -369,9 +377,18 @@ class ALManager:
                 )
                 self.get_neighbor_dataset(args, self.llm_augmented_dataset, indices)
 
+        # Final evaluation: use the last model (at early-stop epoch), not the best test epoch
+        final_results = self.test(
+            test_dataloader=self.test_dataloader,
+            model=self.model,
+            num_labels=self.num_labels,
+            args=args,
+        )
+        self.logger.info("***** Final test results (at stop epoch): %s *****", str(final_results))
+
         if args.save_results:
-            self.logger.info("***** Save best results *****")
-            save_results(args, best_metrics)
+            self.logger.info("***** Save final results *****")
+            save_results(args, final_results)
 
     def alignment(self, old_centroids, new_centroids, cluster_labels):
         self.logger.info("***** Conducting Alignment *****")
@@ -801,6 +818,16 @@ class ALManager:
         cluster_map_opp = np.asarray(cluster_map_opp)
         assert np.all(cluster_map[cluster_map_opp] == np.arange(len(ind)))
         return y_pred_map, cluster_map, cluster_map_opp
+
+    def eval_for_es(self, model, args):
+        """Evaluate on dev set (known classes only) for early stopping."""
+        feats, y_true = self.get_outputs(dataloader=self.eval_dataloader, model=model)
+        n_known = len(self.data.known_label_list)
+        km = KMeans(n_clusters=n_known, random_state=args.seed).fit(feats)
+        y_pred = km.labels_
+        results = clustering_score(y_true, y_pred, self.data.known_lab)
+        self.logger.info("eval_for_es results: %s", str(results))
+        return results
 
     def test(self, test_dataloader, model, num_labels, args):
 

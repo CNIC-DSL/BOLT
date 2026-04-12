@@ -174,7 +174,7 @@ if __name__ == "__main__":
         type=str,
         default="fold",
         help="",
-        choices=["imbalance_fold", "fold"],
+        choices=["imbalance_fold", "fold", "sim_fold"],
     )
 
     args = parser.parse_args()

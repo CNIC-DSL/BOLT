@@ -41,6 +41,7 @@ def _common_flags(args_json: Dict[str, Any]) -> List[str]:
         "plm_ood",
         "plm_ood-llm",
         "clap",
+        "unllm",
     ]:
         return [
             "--config",
@@ -293,6 +294,29 @@ def cli_scl(args_json: Dict[str, Any], stage: int) -> List[str]:
     ]
 
 
+def cli_unllm(args_json: Dict[str, Any], stage: int) -> List[str]:
+    out_dir = args_json.get(
+        "output_dir",
+        f'./outputs/openset/unllm/{args_json["dataset"]}_{args_json["known_cls_ratio"]}_{args_json["seed"]}',
+    )
+    argv = [
+        sys.executable,
+        "code/openset/baselines/UnLLM/bolt_run.py",
+        *_common_flags(args_json),
+        "--num_train_epochs", str(args_json.get("num_train_epochs", 1)),
+        "--save_results_path", str(args_json.get("save_results_path", "results/openset/unllm")),
+    ]
+    for key in [
+        "model_name_or_path", "segment_length", "neg_sample", "random_sample",
+        "con_weight", "neg_weight", "vos_neg_sample", "epsilon", "e_dim",
+        "temperature", "per_device_train_batch_size", "per_device_eval_batch_size",
+        "gradient_accumulation_steps", "train_ablation", "learning_rate",
+    ]:
+        if key in args_json:
+            argv += [f"--{key}", str(args_json[key])]
+    return argv
+
+
 METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
     "ab": {
         "task": "openset",
@@ -414,5 +438,16 @@ METHOD_REGISTRY_OPENSET: Dict[str, Dict[str, Any]] = {
         ],
         "config": "configs/openset/scl.yaml",
         "output_base": "./outputs/openset/scl",
+    },
+    "unllm": {
+        "task": "openset",
+        "stages": [
+            {
+                "entry": "code/openset/baselines/UnLLM/bolt_run.py",
+                "cli_builder": cli_unllm,
+            }
+        ],
+        "config": "configs/openset/unllm.yaml",
+        "output_base": "./outputs/openset/unllm",
     },
 }

@@ -131,6 +131,19 @@ class CLNNModelManager:
                     adj[b1][b2] = 1
         return adj
 
+    def eval_for_es(self, args, data):
+        """Evaluate on dev set (known classes only) for early stopping."""
+        feats_eval, labels_eval = self.get_features_labels(
+            data.eval_dataloader, self.model, args
+        )
+        feats_eval = feats_eval.cpu().numpy()
+        km = KMeans(n_clusters=data.n_known_cls).fit(feats_eval)
+        y_pred = km.labels_
+        y_true = labels_eval.cpu().numpy()
+        results = clustering_score(y_true, y_pred, data.known_lab)
+        print("eval_for_es results", results)
+        return results
+
     def evaluation(self, args, data, save_results=True, plot_cm=True):
 
         feats_test, labels = self.get_features_labels(
@@ -467,12 +480,8 @@ class CLNNModelManager:
             print("train_loss", loss)
             print("evaluation")
 
-            res_cluster = self.evaluation(args, data, save_results=False, plot_cm=False)
-            if res_cluster > best_res_cluster:
-                best_res_cluster = res_cluster
-            print("best_res_cluster:", best_res_cluster)
-
-            cur_score = float(res_cluster)
+            es_results = self.eval_for_es(args, data)
+            cur_score = float(es_results.get(monitor_name, es_results["ACC"]))
             is_better = (cur_score - best_score_scalar) > min_delta
 
             if is_better:

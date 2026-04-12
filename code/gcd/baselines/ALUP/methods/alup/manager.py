@@ -192,9 +192,10 @@ class Manager:
                     
             tr_loss = tr_loss / nb_tr_steps
             self.logger.info("***** Epoch: %s: Train loss: %f *****", str(epoch), tr_loss)
-            results = self.test(args, data)
 
-            curr_score = (results['ACC'] + results['ARI'] + results['NMI']) if monitor_sum else results['ACC']
+            # Early stopping based on dev set (known classes only)
+            es_results = self.eval_for_es(args, data)
+            curr_score = (es_results['ACC'] + es_results['ARI'] + es_results['NMI']) if monitor_sum else es_results['ACC']
 
             if curr_score > best_score + min_delta:
                 best_score = curr_score
@@ -206,6 +207,8 @@ class Manager:
                     self.logger.info("EarlyStopping: patience reached, stopping training.")
                     break
 
+            # Also run test for logging (but NOT for model selection)
+            results = self.test(args, data)
 
             if args.save_results:
                 self.logger.info("***** Save results *****")
@@ -218,9 +221,12 @@ class Manager:
                 best_metrics['ACC'] = results['ACC']
                 best_metrics['ARI'] = results['ARI']
                 best_metrics['NMI'] = results['NMI']
+
+            # Model selection based on dev score (not test)
+            if curr_score >= best_score:
                 self.best_model = copy.deepcopy(self.model.eval())
                 save_model(args, self.best_model, 'best')
-            
+
             self.model.eval()
             # save_model(args, self.model, epoch)
 
@@ -239,6 +245,16 @@ class Manager:
                 indices = self.get_neighbor_inds(args, data)
                 self.get_neighbor_dataset(args, data, indices)
 
+
+    def eval_for_es(self, args, data):
+        """Evaluate on dev set (known classes only) for early stopping."""
+        feats, y_true = self.get_outputs(args, dataloader=self.eval_dataloader, get_feats=True)
+        n_known = len(data.known_label_list)
+        km = KMeans(n_clusters=n_known, random_state=args.seed).fit(feats)
+        y_pred = km.labels_
+        results = clustering_score(y_true, y_pred, data.known_lab)
+        self.logger.info("eval_for_es results: %s", str(results))
+        return results
 
     def test(self, args, data):
         
@@ -316,5 +332,13 @@ class Manager:
         self.test_dataloader = DataLoader(
             self.test_dataset,
             sampler=test_sampler,
+            batch_size=args.eval_batch_size
+        )
+
+        self.eval_dataset = new_data.eval_dataset
+        eval_sampler = SequentialSampler(self.eval_dataset)
+        self.eval_dataloader = DataLoader(
+            self.eval_dataset,
+            sampler=eval_sampler,
             batch_size=args.eval_batch_size
         )

@@ -1,0 +1,33 @@
+dataset: "banking"
+known_cls_ratio: 0.25
+labeled_ratio: 1.0
+seed: 2025
+gpu_id: "0"
+fold_idx: 0
+fold_num: 5
+fold_type: "fold"
+
+# Model
+model_name_or_path: "./pretrained_models/Meta-Llama-3.1-8B-Instruct"
+
+# Training
+num_train_epochs: 1
+per_device_train_batch_size: 4
+per_device_eval_batch_size: 8
+gradient_accumulation_steps: 2
+learning_rate: 0.0001
+segment_length: 2
+neg_sample: 0
+random_sample: 1
+train_ablation: "binary"
+
+# OOD parameters
+con_weight: 0.1
+neg_weight: 0.1
+vos_neg_sample: 20
+epsilon: 2
+e_dim: 20
+temperature: 1.0
+
+# Output
+save_results_path: "results/openset/unllm"

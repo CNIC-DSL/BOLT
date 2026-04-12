@@ -1,0 +1,31 @@
+dataset: "banking"
+known_cls_ratio: 0.25
+labeled_ratio: 0.1
+seed: 2025
+gpu_id: "0"
+fold_idx: 0
+fold_num: 5
+fold_type: "fold"
+
+# Model
+model_name_or_path: "./pretrained_models/Meta-Llama-3.1-8B-Instruct"
+
+# Training
+num_train_epochs: 12
+num_semi_warmup_epochs: 5
+num_gen_warmup_epochs: 10
+per_device_train_batch_size: 32
+per_device_eval_batch_size: 32
+gradient_accumulation_steps: 2
+learning_rate: 5e-5
+linear_learning_rate: 1e-4
+
+# Semi-supervised / CCA
+is_semi: "semisurpervised"
+is_mlp: "mlp"
+cca_loss_func: "log"
+cca_k: 16
+cca_loss_weight: 0.01
+
+# Output
+save_results_path: "results/gcd/llm4openssl"
