@@ -278,31 +278,36 @@ def cli_tlsa(args_json: Dict[str, Any], stage: int) -> List[str]:
 
 
 def cli_llm4openssl(args_json: Dict[str, Any], stage: int) -> List[str]:
-    argv = [
-        sys.executable,
-        "code/gcd/baselines/LLM4OpenSSL/bolt_run.py",
-        "--config", str(args_json["config"]),
-        "--dataset", args_json["dataset"],
-        "--known_cls_ratio", str(args_json["known_cls_ratio"]),
-        "--labeled_ratio", str(args_json["labeled_ratio"]),
-        "--seed", str(args_json["seed"]),
-        "--gpu_id", str(args_json["gpu_id"]),
-        "--fold_idx", str(args_json["fold_idx"]),
-        "--fold_num", str(args_json["fold_num"]),
-        "--fold_type", str(args_json["fold_type"]),
-        "--output_dir", str(args_json["result_dir"]),
-        "--save_results_path", str(args_json.get("save_results_path", "results/gcd/llm4openssl")),
-        "--num_train_epochs", str(args_json.get("num_train_epochs", 12)),
-    ]
+    """Call original LLM4OpenSSL main.py (train or eval-test)."""
+    mode = "train" if stage == 1 else "eval-test"
+    basedir = os.path.abspath("code/gcd/baselines/LLM4OpenSSL")
+    bolt_root = os.path.abspath(".")
+    model = args_json.get("model_name_or_path", "Meta-Llama-3.1-8B-Instruct")
+    py_cmd = (
+        f"{sys.executable} main.py"
+        f" --base_dir {bolt_root}"
+        f" --dataset_name {args_json['dataset']}"
+        f" --rate {args_json['known_cls_ratio']}"
+        f" --labeled_ratio {args_json['labeled_ratio']}"
+        f" --seed {args_json['seed']}"
+        f" --gpu_id {args_json['gpu_id']}"
+        f" --mode {mode}"
+        f" --data_root_dir {bolt_root}/data"
+        f" --model_name_or_path {model}"
+        f" --num_train_epochs {args_json.get('num_train_epochs', 12)}"
+        f" --fold_idx {args_json['fold_idx']}"
+        f" --fold_num {args_json['fold_num']}"
+        f" --fold_type {args_json['fold_type']}"
+    )
     for key in [
-        "model_name_or_path", "per_device_train_batch_size", "per_device_eval_batch_size",
+        "per_device_train_batch_size", "per_device_eval_batch_size",
         "gradient_accumulation_steps", "learning_rate", "linear_learning_rate",
         "num_semi_warmup_epochs", "num_gen_warmup_epochs", "is_semi", "is_mlp",
         "cca_loss_func", "cca_k", "cca_loss_weight",
     ]:
         if key in args_json:
-            argv += [f"--{key}", str(args_json[key])]
-    return argv
+            py_cmd += f" --{key} {args_json[key]}"
+    return ["bash", "-c", f"cd {basedir} && {py_cmd}"]
 
 
 METHOD_REGISTRY_GCD: Dict[str, Dict[str, Any]] = {
@@ -392,9 +397,13 @@ METHOD_REGISTRY_GCD: Dict[str, Dict[str, Any]] = {
         "task": "gcd",
         "stages": [
             {
-                "entry": "code/gcd/baselines/LLM4OpenSSL/bolt_run.py",
+                "entry": "code/gcd/baselines/LLM4OpenSSL/main.py",
                 "cli_builder": cli_llm4openssl,
-            }
+            },
+            {
+                "entry": "code/gcd/baselines/LLM4OpenSSL/main.py",
+                "cli_builder": cli_llm4openssl,
+            },
         ],
         "config": "configs/gcd/llm4openssl.yaml",
         "output_base": "./outputs/gcd/llm4openssl",

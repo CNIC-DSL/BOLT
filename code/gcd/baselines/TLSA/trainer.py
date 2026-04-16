@@ -704,14 +704,17 @@ class TTCLIPTrainer:
                     current_known_labels,
                     cluster_id
                 )
-                if generated_label in current_known_labels:
+                if generated_label is None:
+                    generated_label = f"novel_cluster_{cluster_id}"
+                    logger.warning(f"   LLM failed for cluster {cluster_id}, using fallback label: {generated_label}")
+                elif generated_label in current_known_labels:
                     logger.info(
                         f"   Duplicate label '{generated_label}' detected for cluster {cluster_id}. "
                         "Keeping original result; downstream force-renaming will handle conflicts."
                     )
             except Exception as e:
                 logger.warning(f"   Exception in label generation for cluster {cluster_id}: {e}")
-                raise Exception(f"Failed to generate label for cluster {cluster_id}.")
+                generated_label = f"novel_cluster_{cluster_id}"
             # write back result (label only)
             cluster_info['assigned_label'] = generated_label
             # debug output

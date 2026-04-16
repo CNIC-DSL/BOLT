@@ -237,12 +237,13 @@ class DataTrainingArguments:
 
 
 parser = argparse.ArgumentParser()
+parser.add_argument("--base_dir", default="..", help="project root for configs/outputs/pretrained_models")
 parser.add_argument("--dataset_name", default="demo")
-parser.add_argument("--data_root_dir", default="../data")
+parser.add_argument("--data_root_dir", default=None, help="data dir, defaults to <base_dir>/data")
 parser.add_argument("--rate", default=0.25, type=float)
 parser.add_argument("--labeled_ratio", default=0.1, type=float)
 parser.add_argument("--model_name_or_path", default="Qwen2.5-7B-Instruct")
-parser.add_argument("--default_config", default="../configs/args.json")
+parser.add_argument("--default_config", default=None, help="path to args.json, defaults to ./configs/args.json")
 parser.add_argument("--per_device_train_batch_size", default=32, type=int)
 parser.add_argument("--per_device_eval_batch_size", default=32, type=int)
 parser.add_argument("--seed", default=0, type=int)
@@ -286,13 +287,29 @@ parser.add_argument("--num_return_sequences", default=4, type=int)
 
 parser.add_argument("--gpu_id", default="0", type=str)
 parser.add_argument("--run_name", default="NeurIPS-LLM4Open", type=str)
+parser.add_argument("--fold_idx", default=0, type=int)
+parser.add_argument("--fold_num", default=5, type=int)
+parser.add_argument("--fold_type", default="fold", type=str)
 
 custom_args = parser.parse_args()
+# Resolve defaults that depend on base_dir
+_bd = custom_args.base_dir
+if custom_args.data_root_dir is None:
+    custom_args.data_root_dir = f"{_bd}/data"
+if custom_args.default_config is None:
+    custom_args.default_config = os.path.join(os.path.dirname(__file__), "configs", "args.json")
 custom_args.cca_pseudo_loss_weight = 0.0
 custom_args.num_iters_sk = 3
 custom_args.epsilon_sk = 0.1
 custom_args.imb_factor = 1.0
 custom_args.num_return_sequences = int(4)
+# Build known_labels_file from fold structure
+custom_args.known_labels_file = os.path.join(
+    custom_args.data_root_dir, custom_args.dataset_name, "label",
+    f"{custom_args.fold_type}{custom_args.fold_num}",
+    f"part{custom_args.fold_idx}",
+    f"label_known_{custom_args.rate}.list",
+)
 
 os.environ['CUDA_VISIBLE_DEVICES'] = custom_args.gpu_id
 
@@ -310,11 +327,11 @@ pretrained_is_semi = 'semisurpervised'
 
 pretrained_model_identify_id = f"{custom_args.model_name_or_path}/{pretrained_is_semi}_{custom_args.is_mlp}_{custom_args.cca_loss_func}_{custom_args.logit_adjustent}/{custom_args.gen_loss_weight}_{custom_args.class_loss_weight}_{custom_args.dis_loss_weight}/{custom_args.com_loss_weight}_{pretrained_cca_loss_weight}_{custom_args.cca_k}_{pretrained_class_pseudo_loss_weight}_{pretrained_dis_pseudo_loss_weight}_{pretrained_com_pseudo_loss_weight}_{pretrained_cca_pseudo_loss_weight}_{pretrained_num_return_sequences}/{custom_args.num_semi_warmup_epochs}_{pretrained_num_gen_warmup_epochs}_{pretrained_num_train_epochs}_{custom_args.learning_rate}_{custom_args.linear_learning_rate}"
 
-custom_args.config_file = f"../configs/json/{custom_args.dataset_name}/{custom_args.dataset_name}_{custom_args.rate}_{custom_args.shot_num}/{data_identify_id}_{model_identify_id}/seed_{custom_args.seed}.json"
+custom_args.config_file = f"{_bd}/configs/json/{custom_args.dataset_name}/{custom_args.dataset_name}_{custom_args.rate}_{custom_args.shot_num}/{data_identify_id}_{model_identify_id}/seed_{custom_args.seed}.json"
 
 sample_num = json.load(open(f'{custom_args.data_root_dir}/data_statics.json', 'r'))
 
-os.makedirs(f"../configs/json/{custom_args.dataset_name}/{custom_args.dataset_name}_{custom_args.rate}_{custom_args.shot_num}/{data_identify_id}_{model_identify_id}", exist_ok=True)
+os.makedirs(f"{_bd}/configs/json/{custom_args.dataset_name}/{custom_args.dataset_name}_{custom_args.rate}_{custom_args.shot_num}/{data_identify_id}_{model_identify_id}", exist_ok=True)
 
 with open(custom_args.config_file, 'w') as w:
     config_content['data_root_dir'] = custom_args.data_root_dir
@@ -327,17 +344,18 @@ with open(custom_args.config_file, 'w') as w:
     config_content['logit_adjustent'] = custom_args.logit_adjustent
     config_content['rate'] = custom_args.rate
     config_content['labeled_ratio'] = custom_args.labeled_ratio
+    config_content['known_labels_file'] = custom_args.known_labels_file
     config_content['num_labels'] = sample_num[custom_args.dataset_name]['num_labels']
 
-    config_content['output_dir'] = f"../outputs/ckpts/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
-    config_content['pretrain_output_dir'] = f"../outputs/ckpts/{custom_args.dataset_name}/{data_identify_id}/{pretrained_model_identify_id}/seed_{custom_args.seed}"
+    config_content['output_dir'] = f"{_bd}/outputs/ckpts/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
+    config_content['pretrain_output_dir'] = f"{_bd}/outputs/ckpts/{custom_args.dataset_name}/{data_identify_id}/{pretrained_model_identify_id}/seed_{custom_args.seed}"
 
-    config_content['logs_dir'] = f"../outputs/logs/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
-    config_content['metric_dir'] = f"../outputs/metrics/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
-    config_content['generate_dir'] = f"../outputs/generate/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
-    config_content['vector_dir'] = f"../outputs/vectors/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
+    config_content['logs_dir'] = f"{_bd}/outputs/logs/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
+    config_content['metric_dir'] = f"{_bd}/outputs/metrics/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
+    config_content['generate_dir'] = f"{_bd}/outputs/generate/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
+    config_content['vector_dir'] = f"{_bd}/outputs/vectors/{custom_args.dataset_name}/{data_identify_id}/{model_identify_id}/seed_{custom_args.seed}"
 
-    config_content['model_name_or_path'] = f"../pretrained_models/{custom_args.model_name_or_path}"    
+    config_content['model_name_or_path'] = f"{_bd}/pretrained_models/{custom_args.model_name_or_path}"    
     config_content['per_device_eval_batch_size'] = custom_args.per_device_eval_batch_size   
     config_content['per_device_train_batch_size'] = custom_args.per_device_train_batch_size    
     config_content['seed'] = custom_args.seed    

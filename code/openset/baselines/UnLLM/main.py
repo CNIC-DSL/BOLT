@@ -13,7 +13,7 @@ def main(model_args, data_args, training_args):
     if data_args.dataset_name != 'demo' and 'self_check' not in model_args.mode:
         if model_args.mode == 'train' and os.path.exists(f"{data_args.metric_dir}/eval.csv"):
             print("This model has been trained")
-            exit()
+            return
 
     set_seed(training_args.seed)
     print(training_args)

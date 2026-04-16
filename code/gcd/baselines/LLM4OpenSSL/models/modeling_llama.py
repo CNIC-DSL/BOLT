@@ -16,7 +16,11 @@ from .cca_model import CCAProjection
 from .sdl_loss import SoftCCALoss
 from .utils import triplet_ranking_loss
 
-from transformers.models.llama.modeling_llama import LlamaModel, KwargsForCausalLM, can_return_tuple, auto_docstring
+from transformers.models.llama.modeling_llama import LlamaModel, can_return_tuple, auto_docstring
+try:
+    from transformers.models.llama.modeling_llama import KwargsForCausalLM
+except ImportError:
+    from transformers.models.llama.modeling_llama import TransformersKwargs as KwargsForCausalLM
 from transformers.processing_utils import Unpack
 
 from transformers.utils import ModelOutput

@@ -65,28 +65,53 @@ BOLT/
 
 ## 🚀 Getting Started
 
-1. Clone the repository:
+### Requirements
 
+- Linux + NVIDIA GPU
+- Python 3.10
+- NVIDIA driver installed (`nvidia-smi` works)
+
+### Installation (run in order)
+
+1) Clone the repository and create the environment:
 ```bash
 git clone https://github.com/yourusername/BOLT.git
 cd BOLT
-
 conda create -n bolt python=3.10
 conda activate bolt
-pip install -r requirements.txt
 ```
 
-2.	(Optional) Create a conda environment and install dependencies:
-
+2) Install PyTorch (CUDA 12.6 uses cu126):
 ```bash
-conda create -n bolt python=3.10
-conda activate bolt
-pip install -r requirements.txt
+pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu126
 ```
 
-3.	Run experiments under code/gcd/ or code/openset/.
+3) Install NVCC (use conda only for this step):
+```bash
+conda install -c nvidia cuda-nvcc -y
+```
 
-4.	Use notebooks in data/ for dataset preparation and statistics.
+4) Install the remaining Python dependencies:
+```bash
+pip install -r requirement.txt
+```
+
+5) Install flash-attn (install separately to avoid build failures):
+```bash
+mkdir -p ~/tmp/pip
+TMPDIR=~/tmp/pip pip install --no-build-isolation --no-cache-dir flash-attn==2.8.3
+```
+
+### Quick self-check
+```bash
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+```
+
+### Run experiments
+
+- GCD task: see `code/gcd/`
+- Open-set task: see `code/openset/`
+- Data preparation: use notebooks in `data/`
 
 
 ## 📚 Documentation

@@ -47,6 +47,7 @@ class LLMLabelGenerator:
         """Create prompt for selecting sample indices matching given label (strict JSON output)."""
         known_labels_str = ", ".join(known_labels)
 
+        representative_texts = [t[:500] for t in representative_texts]
         numbered = "\n".join([f"{i+1}. {t}" for i, t in enumerate(representative_texts)])
 
         prompt = f"""
@@ -92,7 +93,7 @@ QUERIES (numbered):
         import concurrent.futures
 
         attempt = 0
-        while True:
+        while attempt <= self.max_retries:
             try:
                 messages = [
                     SystemMessage(content="You are an expert at judging whether a user query belongs to a given category label. You should make precise selections."),
@@ -109,16 +110,19 @@ QUERIES (numbered):
                 return indices
             except Exception as e:
                 attempt += 1
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 err_name = e.__class__.__name__
                 err_msg = str(e) if str(e) else repr(e)
                 logger.warning(f"select_indices_for_known_label error (attempt {attempt}): {err_name}: {err_msg}. Retrying in {delay:.2f}s")
                 time.sleep(delay)
+        logger.error("select_indices_for_known_label exhausted retries, returning all indices")
+        return list(range(1, min(len(representative_texts), 60) + 1))
 
 
     def _create_prompt_generate_label_for_texts(self, sample_texts: List[str], known_labels: List[str]) -> str:
         """Create prompt for generating label only (no indices; strict JSON output)."""
         known_labels_str = ", ".join(known_labels)
+        sample_texts = [t[:500] for t in sample_texts]
         numbered = "\n".join([f"{i+1}. {t}" for i, t in enumerate(sample_texts)])
 
         prompt = f"""
@@ -159,7 +163,7 @@ SAMPLES (numbered):
         import concurrent.futures
 
         attempt = 0
-        while True:
+        while attempt <= self.max_retries:
             try:
                 messages = [
                     SystemMessage(content="You are an expert at categorizing text data and creating concise, meaningful labels."),
@@ -208,12 +212,14 @@ SAMPLES (numbered):
                     raise ValueError("Parsed empty label from model response")
             except Exception as e:
                 attempt += 1
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 err_name = e.__class__.__name__
                 err_msg = str(e) if str(e) else repr(e)
                 logger.error(f"Error generating label for cluster {cluster_id}, attempt {attempt}: {err_name}: {err_msg}")
                 logger.info(f"Retrying in {delay:.2f} seconds...")
                 time.sleep(delay)
+        logger.error(f"generate_label_for_texts exhausted retries for cluster {cluster_id}")
+        return None
 
 
     def generate_labels_for_groups_mixed(
@@ -341,7 +347,7 @@ GROUPS:
             return None
 
         attempt = 0
-        while True:
+        while attempt <= self.max_retries:
             attempt += 1
             try:
                 messages = [
@@ -380,14 +386,15 @@ GROUPS:
                         pass
                     return labels
 
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 logger.warning(f"[LLM-GROUP-LABELS-MIXED][PARSE-RETRY {attempt}] invalid/empty/len!=G. Retrying in {delay:.2f}s...")
                 time.sleep(delay)
             except Exception as e:
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 logger.warning(f"[LLM-GROUP-LABELS-MIXED][API-RETRY {attempt}] error: {e}. Retrying in {delay:.2f}s...")
                 time.sleep(delay)
-
+        logger.error("[LLM-GROUP-LABELS-MIXED] exhausted retries")
+        return None
 
     def generate_labels_for_groups_pure(
         self,
@@ -481,7 +488,7 @@ GROUPS:
             return None
 
         attempt = 0
-        while True:
+        while attempt <= self.max_retries:
             attempt += 1
             try:
                 messages = [
@@ -514,13 +521,15 @@ GROUPS:
                         pass
                     return labels
 
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 logger.warning(f"[LLM-GROUP-LABELS-PURE][PARSE-RETRY {attempt}] invalid/empty/len!=G. Retrying in {delay:.2f}s...")
                 time.sleep(delay)
             except Exception as e:
-                delay = min(self.retry_delay * (2 ** (attempt - 1)), 30.0)
+                delay = min(self.retry_delay * (2 ** min(attempt, 10)), 30.0)
                 logger.warning(f"[LLM-GROUP-LABELS-PURE][API-RETRY {attempt}] error: {e}. Retrying in {delay:.2f}s...")
                 time.sleep(delay)
+        logger.error("[LLM-GROUP-LABELS-PURE] exhausted retries")
+        return None
         
     def _parse_indices(self, raw: str) -> List[int]:
         """Parse indices from response (strict JSON preferred, fallback to [...] extraction)."""

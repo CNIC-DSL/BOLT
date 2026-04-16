@@ -162,9 +162,12 @@ def extract_bolt_metrics(metric_dir, mode="test"):
 
 
 def save_bolt_results(args, acc, f1, kf1, nf1):
+    import csv as _csv
     os.makedirs(args.save_results_path, exist_ok=True)
     results_file = os.path.join(args.save_results_path, "results.csv")
 
+    fieldnames = ["method", "dataset", "known_cls_ratio", "labeled_ratio",
+                  "cluster_num_factor", "seed", "ACC", "F1", "K-F1", "N-F1", "args"]
     row = {
         "method": "UnLLM",
         "dataset": args.dataset,
@@ -180,10 +183,11 @@ def save_bolt_results(args, acc, f1, kf1, nf1):
     }
 
     header_needed = not os.path.exists(results_file)
-    with open(results_file, "a") as f:
+    with open(results_file, "a", newline="") as f:
+        writer = _csv.DictWriter(f, fieldnames=fieldnames)
         if header_needed:
-            f.write(",".join(row.keys()) + "\n")
-        f.write(",".join(str(v) for v in row.values()) + "\n")
+            writer.writeheader()
+        writer.writerow(row)
     print(f"Results saved to {results_file}")
 
 
@@ -225,13 +229,55 @@ def main():
     if unllm_dir not in sys.path:
         sys.path.insert(0, unllm_dir)
 
+    # args.py runs parse_args() and reads relative paths at module level.
+    # 1) cd into UnLLM dir so relative paths (data/statics/, configs/) resolve
+    # 2) swap sys.argv so args.py's parser doesn't choke on bolt_run flags
+    _orig_cwd = os.getcwd()
+    os.chdir(unllm_dir)
+
+    _orig_argv = sys.argv
+    sys.argv = [
+        "args.py",
+        "--dataset_name", args.dataset,
+        "--rate", str(args.known_cls_ratio),
+        "--model_name_or_path", os.path.basename(args.model_name_or_path),
+        "--seed", str(args.seed),
+        "--gpu_id", str(args.gpu_id),
+        "--mode", "train",
+        "--default_config", os.path.join(unllm_dir, "configs", "args.json"),
+        "--con_weight", str(args.con_weight),
+        "--neg_weight", str(args.neg_weight),
+        "--temperature", str(args.temperature),
+        "--segment_length", str(args.segment_length),
+        "--neg_sample", str(args.neg_sample),
+        "--random_sample", str(args.random_sample),
+        "--vos_neg_sample", str(args.vos_neg_sample),
+        "--epsilon", str(args.epsilon),
+        "--e_dim", str(args.e_dim),
+        "--per_device_train_batch_size", str(args.per_device_train_batch_size),
+        "--per_device_eval_batch_size", str(args.per_device_eval_batch_size),
+        "--gradient_accumulation_steps", str(args.gradient_accumulation_steps),
+        "--train_ablation", str(args.train_ablation),
+    ]
+
     from transformers import HfArgumentParser, TrainingArguments
     from args import ModelArguments, DataTrainingArguments
+
+    sys.argv = _orig_argv
+    os.chdir(_orig_cwd)
 
     hf_parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
     model_args, data_args, training_args = hf_parser.parse_json_file(json_file=config_path)
 
     from main import main as unllm_main
+    unllm_main(model_args, data_args, training_args)
+
+    # Run eval — generates best_class_thred.npy needed by test
+    config["mode"] = "eval"
+    with open(config_path, "w") as f:
+        json.dump(config, f, indent=2)
+
+    model_args, data_args, training_args = hf_parser.parse_json_file(json_file=config_path)
     unllm_main(model_args, data_args, training_args)
 
     # Run test

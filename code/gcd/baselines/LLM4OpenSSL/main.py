@@ -23,11 +23,11 @@ def main(model_args, data_args, training_args):
     if data_args.dataset_name != 'demo':
         if os.path.exists(f"{data_args.metric_dir}/{model_args.mode}_{file_name}.csv"):
             print(f"This model has been trained and tested on {model_args.mode}")
-            exit()
+            return
 
         if model_args.mode == 'train' and glob.glob(f"{data_args.metric_dir}/eval-dev*"):
             print("This model has been trained")
-            exit()
+            return
 
         # if model_args.mode == 'train' and get_best_checkpoint(training_args.output_dir):
         #     print("This model has been trained")
@@ -129,3 +129,47 @@ if __name__ == "__main__":
     parser = HfArgumentParser((ModelArguments, DataTrainingArguments, TrainingArguments))
     model_args, data_args, training_args = parser.parse_json_file(json_file=config_file)
     main(model_args, data_args, training_args)
+
+    # Save results to bolt results.csv after eval-test
+    if 'eval' in model_args.mode:
+        import csv as _csv
+        import json
+        from init_parameters import custom_args as _ca
+        _bd = getattr(_ca, 'base_dir', '..')
+        file_name = f"{model_args.mode}_{data_args.num_iters_sk}_{data_args.epsilon_sk}_{data_args.imb_factor}"
+        csv_path = os.path.join(data_args.metric_dir, f"{file_name}.csv")
+        if os.path.exists(csv_path):
+            df = pd.read_csv(csv_path, sep='\t')
+            row = df[df['method'] == 'kmeans_mlp']
+            if row.empty:
+                row = df.iloc[:1]
+            row = row.iloc[0]
+            save_dir = os.path.join(_bd, 'results', 'gcd', 'llm4openssl')
+            os.makedirs(save_dir, exist_ok=True)
+            results_file = os.path.join(save_dir, 'results.csv')
+            args_dict = {k: v for k, v in vars(_ca).items() if not k.startswith('_')}
+            fieldnames = ['method', 'dataset', 'known_cls_ratio', 'labeled_ratio',
+                          'cluster_num_factor', 'seed', 'ACC', 'H-Score',
+                          'K-ACC', 'N-ACC', 'ARI', 'NMI', 'args']
+            result_row = {
+                'method': 'LLM4OpenSSL',
+                'dataset': _ca.dataset_name,
+                'known_cls_ratio': _ca.rate,
+                'labeled_ratio': _ca.labeled_ratio,
+                'cluster_num_factor': 1.0,
+                'seed': _ca.seed,
+                'ACC': round(row.get('ACC', 0), 2),
+                'H-Score': round(row.get('H-Score', 0), 2),
+                'K-ACC': round(row.get('K-ACC', 0), 2),
+                'N-ACC': round(row.get('N-ACC', 0), 2),
+                'ARI': round(row.get('ARI', 0), 2),
+                'NMI': round(row.get('NMI', 0), 2),
+                'args': json.dumps(args_dict, default=str),
+            }
+            header_needed = not os.path.exists(results_file)
+            with open(results_file, 'a', newline='') as f:
+                writer = _csv.DictWriter(f, fieldnames=fieldnames)
+                if header_needed:
+                    writer.writeheader()
+                writer.writerow(result_row)
+            print(f"[BOLT] Results saved to {results_file}")

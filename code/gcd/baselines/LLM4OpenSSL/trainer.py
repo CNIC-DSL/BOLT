@@ -783,13 +783,17 @@ class OHTC_Trainer(SFTTrainer):
             return train_dataloader
 
         ### 判别式伪标签
-        ori_labels = pd.read_csv(f'../data/{self.dataset_name}/label/label.list', header=None)[0].tolist()
-        
-        known_labels = pd.read_csv(f'../data/{self.dataset_name}/label/label_{self.rate}.list', header=None)[0].tolist()
+        ori_labels = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/label/label.list', header=None)[0].tolist()
+
+        _klf = getattr(self.data_args, 'known_labels_file', None)
+        if _klf and os.path.exists(_klf):
+            known_labels = pd.read_csv(_klf, header=None)[0].tolist()
+        else:
+            known_labels = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/label/label_{self.rate}.list', header=None)[0].tolist()
         ori_labels = known_labels + [i for i in ori_labels if i not in known_labels]
         known_lab = [i for i in range(len(known_labels))]
 
-        df = pd.read_csv(f'../data/{self.dataset_name}/train.tsv', sep='\t')
+        df = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/train.tsv', sep='\t')
         df['gold_ids'] = df['label'].apply(lambda x: ori_labels.index(x))
 
         # if not os.path.exists(f"{self.vector_dir}/{self.mode}_{current_epoch}_class_logits.pt"):
@@ -907,9 +911,13 @@ class OHTC_Trainer(SFTTrainer):
         ## 生成式伪标签
         from utils.utils import extract_labels
 
-        origin_data = pd.read_csv(f'../data/{self.dataset_name}/train.tsv', sep='\t')
-        labeled_data = pd.read_csv(f'../data/{self.dataset_name}/labeled_data/train_{self.labeled_ratio}.tsv', sep='\t')
-        known_labels = pd.read_csv(f'../data/{self.dataset_name}/label/label_{self.rate}.list', header=None)[0].tolist()
+        origin_data = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/train.tsv', sep='\t')
+        labeled_data = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/labeled_data/train_{self.labeled_ratio}.tsv', sep='\t')
+        _klf = getattr(self.data_args, 'known_labels_file', None)
+        if _klf and os.path.exists(_klf):
+            known_labels = pd.read_csv(_klf, header=None)[0].tolist()
+        else:
+            known_labels = pd.read_csv(f'{self.data_root_dir}/{self.dataset_name}/label/label_{self.rate}.list', header=None)[0].tolist()
         origin_data['label'] = origin_data.apply(lambda x: x['label'] if x['text'] in labeled_data['text'].tolist() and x['label'] in known_labels else None, axis=1)
 
         df = pd.read_csv(f"{self.vector_dir}/{self.mode}_{pseudo_mode}_train_preds.csv", sep='\t')
