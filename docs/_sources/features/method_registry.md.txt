@@ -9,23 +9,21 @@ This page explains:
 
 ## 1. From Method to Task
 
-In YAML, `maps` declares the mapping between methods and task types:
-- `maps.gcd`: the set of methods belonging to `gcd`
-- `maps.openset`: the set of methods belonging to `openset`
-
-The framework maps each method in `methods` to a task (`gcd` or `openset`) and selects the corresponding registry.
+The framework uses a built-in lookup table (`_METHOD_TASK_MAP` in `configs/base.py`) to resolve each method to its task type (`gcd` or `openset`). There is one unified `METHOD_REGISTRY` defined in `methods/registry.py` that contains entries for all methods across both tasks.
 
 ## 2. Registry Structure
 
 Each method corresponds to one registry entry, which includes:
 - `task`: `gcd` or `openset`
 - `stages`: a list of stages
-- `config`: the default config file path for the method (e.g., `configs/gcd/tan.yaml`)
+- `config`: the default config file path for the method, specified as a relative path (e.g., `"gcd/tan.yaml"`). These relative paths are resolved through workspace lookup in `core.py`.
 - `output_base`: the default output root for the method (e.g., `./outputs/gcd/tan`)
 
 `stages` is a list. Each stage typically contains:
 - `entry`: the script entry point invoked by this stage (for locating/identifying the executable)
 - `cli_builder`: a function that assembles command-line arguments (it ultimately generates the subprocess command)
+
+CLI builder functions are organized into `methods/builders_gcd.py` (for GCD methods) and `methods/builders_openset.py` (for OpenSet methods).
 
 Therefore, a method can be:
 - Single-stage: `stages` has only 1 item (most baselines fall into this category)
@@ -45,7 +43,7 @@ This provides a clear basis for reproducing and debugging a single experiment ru
 
 ## 4. BERT Model Selection Rule (Default Logic)
 
-In some tasks, `cli_builder` automatically chooses the Chinese or English BERT directory based on the dataset. For example:
+In some tasks, `cli_builder` automatically chooses the Chinese or English BERT directory based on the dataset. The set of Chinese datasets is hardcoded as `{"ecdt", "thucnews"}` in `core.py`. For example:
 - `ecdt` / `thucnews`: use `bert-base-chinese`
 - otherwise: use `bert-base-uncased`
 
@@ -54,9 +52,9 @@ When using `bolt-grid`, it is recommended to point `--model-dir` to a stable pre
 ## 5. Extension: What You Need to Do to Add a New Method
 
 In general, you need to complete the following:
-1) Add a new method entry in the corresponding registry (`gcd` or `openset`):
-   - specify `task`, `config`, and `output_base`
-   - configure `stages` and `cli_builder`
+1) Add a new method entry in the unified `METHOD_REGISTRY` (in `methods/registry.py`):
+   - specify `task`, `config` (as a relative path), and `output_base`
+   - configure `stages` and `cli_builder` (adding the builder function to the appropriate `methods/builders_*.py` module)
 2) Ensure the method script writes results to the location the framework can collect (see the `auto_summary` page)
-3) Add the method to the corresponding task set in YAML `maps`, and reference it in `methods`
+3) Add the method to `_METHOD_TASK_MAP` in `configs/base.py`, and reference it in `methods` in your YAML
 4) First validate commands and parameters with a small grid + `dry_run`, then scale up for large runs

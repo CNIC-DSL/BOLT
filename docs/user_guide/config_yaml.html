@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configuration File (YAML) Guide &mdash; Bolt 0.1.0 documentation</title>
+  <title>Configuration File (YAML) Guide &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -117,29 +117,28 @@
 <h2>1. Top-Level Fields Overview<a class="headerlink" href="#top-level-fields-overview" title="Link to this heading"></a></h2>
 <p>A runnable configuration file typically includes the following top-level fields:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">maps</span></code><br />
-Declares which task (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>) each method belongs to.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">methods</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">methods</span></code>
 The list of methods to run in this experiment.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code>
 The list of datasets to run in this experiment.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">result_file</span></code><br />
-A naming suffix for summary/index files. The framework will generate:</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_file</span></code>
+A naming suffix for the summary file. The framework will generate:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">results/seen_index_{result_file}.json</span></code></p></li>
 </ul>
 </li>
-<li><p><code class="docutils literal notranslate"><span class="pre">grid</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">grid</span></code>
 The grid search space. Each dimension is a list, and the framework takes the Cartesian product to generate combos.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">run</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">run</span></code>
 Runtime control parameters (GPU selection, concurrency, epochs, dry-run, OOM retry, etc.).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">paths</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">paths</span></code>
 Output directory settings (e.g., <code class="docutils literal notranslate"><span class="pre">results_dir</span></code>, <code class="docutils literal notranslate"><span class="pre">logs_dir</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code><br />
+<li><p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>
 Per-method injection/override of extra parameters (method-specific hyperparameters or switches).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_args</span></code> (optional)
+Global extra arguments that apply to all methods.</p></li>
 </ul>
-<p>Missing any required field will cause the configuration to be non-runnable.</p>
+<p>Note: Method-to-task mapping is handled automatically by the framework (via a built-in lookup table). You do <strong>not</strong> need to specify a <code class="docutils literal notranslate"><span class="pre">maps</span></code> field.</p>
 </section>
 <section id="recommendations-for-the-grid-field">
 <h2>2. Recommendations for the <code class="docutils literal notranslate"><span class="pre">grid</span></code> Field<a class="headerlink" href="#recommendations-for-the-grid-field" title="Link to this heading"></a></h2>
@@ -152,6 +151,12 @@ Per-method injection/override of extra parameters (method-specific hyperparamete
 <li><p><code class="docutils literal notranslate"><span class="pre">fold_idxs:</span> <span class="pre">[0]</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">seeds:</span> <span class="pre">[2025]</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cluster_num_factor:</span> <span class="pre">[1.0]</span></code></p></li>
+</ul>
+<p>Valid values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>: <code class="docutils literal notranslate"><span class="pre">0.25</span></code>, <code class="docutils literal notranslate"><span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">0.75</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>: <code class="docutils literal notranslate"><span class="pre">0.1</span></code>, <code class="docutils literal notranslate"><span class="pre">0.5</span></code>, <code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_types</span></code>: <code class="docutils literal notranslate"><span class="pre">fold</span></code>, <code class="docutils literal notranslate"><span class="pre">imbalance_fold</span></code></p></li>
 </ul>
 <p>Recommended practice:</p>
 <ul class="simple">
@@ -172,11 +177,10 @@ Per-method injection/override of extra parameters (method-specific hyperparamete
 <li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom:</span> <span class="pre">true</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">max_retries:</span> <span class="pre">2</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec:</span> <span class="pre">15</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">only_collect:</span> <span class="pre">false</span></code></p></li>
 </ul>
 <p>Recommended practice:</p>
 <ul class="simple">
-<li><p>For the first run, set <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code> to verify the number of generated combos and whether command construction matches your expectations.</p></li>
+<li><p>For the first run, set <code class="docutils literal notranslate"><span class="pre">dry_run:</span> <span class="pre">true</span></code> to verify the number of generated combos and whether command construction matches your expectations. You can also use the <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> CLI flag to achieve the same effect.</p></li>
 <li><p>For concurrency, start with “one task per GPU”, then adjust <code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code> based on your available GPU memory headroom.</p></li>
 </ul>
 </section>
@@ -192,12 +196,14 @@ Per-method injection/override of extra parameters (method-specific hyperparamete
 <section id="per-method-extra-injecting-parameters-per-method">
 <h2>5. <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>: Injecting Parameters per Method<a class="headerlink" href="#per-method-extra-injecting-parameters-per-method" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> is used to set parameters for a specific method only. Example:</p>
-<p>per_method_extra:
-tan:
-backbone: bert-base-uncased
-ab:
-emb_name: sbert
-temperature: 0.07</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">per_method_extra</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tan</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">backbone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bert-base-uncased</span>
+<span class="w">  </span><span class="nt">ab</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">emb_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sbert</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span>
+</pre></div>
+</div>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Keys under <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> must match the method names listed in <code class="docutils literal notranslate"><span class="pre">methods</span></code>.</p></li>
@@ -206,12 +212,8 @@ temperature: 0.07</p>
 </section>
 <section id="minimal-runnable-example">
 <h2>6. Minimal Runnable Example<a class="headerlink" href="#minimal-runnable-example" title="Link to this heading"></a></h2>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">maps</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">gcd</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">openset</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
-
-<span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
-<span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">XTopic</span><span class="p p-Indicator">]</span>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
+<span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">X-Topic</span><span class="p p-Indicator">]</span>
 <span class="nt">result_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">demo</span>
 
 <span class="nt">grid</span><span class="p">:</span>

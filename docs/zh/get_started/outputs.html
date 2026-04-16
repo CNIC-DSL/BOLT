@@ -1,0 +1,192 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>输出目录结构与说明 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">输出目录结构与说明</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/get_started/outputs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>输出目录结构与说明<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本节介绍 <strong>bolt-lab</strong> 运行时输出的写入位置、实验完成后通常会创建哪些目录，以及推荐的使用方式，帮助你快速定位日志和结果。</p>
+<section id="output-dir">
+<h2>1. 工作目录（<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>）的含义<a class="headerlink" href="#output-dir" title="Link to this heading"></a></h2>
+<p>运行时，你通过 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 指定一个<strong>工作目录</strong>。框架会在该目录下创建当前实验的运行环境和输出文件夹，并将<strong>日志、汇总结果和训练/评估产物</strong>写入其中。这使得迁移、打包和复现运行变得方便。</p>
+<p>建议将 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 指向一个专用的实验根目录（例如 <code class="docutils literal notranslate"><span class="pre">~/tmp/exp_001</span></code>），而不是直接指向 <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> 或 <code class="docutils literal notranslate"><span class="pre">logs/</span></code> 等子目录。</p>
+</section>
+<section id="id2">
+<h2>2. 运行后通常创建的目录<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>以 <code class="docutils literal notranslate"><span class="pre">--output-dir</span> <span class="pre">~/tmp</span></code> 为例，运行后你将看到类似如下的结构（示例）：</p>
+<p>~/tmp/
+outputs/            训练/评估产物（模型、预测结果、缓存等）
+results/            按方法汇总的结果和汇总文件
+logs/               运行时日志（用于调试错误和跟踪阶段进度）
+configs/            本次运行使用的 YAML 配置文件副本
+data -&gt; …         指向 –data-dir 的符号链接（或包内置的 _data 目录）
+pretrained_models -&gt; …  指向 –model-dir 的符号链接</p>
+<p>注意：</p>
+<ul class="simple">
+<li><p>请首先关注 <code class="docutils literal notranslate"><span class="pre">logs/</span></code>、<code class="docutils literal notranslate"><span class="pre">results/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configs/</span></code> 是一个真实目录，其中的 YAML 配置文件从包中复制而来，保留了本次运行的确切配置状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pretrained_models</span></code> 是符号链接，分别指向你通过 <code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 指定的目录。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>3. 推荐用法<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>3.1 如何修改配置文件<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<p>建议<strong>不要</strong>直接编辑工作目录下 <code class="docutils literal notranslate"><span class="pre">configs/</span></code> 中的文件作为长期的配置来源。</p>
+<p>更稳妥的做法是：</p>
+<ul class="simple">
+<li><p>将示例配置复制到你自己的目录并在那里修改。</p></li>
+<li><p>运行时通过 <code class="docutils literal notranslate"><span class="pre">--config</span></code> 传入该配置文件的绝对路径。</p></li>
+</ul>
+<p>这样可以避免不同实验之间的意外覆盖，也更便于版本控制。</p>
+</section>
+<section id="id5">
+<h3>3.2 排查问题时优先查看的位置<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>运行时错误、卡住或阶段失败：请先检查 <code class="docutils literal notranslate"><span class="pre">logs/</span></code>。通常可以在其中找到错误堆栈信息和失败的阶段。</p></li>
+<li><p>实验汇总结果：请检查 <code class="docutils literal notranslate"><span class="pre">results/</span></code>（通常包含按方法分类的结果文件和汇总 CSV）。</p></li>
+<li><p>模型和预测产物：请检查 <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>。</p></li>
+</ul>
+</section>
+</section>
+<section id="id6">
+<h2>4. 常见问题及避免方法<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<section id="id7">
+<h3>4.1 避免输出目录嵌套<a class="headerlink" href="#id7" title="Link to this heading"></a></h3>
+<p>确保 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 是实验根目录。
+不要将 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 设为类似 <code class="docutils literal notranslate"><span class="pre">.../outputs</span></code> 的路径，否则可能产生 <code class="docutils literal notranslate"><span class="pre">outputs/outputs</span></code> 这样的嵌套结构，给查找和清理带来困难。</p>
+</section>
+<section id="model-dir">
+<h3>4.2 关于 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>（补充说明）<a class="headerlink" href="#model-dir" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 用于指定模型/缓存目录（用于读写预训练模型及相关缓存）。
+工作目录下的 <code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code> 目录是该入口点的容器。建议将 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 设为一个稳定的、可读写的位置，以减少重复下载和准备的成本。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

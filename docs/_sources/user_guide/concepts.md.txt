@@ -15,9 +15,7 @@ In the configuration files, methods are grouped under a specific task. The frame
 A `method` is the name of the algorithm you want to run, such as `tan`, `ab`, `plm_ood`, etc.
 The same method can be run multiple times under different datasets, splits, and hyperparameter combinations.
 
-The relationship between methods and tasks is defined by the `maps` field in YAML:
-- `maps.gcd`: the set of methods belonging to `gcd`
-- `maps.openset`: the set of methods belonging to `openset`
+The relationship between methods and tasks is handled automatically by the framework's internal lookup table (`_METHOD_TASK_MAP` in `configs/base.py`). You do not need to specify any `maps` field in YAML.
 
 ## 3. Dataset
 
@@ -55,7 +53,7 @@ The framework executes `stage1`, `stage2`, ... in order. If any stage fails, tha
 ## 7. Workdir: Working Directory (`--output-dir`)
 
 You specify the working directory via `--output-dir` at runtime.
-The framework organizes outputs such as `logs/`, `results/`, and `outputs/` under this directory, and also keeps configuration/environment snapshots for the run to support reproducibility and archiving.
+The framework organizes outputs such as `logs/`, `results/`, and `outputs/` under this directory, and also keeps configuration copies for the run to support reproducibility and archiving.
 
 ## 8. Summary: Summary Table (`summary_{result_file}.csv`)
 

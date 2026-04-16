@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Automatic Result Collection and Summarization &mdash; Bolt 0.1.0 documentation</title>
+  <title>Automatic Result Collection and Summarization &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -60,10 +60,11 @@
 <li class="toctree-l1"><a class="reference internal" href="oom_retry.html">OOM Retry Mechanism</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Automatic Result Collection and Summarization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#result-file-convention">1. Result File Convention</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#summary-file-location-and-naming">2. Summary File Location and Naming</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#what-fields-are-included-in-the-summary-table">3. What Fields Are Included in the Summary Table</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#common-issue-why-nothing-was-written-to-the-summary">4. Common Issue: Why Nothing Was Written to the Summary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#usage-tips">5. Usage Tips</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#deduplication">2. Deduplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#summary-file-location-and-naming">3. Summary File Location and Naming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#what-fields-are-included-in-the-summary-table">4. What Fields Are Included in the Summary Table</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-issue-why-nothing-was-written-to-the-summary">5. Common Issue: Why Nothing Was Written to the Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-tips">6. Usage Tips</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
@@ -121,23 +122,25 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">task</span></code> is <code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> is the method name (e.g., <code class="docutils literal notranslate"><span class="pre">tan</span></code>, <code class="docutils literal notranslate"><span class="pre">plm_ood</span></code>, <code class="docutils literal notranslate"><span class="pre">ab</span></code>, etc.)</p></li>
 </ul>
-<p>The framework reads the <strong>last row</strong> of this CSV as the “latest result record”.</p>
+<p>Results are collected by <code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code> in <code class="docutils literal notranslate"><span class="pre">core.py</span></code>, which reads the <strong>last row</strong> of this CSV as the “latest result record”.</p>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>If <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> does not exist or is empty, the framework will not write anything to the summary table and will print a message.</p></li>
 <li><p>Therefore, each method script must ensure it writes to the location above after finishing, and that the CSV includes the key metric columns.</p></li>
 </ul>
 </section>
+<section id="deduplication">
+<h2>2. Deduplication<a class="headerlink" href="#deduplication" title="Link to this heading"></a></h2>
+<p>Before launching an experiment combo, the framework checks whether it has already been completed. This is handled by <code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code> in <code class="docutils literal notranslate"><span class="pre">core.py</span></code>, which reads the per-method CSV at <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code> and checks the following fields: <code class="docutils literal notranslate"><span class="pre">method</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_num</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_type</span></code>, <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>. If a matching row is found, the combo is skipped.</p>
+</section>
 <section id="summary-file-location-and-naming">
-<h2>2. Summary File Location and Naming<a class="headerlink" href="#summary-file-location-and-naming" title="Link to this heading"></a></h2>
-<p>The summary file is written under <code class="docutils literal notranslate"><span class="pre">paths.results_dir</span></code> from the YAML:
+<h2>3. Summary File Location and Naming<a class="headerlink" href="#summary-file-location-and-naming" title="Link to this heading"></a></h2>
+<p>The summary file is written by <code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code> in <code class="docutils literal notranslate"><span class="pre">core.py</span></code> under <code class="docutils literal notranslate"><span class="pre">paths.results_dir</span></code> from the YAML:
 {results_dir}/summary_{result_file}.csv</p>
-<p>An index file is also generated:
-{results_dir}/seen_index_{result_file}.json</p>
 <p>Here, <code class="docutils literal notranslate"><span class="pre">result_file</span></code> comes from the top-level YAML field <code class="docutils literal notranslate"><span class="pre">result_file</span></code>.</p>
 </section>
 <section id="what-fields-are-included-in-the-summary-table">
-<h2>3. What Fields Are Included in the Summary Table<a class="headerlink" href="#what-fields-are-included-in-the-summary-table" title="Link to this heading"></a></h2>
+<h2>4. What Fields Are Included in the Summary Table<a class="headerlink" href="#what-fields-are-included-in-the-summary-table" title="Link to this heading"></a></h2>
 <p>At minimum, the summary table includes:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">method</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span></code></p></li>
@@ -152,7 +155,7 @@
 </ul>
 </section>
 <section id="common-issue-why-nothing-was-written-to-the-summary">
-<h2>4. Common Issue: Why Nothing Was Written to the Summary<a class="headerlink" href="#common-issue-why-nothing-was-written-to-the-summary" title="Link to this heading"></a></h2>
+<h2>5. Common Issue: Why Nothing Was Written to the Summary<a class="headerlink" href="#common-issue-why-nothing-was-written-to-the-summary" title="Link to this heading"></a></h2>
 <p>Troubleshoot in the following order:</p>
 <ol class="arabic simple">
 <li><p>Did the sub-task fail?
@@ -164,7 +167,7 @@ If the columns written by the method script differ significantly from what the f
 </ol>
 </section>
 <section id="usage-tips">
-<h2>5. Usage Tips<a class="headerlink" href="#usage-tips" title="Link to this heading"></a></h2>
+<h2>6. Usage Tips<a class="headerlink" href="#usage-tips" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>When comparing methods, use <code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code> directly as the primary analysis entry point.</p></li>
 <li><p>If you want to distinguish multiple large runs, change <code class="docutils literal notranslate"><span class="pre">result_file</span></code> to generate separate summary files and avoid overwriting each other.</p></li>

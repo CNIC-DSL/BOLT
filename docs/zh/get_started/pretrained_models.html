@@ -1,0 +1,206 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>预训练模型准备 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">预训练模型准备</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/get_started/pretrained_models.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>预训练模型准备<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>在运行过程中，本项目会从 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 指定的目录读取预训练模型和嵌入/编码器模型。为确保可复现性并避免运行时自动下载导致的失败，建议在首次运行前手动将以下模型下载到本地。</p>
+<section id="id2">
+<h2>1. 所需模型列表<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>以下模型需要用户自行下载并放置在 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 下（建议目录名与以下列表保持一致）：</p>
+<ol class="arabic simple">
+<li><p>bert-base-chinese</p></li>
+</ol>
+<ul class="simple">
+<li><p>用途：中文数据集相关方法的 PLM/骨干模型</p></li>
+<li><p>推荐来源：Hugging Face (<code class="docutils literal notranslate"><span class="pre">google-bert/bert-base-chinese</span></code>)</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>bert-base-uncased</p></li>
+</ol>
+<ul class="simple">
+<li><p>用途：英文数据集相关方法的 PLM/骨干模型</p></li>
+<li><p>推荐来源：Hugging Face (<code class="docutils literal notranslate"><span class="pre">google-bert/bert-base-uncased</span></code>)</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>stsb-roberta-base</p></li>
+</ol>
+<ul class="simple">
+<li><p>用途：部分方法使用的句子嵌入/语义编码器模型（Sentence Transformer）</p></li>
+<li><p>推荐来源：Hugging Face (<code class="docutils literal notranslate"><span class="pre">sentence-transformers/stsb-roberta-base-v2</span></code>)
+注意：如果你的配置/代码中将目录名硬编码为 <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code>，可以将下载的文件夹重命名为 <code class="docutils literal notranslate"><span class="pre">stsb-roberta-base</span></code> 以保持兼容。</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>Meta-Llama-3.1-8B-Instruct</p></li>
+</ol>
+<ul class="simple">
+<li><p>用途：LLM 相关方法（如启用）</p></li>
+<li><p>推荐来源：Hugging Face (<code class="docutils literal notranslate"><span class="pre">meta-llama/Llama-3.1-8B-Instruct</span></code>)
+注意：该模型通常需要在 Hugging Face 账户上接受许可协议/申请访问权限后才能下载。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>2. 推荐目录布局<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>假设你将 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">/path/to/pretrained_models</span></code>，推荐的结构如下：</p>
+<p>/path/to/pretrained_models/
+bert-base-chinese/
+bert-base-uncased/
+stsb-roberta-base/
+Meta-Llama-3.1-8B-Instruct/</p>
+<p>运行示例：
+bolt-grid –config grid_gcd.yaml –output-dir ~/tmp/exp_001 –model-dir /path/to/pretrained_models</p>
+</section>
+<section id="id4">
+<h2>3. 下载方法（示例）<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>方法 A：使用 <code class="docutils literal notranslate"><span class="pre">huggingface-cli</span></code>（推荐）</p>
+<ol class="arabic simple">
+<li><p>安装并登录
+pip install -U huggingface_hub
+huggingface-cli login</p></li>
+<li><p>下载到目标目录
+huggingface-cli download google-bert/bert-base-chinese –local-dir /path/to/pretrained_models/bert-base-chinese
+huggingface-cli download google-bert/bert-base-uncased –local-dir /path/to/pretrained_models/bert-base-uncased
+huggingface-cli download sentence-transformers/stsb-roberta-base-v2 –local-dir /path/to/pretrained_models/stsb-roberta-base
+huggingface-cli download meta-llama/Llama-3.1-8B-Instruct –local-dir /path/to/pretrained_models/Meta-Llama-3.1-8B-Instruct</p></li>
+</ol>
+<p>方法 B：使用 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">lfs</span></code>（可选）
+适合将权重文件作为 Git 仓库管理的场景。请确保已安装 <code class="docutils literal notranslate"><span class="pre">git-lfs</span></code>，并确保网络连接和磁盘空间充足。</p>
+</section>
+<section id="id5">
+<h2>4. 常见问题排查<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>模型未找到或下载访问被拒绝：
+请先确认是否需要登录 Hugging Face，以及是否需要在网站上接受许可协议（LLM 模型常见此要求）。</p></li>
+<li><p>程序在运行时仍尝试在线下载：
+请检查配置/代码中引用的模型目录名是否与本地文件夹名完全一致（特别注意大小写和连字符）。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

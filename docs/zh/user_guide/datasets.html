@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数据集概览 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">数据集概览</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/datasets.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>数据集概览<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本项目涵盖多种文本分类/意图识别数据集，包括英文和中文场景。本页面简要介绍当前支持的数据集，并提供常用缩写和来源信息。</p>
+<p>说明：</p>
+<ul class="simple">
+<li><p>“我们构造的版本”指论文实验中所使用的版本，即对原始数据集进行采样/过滤后的版本（例如采样 10,000 条样本）。</p></li>
+<li><p>关于数据文件的下载和放置方式，请参照项目的数据准备脚本或仓库说明。本页面主要提供背景信息和数据来源。</p></li>
+</ul>
+<section id="id2">
+<h2>1. 数据集列表（按论文描述整理）<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>20NG (20 Newsgroups)</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">20NG</span></code></p></li>
+<li><p>描述：约 20,000 篇新闻组帖子，大致均匀分布在 20 个类别中。</p></li>
+<li><p>我们构造的版本：采样 10,000 条文本用于实验。</p></li>
+<li><p>来源：https://people.csail.mit.edu/jrennie/20Newsgroups/</p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>THUCNews</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">thucnews</span></code></p></li>
+<li><p>描述：大规模中文新闻分类语料库，采集自新浪新闻 2005 至 2011 年间的 RSS 历史数据。</p></li>
+<li><p>我们构造的版本：采样 10,000 条文本用于实验。</p></li>
+<li><p>来源：http://thuctc.thunlp.org/</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>Yahoo (Yahoo! Answers Topic Classification)</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">Yahoo</span></code></p></li>
+<li><p>描述：来自 Yahoo! Answers 的主题分类数据集，包含 10 个粗粒度主题类别。</p></li>
+<li><p>我们构造的版本：采样 10,000 条文本用于实验。</p></li>
+<li><p>来源：https://www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification/data</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>BANKING77</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">banking</span></code></p></li>
+<li><p>描述：英文银行客服意图数据集，包含 13,083 条标注了 77 个细粒度意图类别的语句。</p></li>
+<li><p>来源：https://huggingface.co/datasets/PolyAI/banking77</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>StackOverflow</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">stackoverflow</span></code></p></li>
+<li><p>描述：来自 Stack Overflow 的短文本标题数据集，包含 20,000 条样本，标注了 20 个技术主题标签。</p></li>
+<li><p>来源：https://github.com/jacoxu/StackOverflow</p></li>
+</ul>
+<ol class="arabic simple" start="6">
+<li><p>CLINC150</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">clinc</span></code></p></li>
+<li><p>描述：意图分类数据集，涵盖 150 个域内意图，常用于评估域外/开放集场景。</p></li>
+<li><p>来源：https://archive.ics.uci.edu/dataset/570/clinc150</p></li>
+</ul>
+<ol class="arabic simple" start="7">
+<li><p>HWU-64</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">hwu</span></code></p></li>
+<li><p>描述：英文多领域意图检测数据集（如新闻、IoT 等），涵盖 64 个意图，常用于对话系统研究。</p></li>
+<li><p>来源：https://service.tib.eu/ldmservice/en/dataset/hwu64</p></li>
+</ul>
+<ol class="arabic simple" start="8">
+<li><p>SMP-ECDT</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">ecdt</span></code></p></li>
+<li><p>描述：中文意图分类数据集（SMP-ECDT），在论文中用于中文意图识别场景。</p></li>
+<li><p>来源：https://arxiv.org/pdf/1709.10217</p></li>
+</ul>
+<ol class="arabic simple" start="9">
+<li><p>TREC</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">TREC</span></code></p></li>
+<li><p>描述：开放领域事实型问题分类数据集（Question Classification）。</p></li>
+<li><p>来源：https://huggingface.co/datasets/CogComp/trec</p></li>
+</ul>
+<ol class="arabic simple" start="10">
+<li><p>M-CID</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">mcid</span></code></p></li>
+<li><p>描述：多语言 COVID-19 意图检测数据集，包含 6,871 条语句和 16 个意图。在本工作中，我们仅使用英文语句构建实验版本。</p></li>
+<li><p>来源：https://openreview.net/pdf?id=Ku-nv600bNM</p></li>
+</ul>
+<ol class="arabic simple" start="11">
+<li><p>DBpedia</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">DBPedia</span></code></p></li>
+<li><p>描述：与 DBpedia（从维基百科提取的结构化知识库）中的本体/类别相关的文本分类数据集。论文构造了一个采样版本用于对比。</p></li>
+<li><p>我们构造的版本：采样 10,000 条文本用于实验。</p></li>
+<li><p>来源：https://huggingface.co/datasets/DeveloperOats/DBPedia_Classes</p></li>
+</ul>
+<ol class="arabic simple" start="12">
+<li><p>X-Topic</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML 名称：<code class="docutils literal notranslate"><span class="pre">X-Topic</span></code></p></li>
+<li><p>描述：跨主题文本分类数据集，用于广义类别发现评估。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>2. 配置文件中的常见用法<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>在 YAML 中，使用上面列出的精确 YAML 名称来指定数据集。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">banking</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">clinc</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">stackoverflow</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">hwu</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mcid</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">20NG</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">DBPedia</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">TREC</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Yahoo</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">thucnews</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ecdt</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">X-Topic</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>注意：数据集名称<strong>区分大小写</strong>。请使用上面所示的精确 YAML 名称。例如，使用 <code class="docutils literal notranslate"><span class="pre">banking</span></code>（而非 <code class="docutils literal notranslate"><span class="pre">BANK</span></code>）、<code class="docutils literal notranslate"><span class="pre">clinc</span></code>（而非 <code class="docutils literal notranslate"><span class="pre">CLINC</span></code>）、<code class="docutils literal notranslate"><span class="pre">thucnews</span></code>（而非 <code class="docutils literal notranslate"><span class="pre">THUCNews</span></code>）。</p>
+<p>中文数据集（<code class="docutils literal notranslate"><span class="pre">ecdt</span></code>、<code class="docutils literal notranslate"><span class="pre">thucnews</span></code>）会自动使用 <code class="docutils literal notranslate"><span class="pre">bert-base-chinese</span></code> 作为骨干模型；其他所有数据集使用 <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

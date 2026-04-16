@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Architecture and Execution Flow &mdash; Bolt 0.1.0 documentation</title>
+  <title>Architecture and Execution Flow &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -75,15 +75,19 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Architecture and Execution Flow</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#i-end-to-end-data-flow-from-yaml-to-summarized-results">I. End-to-End Data Flow (From YAML to Summarized Results)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#entry-point-bolt-grid">1) Entry Point: <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#runner-run-grid-py">2) Runner: <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#single-combo-execution-utils-run-combo">3) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">utils.run_combo()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#result-collection-and-summarization-collect-latest-result-write-summary">4) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">write_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#config-parsing-and-workspace-initialization">2) Config Parsing and Workspace Initialization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#combo-expansion-and-scheduling">3) Combo Expansion and Scheduling</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#single-combo-execution-core-py">4) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">core.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#result-collection-and-summarization-collect-latest-result-write-summary">5) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ii-key-modules-and-responsibility-boundaries">II. Key Modules and Responsibility Boundaries</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#run-grid-py-scheduling-layer">1) <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> (Scheduling Layer)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#cli-gcd-py-cli-openset-py-method-registration-and-command-building">2) <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code> (Method Registration and Command Building)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#utils-py-execution-and-summarization-layer">3) <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> (Execution and Summarization Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cli-py-entry-point">1) <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> (Entry Point)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-py-execution-and-summarization-layer">2) <code class="docutils literal notranslate"><span class="pre">core.py</span></code> (Execution and Summarization Layer)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methods-builders-gcd-py-methods-builders-openset-py-method-registration-and-command-building">3) <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code> (Method Registration and Command Building)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#methods-registry-py-unified-method-registry">4) <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code> (Unified Method Registry)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configs-base-py-config-parsing">5) <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> (Config Parsing)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#workspace-py-workspace-initialization">6) <code class="docutils literal notranslate"><span class="pre">workspace.py</span></code> (Workspace Initialization)</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#iii-reproducibility-conventions">III. Reproducibility Conventions</a><ul>
@@ -135,31 +139,38 @@
 <section id="entry-point-bolt-grid">
 <h3>1) Entry Point: <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code><a class="headerlink" href="#entry-point-bolt-grid" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>The CLI accepts arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code></p></li>
-<li><p>After resolving the config file to a concrete path, it hands control to the runner (which reads the YAML and starts scheduling)</p></li>
+<li><p>The CLI entry point is <code class="docutils literal notranslate"><span class="pre">bolt_lab.cli:main</span></code> (defined in <code class="docutils literal notranslate"><span class="pre">cli.py</span></code>)</p></li>
+<li><p>It accepts arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--data-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>, <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code>, <code class="docutils literal notranslate"><span class="pre">--overwrite-configs</span></code></p></li>
+<li><p>After resolving the config file to a concrete path, it hands control to the execution engine in <code class="docutils literal notranslate"><span class="pre">core.py</span></code></p></li>
 </ul>
 </section>
-<section id="runner-run-grid-py">
-<h3>2) Runner: <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code><a class="headerlink" href="#runner-run-grid-py" title="Link to this heading"></a></h3>
+<section id="config-parsing-and-workspace-initialization">
+<h3>2) Config Parsing and Workspace Initialization<a class="headerlink" href="#config-parsing-and-workspace-initialization" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Reads the YAML and validates required fields:
-<code class="docutils literal notranslate"><span class="pre">maps</span> <span class="pre">/</span> <span class="pre">methods</span> <span class="pre">/</span> <span class="pre">datasets</span> <span class="pre">/</span> <span class="pre">grid</span> <span class="pre">/</span> <span class="pre">run</span> <span class="pre">/</span> <span class="pre">paths</span> <span class="pre">/</span> <span class="pre">result_file</span> <span class="pre">/</span> <span class="pre">per_method_extra</span></code></p></li>
-<li><p>Calls <code class="docutils literal notranslate"><span class="pre">set_paths(results_dir,</span> <span class="pre">logs_dir,</span> <span class="pre">result_file)</span></code> to initialize:</p>
+<li><p>The YAML is parsed via <code class="docutils literal notranslate"><span class="pre">GridConfig.from_grid_yaml()</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code></p></li>
+<li><p>Required fields are validated:
+<code class="docutils literal notranslate"><span class="pre">methods</span> <span class="pre">/</span> <span class="pre">datasets</span> <span class="pre">/</span> <span class="pre">grid</span> <span class="pre">/</span> <span class="pre">run</span> <span class="pre">/</span> <span class="pre">paths</span> <span class="pre">/</span> <span class="pre">result_file</span> <span class="pre">/</span> <span class="pre">per_method_extra</span> <span class="pre">/</span> <span class="pre">extra_args</span></code></p></li>
+<li><p>Path setup is performed inline in <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> (lines 59-63), initializing:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">results/seen_index_{result_file}.json</span></code></p></li>
 <li><p>the <code class="docutils literal notranslate"><span class="pre">logs/</span></code> root directory</p></li>
 </ul>
 </li>
-<li><p>Expands each dimension in <code class="docutils literal notranslate"><span class="pre">grid</span></code> into experiment combinations (combos), forming a task list <code class="docutils literal notranslate"><span class="pre">combos</span></code></p></li>
-<li><p>Builds a GPU token pool (a <code class="docutils literal notranslate"><span class="pre">Queue</span></code>):</p>
+<li><p>Workspace initialization is handled by <code class="docutils literal notranslate"><span class="pre">workspace.py:init_workspace()</span></code></p></li>
+</ul>
+</section>
+<section id="combo-expansion-and-scheduling">
+<h3>3) Combo Expansion and Scheduling<a class="headerlink" href="#combo-expansion-and-scheduling" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> expands each dimension in <code class="docutils literal notranslate"><span class="pre">grid</span></code> into experiment combinations (combos) using <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>, forming the full task list</p></li>
+<li><p>A GPU token pool (a <code class="docutils literal notranslate"><span class="pre">Queue</span></code>) is built:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">run.gpus</span></code> specifies the list of available GPUs</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">run.slots_per_gpu</span></code> determines how many tokens each GPU provides</p></li>
 <li><p>total tokens = <code class="docutils literal notranslate"><span class="pre">len(gpus)</span> <span class="pre">*</span> <span class="pre">slots_per_gpu</span></code></p></li>
 </ul>
 </li>
-<li><p>Schedules tasks concurrently via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>:</p>
+<li><p>Tasks are scheduled concurrently via <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code>:</p>
 <ul>
 <li><p>each worker acquires a <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code> when starting</p></li>
 <li><p>returns the <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code> when finished</p></li>
@@ -168,16 +179,15 @@
 </li>
 </ul>
 </section>
-<section id="single-combo-execution-utils-run-combo">
-<h3>3) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">utils.run_combo()</span></code><a class="headerlink" href="#single-combo-execution-utils-run-combo" title="Link to this heading"></a></h3>
+<section id="single-combo-execution-core-py">
+<h3>4) Single-Combo Execution: <code class="docutils literal notranslate"><span class="pre">core.py</span></code><a class="headerlink" href="#single-combo-execution-core-py" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Looks up method definitions from the two registries:</p>
+<li><p>Looks up method definitions from the unified registry:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">cli_gcd.METHOD_REGISTRY_GCD</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cli_openset.METHOD_REGISTRY_OPENSET</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">methods.registry.METHOD_REGISTRY</span></code></p></li>
 </ul>
 </li>
-<li><p>Builds <code class="docutils literal notranslate"><span class="pre">args_json</span></code> (<code class="docutils literal notranslate"><span class="pre">make_base_args</span></code>):</p>
+<li><p>Builds <code class="docutils literal notranslate"><span class="pre">args_json</span></code> via <code class="docutils literal notranslate"><span class="pre">core.py:make_base_args()</span></code>:</p>
 <ul>
 <li><p>includes key fields such as method/dataset/ratios/fold/seed/GPU/epochs</p></li>
 <li><p>merges method-specific extra fields from <code class="docutils literal notranslate"><span class="pre">per_method_extra[method]</span></code></p></li>
@@ -197,10 +207,15 @@
 <li><p>if any stage returns a non-zero code, the combo fails and subsequent stages will not run</p></li>
 </ul>
 </li>
+<li><p>Log path convention: <code class="docutils literal notranslate"><span class="pre">logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/</span></code></p>
+<ul>
+<li><p>Each stage produces its own log file (<code class="docutils literal notranslate"><span class="pre">stage1.log</span></code>, <code class="docutils literal notranslate"><span class="pre">stage2.log</span></code>, etc.)</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="result-collection-and-summarization-collect-latest-result-write-summary">
-<h3>4) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">write_summary()</span></code><a class="headerlink" href="#result-collection-and-summarization-collect-latest-result-write-summary" title="Link to this heading"></a></h3>
+<h3>5) Result Collection and Summarization: <code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code><a class="headerlink" href="#result-collection-and-summarization-collect-latest-result-write-summary" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>After all stages succeed, the framework attempts to read:
 <code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code>
@@ -208,31 +223,52 @@ and uses the last row as the “latest result”</p></li>
 <li><p>If successful, it appends one row to:
 <code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
 <li><p>If the result file is missing or empty, it prints a message like “Finished but no results found” and does not write to the summary</p></li>
+<li><p>Skip logic is handled by <code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code> in <code class="docutils literal notranslate"><span class="pre">core.py</span></code></p></li>
 </ul>
 </section>
 </section>
 <section id="ii-key-modules-and-responsibility-boundaries">
 <h2>II. Key Modules and Responsibility Boundaries<a class="headerlink" href="#ii-key-modules-and-responsibility-boundaries" title="Link to this heading"></a></h2>
-<section id="run-grid-py-scheduling-layer">
-<h3>1) <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> (Scheduling Layer)<a class="headerlink" href="#run-grid-py-scheduling-layer" title="Link to this heading"></a></h3>
+<section id="cli-py-entry-point">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> (Entry Point)<a class="headerlink" href="#cli-py-entry-point" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Responsible for: parsing YAML, expanding combos, concurrent scheduling, OOM retry policy (optional)</p></li>
+<li><p>Responsible for: CLI argument parsing, path setup (inline, lines 59-63), handing control to the execution engine</p></li>
 <li><p>Not responsible for: method-internal training logic or metric computation</p></li>
 </ul>
 </section>
-<section id="cli-gcd-py-cli-openset-py-method-registration-and-command-building">
-<h3>2) <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code> (Method Registration and Command Building)<a class="headerlink" href="#cli-gcd-py-cli-openset-py-method-registration-and-command-building" title="Link to this heading"></a></h3>
+<section id="core-py-execution-and-summarization-layer">
+<h3>2) <code class="docutils literal notranslate"><span class="pre">core.py</span></code> (Execution and Summarization Layer)<a class="headerlink" href="#core-py-execution-and-summarization-layer" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Responsible for: constructing <code class="docutils literal notranslate"><span class="pre">args_json</span></code> (<code class="docutils literal notranslate"><span class="pre">make_base_args()</span></code>), running stages, organizing log directories, collecting results (<code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code>), writing the summary (<code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code>), and skip detection (<code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code>)</p></li>
+<li><p>Responsible for: writing <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> for each stage (for reproducibility and debugging)</p></li>
+<li><p>Not responsible for: YAML parsing or workspace initialization</p></li>
+</ul>
+</section>
+<section id="methods-builders-gcd-py-methods-builders-openset-py-method-registration-and-command-building">
+<h3>3) <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code> (Method Registration and Command Building)<a class="headerlink" href="#methods-builders-gcd-py-methods-builders-openset-py-method-registration-and-command-building" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Responsible for: mapping a method to stages, and providing <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> for each stage</p></li>
 <li><p>Responsible for: defining default config paths and default <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
 <li><p>Not responsible for: writing results during execution (this is handled by the method scripts)</p></li>
 </ul>
 </section>
-<section id="utils-py-execution-and-summarization-layer">
-<h3>3) <code class="docutils literal notranslate"><span class="pre">utils.py</span></code> (Execution and Summarization Layer)<a class="headerlink" href="#utils-py-execution-and-summarization-layer" title="Link to this heading"></a></h3>
+<section id="methods-registry-py-unified-method-registry">
+<h3>4) <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code> (Unified Method Registry)<a class="headerlink" href="#methods-registry-py-unified-method-registry" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Responsible for: constructing <code class="docutils literal notranslate"><span class="pre">args_json</span></code>, running stages, organizing log directories, collecting results, and writing the summary</p></li>
-<li><p>Responsible for: writing <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> for each stage (for reproducibility and debugging)</p></li>
+<li><p>Contains the single <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> dict that maps method names to their specs</p></li>
+<li><p>Both <code class="docutils literal notranslate"><span class="pre">builders_gcd.py</span></code> and <code class="docutils literal notranslate"><span class="pre">builders_openset.py</span></code> register into this shared registry</p></li>
+</ul>
+</section>
+<section id="configs-base-py-config-parsing">
+<h3>5) <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> (Config Parsing)<a class="headerlink" href="#configs-base-py-config-parsing" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Responsible for: <code class="docutils literal notranslate"><span class="pre">GridConfig.from_grid_yaml()</span></code> and <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code></p></li>
+</ul>
+</section>
+<section id="workspace-py-workspace-initialization">
+<h3>6) <code class="docutils literal notranslate"><span class="pre">workspace.py</span></code> (Workspace Initialization)<a class="headerlink" href="#workspace-py-workspace-initialization" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Responsible for: <code class="docutils literal notranslate"><span class="pre">init_workspace()</span></code> which sets up the directory structure for a run</p></li>
 </ul>
 </section>
 </section>
@@ -271,7 +307,8 @@ Method scripts must write this file at the end of execution; otherwise, the fram
 <section id="reproduce-from-stage-logs">
 <h3>2) Reproduce from Stage Logs<a class="headerlink" href="#reproduce-from-stage-logs" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Locate <code class="docutils literal notranslate"><span class="pre">stageX.log</span></code> for the failed combo</p></li>
+<li><p>Locate <code class="docutils literal notranslate"><span class="pre">stage1.log</span></code> or <code class="docutils literal notranslate"><span class="pre">stage2.log</span></code> for the failed combo under the log path:
+<code class="docutils literal notranslate"><span class="pre">logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/</span></code></p></li>
 <li><p>Copy <code class="docutils literal notranslate"><span class="pre">CMD</span></code> and <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>, and reproduce/debug by aligning with the method script’s argument parsing logic</p></li>
 </ul>
 </section>

@@ -1,0 +1,126 @@
+# 配置文件（YAML）指南
+
+本页面说明一个 YAML 配置文件应包含哪些字段、各字段的含义，以及如何从"小规模验证运行"扩展到"大规模网格实验"。
+
+## 1. 顶层字段概览
+
+一个可运行的配置文件通常包含以下顶层字段：
+
+- `methods`
+  本次实验要运行的方法列表。
+
+- `datasets`
+  本次实验要运行的数据集列表。
+
+- `result_file`
+  汇总文件的命名后缀。框架将生成：
+  - `results/summary_{result_file}.csv`
+
+- `grid`
+  网格搜索空间。每个维度为一个列表，框架取笛卡尔积生成 combo。
+
+- `run`
+  运行时控制参数（GPU 选择、并发数、训练轮次、dry-run、OOM 重试等）。
+
+- `paths`
+  输出目录设置（例如 `results_dir`、`logs_dir`）。
+
+- `per_method_extra`
+  按方法注入/覆盖额外参数（方法特有的超参或开关）。
+
+- `extra_args`（可选）
+  适用于所有方法的全局额外参数。
+
+注意：方法到任务的映射由框架自动处理（通过内置查找表）。您**不需要**指定 `maps` 字段。
+
+## 2. `grid` 字段建议
+
+常见维度示例：
+- `known_cls_ratio: [0.75]`
+- `labeled_ratio: [0.5]`
+- `fold_types: [fold]`
+- `fold_nums: [5]`
+- `fold_idxs: [0]`
+- `seeds: [2025]`
+- `cluster_num_factor: [1.0]`
+
+有效取值：
+- `known_cls_ratio`：`0.25`、`0.5`、`0.75`
+- `labeled_ratio`：`0.1`、`0.5`、`1.0`
+- `fold_types`：`fold`、`imbalance_fold`
+
+建议做法：
+- 首次验证流水线时，`fold_idxs` 和 `seeds` 各保留一个值即可。
+- 确认流水线正常运行后，再逐步增加 `seeds` / `folds` / `ratios` 以扩大实验规模。
+
+## 3. `run` 字段建议
+
+常见字段：
+- `gpus: [0,1,2,3]`
+- `max_workers: 4`
+- `slots_per_gpu: 1`
+- `num_pretrain_epochs: 1`
+- `num_train_epochs: 1`
+- `dry_run: false`
+- `retry_on_oom: true`
+- `max_retries: 2`
+- `retry_backoff_sec: 15`
+
+建议做法：
+- 首次运行时，设置 `dry_run: true` 来验证生成的 combo 数量以及命令构造是否符合预期。您也可以使用 `--dry-run` CLI 参数达到同样效果。
+- 并发设置建议从"每个 GPU 一个任务"开始，然后根据 GPU 显存余量调整 `slots_per_gpu`。
+
+## 4. `paths` 字段建议
+
+常见设置：
+- `results_dir: results`
+- `logs_dir: logs`
+
+大多数情况下使用相对路径即可。相对路径会在工作目录（`--output-dir`）下创建，便于将整次运行作为一个整体归档。
+
+## 5. `per_method_extra`：按方法注入参数
+
+`per_method_extra` 用于仅为特定方法设置参数。示例：
+
+```yaml
+per_method_extra:
+  tan:
+    backbone: bert-base-uncased
+  ab:
+    emb_name: sbert
+    temperature: 0.07
+```
+
+注意事项：
+- `per_method_extra` 下的键必须与 `methods` 中列出的方法名一致。
+- 注入的字段会与基础 `args` 合并后传递给方法执行脚本，同时也会写入日志中的 `ARGS_JSON` 以支持可复现性。
+
+## 6. 最小可运行示例
+```yaml
+methods: [tan]
+datasets: [X-Topic]
+result_file: demo
+
+grid:
+  known_cls_ratio: [0.75]
+  labeled_ratio: [0.5]
+  fold_types: [fold]
+  fold_nums: [5]
+  fold_idxs: [0]
+  seeds: [2025]
+  cluster_num_factor: [1.0]
+
+run:
+  gpus: [0]
+  max_workers: 1
+  slots_per_gpu: 1
+  num_pretrain_epochs: 1
+  num_train_epochs: 1
+  dry_run: false
+
+paths:
+  results_dir: results
+  logs_dir: logs
+
+per_method_extra: {}
+```

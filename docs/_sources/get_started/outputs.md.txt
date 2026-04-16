@@ -14,16 +14,16 @@ Using `--output-dir ~/tmp` as an example, after running you will see something l
 
 ~/tmp/
   outputs/            Training/evaluation artifacts (models, predictions, caches, etc.)
-  results/            Aggregations and index files (e.g., summary, seen_index, etc.)
+  results/            Aggregated per-method results and summary files
   logs/               Runtime logs (for debugging errors and tracking stage progress)
-  code/               Snapshot of the code used for this run (records code state)
-  configs/            Snapshot of the config used for this run (records config state)
-  data/               Data entry directory (may be empty or filled by your data pipeline)
-  pretrained_models/  Model entry directory (corresponds to `--model-dir`)
+  configs/            Copies of the YAML config files used for this run
+  data -> ...         Symlink to --data-dir (or the package-embedded _data directory)
+  pretrained_models -> ...  Symlink to --model-dir
 
 Notes:
 - Focus first on `logs/`, `results/`, and `outputs/`.
-- Directories such as `code/` and `configs/` are used to record the environment state for the run, making reproduction and tracking easier.
+- `configs/` is a real directory where YAML configuration files are copied from the package, preserving the exact config state for the run.
+- `data` and `pretrained_models` are symbolic links pointing to the directories you specify via `--data-dir` and `--model-dir` respectively.
 
 ## 3. Recommended Usage
 
@@ -40,7 +40,7 @@ This avoids accidental overwrites between experiments and is easier to manage wi
 ### 3.2 Where to Look First to Diagnose Issues
 
 - Runtime errors, hangs, or stage failures: check `logs/` first. You can usually find the error stack trace and the failed stage there.
-- Experiment summary results: check `results/` (typically contains summary files, indexes, etc.).
+- Experiment summary results: check `results/` (typically contains per-method result files and summary CSVs).
 - Model and prediction artifacts: check `outputs/`.
 
 ## 4. Common Issues and How to Avoid Them

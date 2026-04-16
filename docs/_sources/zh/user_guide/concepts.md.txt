@@ -1,0 +1,63 @@
+# 核心概念
+
+本页面对 **bolt-lab** 文档中反复出现的关键术语进行统一说明，帮助您快速理解配置和输出内容。
+
+## 1. 任务：`gcd` 与 `openset`
+
+bolt-lab 目前支持两类任务：
+- `gcd`：广义类别发现（Generalized Category Discovery）
+- `openset`：开放集识别 / 开放集分类（Open-set Recognition / Open-set Classification）
+
+在配置文件中，方法按特定任务进行分组。框架据此选择对应的执行入口以及指标/结果字段。
+
+## 2. 方法：算法（实现）
+
+`method` 是您要运行的算法名称，例如 `tan`、`ab`、`plm_ood` 等。
+同一方法可以在不同的数据集、划分方式和超参组合下多次运行。
+
+方法与任务之间的映射关系由框架内部查找表自动处理（`configs/base.py` 中的 `_METHOD_TASK_MAP`），无需在 YAML 中手动声明。
+
+## 3. 数据集
+
+`dataset` 是一个数据集标识符（字符串）。
+框架会将 `methods x datasets x grid` 展开为实验组合的笛卡尔积，然后逐一调度执行。
+
+## 4. 网格：超参搜索空间
+
+`grid` 描述了要扫描的参数维度。常见维度包括：
+- `known_cls_ratio`：已知类别比例
+- `labeled_ratio`：有标注数据比例
+- `fold_types / fold_nums / fold_idxs`：数据划分策略及索引
+- `seeds`：随机种子
+- `cluster_num_factor`：簇数倍数（部分方法使用）
+
+每个维度为一个列表，框架对所有维度取笛卡尔积。
+
+## 5. Combo：实验组合（最小执行单元）
+
+`combo` 是最小执行单元，通常由以下参数唯一确定：
+- 任务、方法、数据集
+- `known_cls_ratio`、`labeled_ratio`、`cluster_num_factor`
+- `fold_type`、`fold_num`、`fold_idx`
+- seed
+- 训练轮次（`num_pretrain_epochs`、`num_train_epochs`）
+- 通过 `per_method_extra` 注入的附加参数
+
+对于每个 combo，框架会生成日志和输出产物，并将结果汇总到汇总表中。
+
+## 6. Stage：多阶段流水线（按方法划分）
+
+部分方法由多个阶段组成（例如先预训练再微调）。每个阶段称为一个 `stage`。
+框架按顺序执行 `stage1`、`stage2`、……如果某个阶段失败，该 combo 即判定为失败，后续阶段将不再执行。
+
+## 7. Workdir：工作目录（`--output-dir`）
+
+您在运行时通过 `--output-dir` 指定工作目录。
+框架会在该目录下组织 `logs/`、`results/`、`outputs/` 等输出，同时保留本次运行的配置副本，以支持可复现性和归档。
+
+## 8. Summary：汇总表（`summary_{result_file}.csv`）
+
+每个 combo 完成后，框架会尝试收集该方法的最新结果记录，并追加到汇总表中：
+results/summary_{result_file}.csv
+
+汇总表是后续对比分析的首选入口。

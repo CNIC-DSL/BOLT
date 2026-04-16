@@ -1,0 +1,41 @@
+# OOM 重试机制
+
+在 GPU 训练中，CUDA OOM（显存不足）是常见的失败模式。bolt-lab 提供了可控的自动 OOM 重试机制，以提高大规模网格实验的完成率。
+
+## 1. 触发条件
+
+如果子进程抛出 `RuntimeError` 且错误信息包含：
+- "CUDA out of memory"
+- 或 "out of memory"
+框架会将其视为 OOM 事件。
+
+## 2. 可配置参数（在 `run` 中）
+
+- `retry_on_oom`（默认：true）  
+  是否启用 OOM 重试。
+
+- `max_retries`（默认：2）  
+  最大重试次数。
+
+- `retry_backoff_sec`（默认：15.0）  
+  每次重试前的等待秒数，以等待 GPU 显存和缓冲区释放。
+
+示例：
+run:
+  retry_on_oom: true
+  max_retries: 3
+  retry_backoff_sec: 30
+
+## 3. 重试行为
+
+- OOM 发生后，框架等待退避秒数，然后重新启动该组合。
+- 如果配置了多个 GPU，重试时可能获取到不同的 GPU 令牌，相当于"换一个 GPU 重试"。
+- 如果达到 `max_retries` 后组合仍然失败，则标记为失败，该组合的流水线停止（需要手动调试或调整配置后重新运行）。
+
+## 4. 处理 OOM 的建议操作（按优先级排序）
+
+如果同一组合反复出现 OOM，建议按以下顺序处理：
+1) 降低并发：减少 `max_workers` 或 `slots_per_gpu`
+2) 降低训练开销：减小 batch size / `max_length` / `num_train_epochs`
+3) 调整模型/骨干网络：换用更小的骨干网络或禁用内存消耗大的功能
+4) 使用显存更大的 GPU，或减少同一 GPU 上运行的任务数量

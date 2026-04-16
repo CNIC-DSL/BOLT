@@ -6,10 +6,10 @@ This page explains how to start runs, how to control scale and concurrency, and 
 
 If you want to prepare the working directory structure without running any combos, use `--init-only`:
 ```bash
-bolt-grid --init-only --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/pretrained_models
 ```
 What it does:
-- Initializes the workspace under `--output-dir` (e.g., creates `outputs/`, `results/`, `logs/` and linked directories such as `code/`, `configs/`, `data/`, `pretrained_models/`)
+- Initializes the workspace under `--output-dir` (e.g., creates `outputs/`, `results/`, `logs/`, `configs/` and symlinks such as `data/`, `pretrained_models/`)
 - Useful for verifying paths/permissions and confirming the workspace layout before starting a large run
 
 What it does NOT do:
@@ -21,12 +21,12 @@ What it does NOT do:
 
 After installation, you can run from any directory:
 
-bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/pretrained_models
 
 Argument details:
 - `--config`  
   A configuration filename or an absolute path.  
-  If you pass something like `grid_gcd.yaml`, the framework will look for a config with the same name under the package’s built-in `configs` directory.  
+  If you pass something like `grid_gcd.yaml`, the framework first looks in `{output-dir}/configs/`, then falls back to the package’s built-in `configs` directory.  
   You can also pass the absolute path to a config file that you copied and modified yourself.
 
 - `--output-dir`  
@@ -35,10 +35,16 @@ Argument details:
 - `--model-dir`  
   The model/cache directory. It is recommended to point to a stable, readable/writable location to store pretrained models and caches.
 
+- `--data-dir`  
+  The data directory. If omitted, the framework falls back to the package-embedded `_data` directory. A symlink named `data` is created in the working directory pointing to this location.
+
+- `--dry-run`  
+  A CLI flag equivalent to setting `dry_run: true` in YAML. When present, combo expansion and command construction are performed but no subprocesses are launched. Useful for quick validation.
+
 ## 2. Recommended Workflow
 
 Step 0 (optional): Initialize the workspace
-bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models --init-only
+bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models --init-only
 
 Step 1: Copy a config file to your working directory and modify it  
 Do not treat the example config as the only long-term source. Keep your own version-controlled copy.
@@ -56,7 +62,7 @@ Set `dry_run=true` in YAML (see Section 3) to verify combo count and command con
 
 Step 4: Run with a new output directory  
 For example:
-bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models
+bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models
 
 It is recommended to use an independent `output-dir` for each large experiment to make archiving, comparison, and cleanup easier.
 
@@ -75,16 +81,7 @@ Note:
 - `dry_run` still goes through combo expansion and command construction, but does not run subprocesses.
 - `--init-only` only initializes the workspace and does not expand combos.
 
-## 4. `only_collect`: Collect and Update Summary Only (As Needed)
-
-Set the following in `run` inside your YAML:
-run:
-  only_collect: true
-
-This mode is useful when you are confident the outputs already exist and you only want the framework to re-collect results and update the summary.
-If result files do not exist, it will not “create” result records out of nothing.
-
-## 5. Concurrency and GPU Configuration Tips
+## 4. Concurrency and GPU Configuration Tips
 
 - Typical default: multiple GPUs, one task per GPU
   run:
@@ -107,7 +104,7 @@ If result files do not exist, it will not “create” result records out of not
 The effective concurrency upper bound is determined jointly by:
 min(max_workers, total GPU slots, number of combos)
 
-## 6. OOM Retry (Optional)
+## 5. OOM Retry (Optional)
 
 In `run` inside your YAML, you can set:
 - `retry_on_oom: true`

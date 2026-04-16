@@ -1,0 +1,110 @@
+# YAML 实验规格说明
+
+在 bolt-lab 中，一次批量实验完全由单个 YAML 文件描述。该 YAML 主要由 8 个部分组成：`methods`、`datasets`、`result_file`、`grid`、`run`、`paths`、`per_method_extra` 和 `extra_args`。
+
+本页说明这些字段的含义、如何设置它们的值，并提供一个可直接复用的最小示例。
+
+## 1. 顶层字段说明
+
+1) `methods`  
+要运行的方法列表。框架通过内置查找表（`configs/base.py` 中的 `_METHOD_TASK_MAP`）将每个方法解析为对应的任务类型（`gcd` 或 `openset`），并在 `grid` 生成的组合上运行这些方法。
+
+2) `datasets`  
+要运行的数据集列表。每个数据集会与 `methods` 和 `grid` 组合，形成最终的实验组合。
+
+3) `result_file`  
+汇总文件的命名后缀。在 `results_dir` 下，框架会生成：
+- `summary_{result_file}.csv`
+
+4) `grid`  
+网格搜索空间。框架对 `grid` 中所有维度取笛卡尔积（通过 `configs/base.py` 中 `GridConfig.iter_experiments()` 的 `itertools.product`）来生成所有组合。
+常见维度包括：
+- `known_cls_ratio`：已知类别比例
+- `labeled_ratio`：有标签数据比例
+- `fold_types / fold_nums / fold_idxs`：交叉验证划分类型及索引。`fold_types` 的有效值为 `fold` 和 `imbalance_fold`。
+- `seeds`：随机种子
+- `cluster_num_factor`：聚类数量倍数（如果方法使用该参数）
+
+5) `run`  
+运行时控制参数，常见选项包括：
+- `gpus`：可用 GPU 列表（例如 `[0,1,2]`）
+- `max_workers`：最大并发工作线程数
+- `slots_per_gpu`：每个 GPU 允许的并发"槽位"数（默认：1）
+- `dry_run`：仅打印命令，不实际执行（默认：false）
+- `retry_on_oom`：是否在 OOM 时重试（默认：true）
+- `max_retries`：OOM 最大重试次数（默认：2）
+- `retry_backoff_sec`：每次重试前的等待秒数（默认：15）
+
+还包括训练轮次：
+- `num_pretrain_epochs`
+- `num_train_epochs`
+
+6) `paths`  
+输出路径设置：
+- `results_dir`：汇总文件目录（例如 `results`）
+- `logs_dir`：日志目录（例如 `logs`）
+
+7) `per_method_extra`  
+按方法的参数覆盖/附加。用于向特定方法的运行时参数注入额外参数，例如：
+- 为特定方法指定 `backbone`、`reg_loss`、`extra_flags` 等
+- 为 OpenSet 基于 LLM 的方法指定 `llm_model`、`llm_api_base` 等
+
+8) `extra_args`  
+可选的顶层字段，用于设置适用于所有方法的全局额外参数。这些参数在应用按方法覆盖之前，会被合并到每个实验组合的参数中。
+
+## 2. 最小示例（可直接复制使用）
+
+以下示例展示了一个可运行的最小 YAML 结构。首次运行时，建议将 `methods` / `datasets` / `grid` 缩减到最小规模，以验证流水线。
+
+```yaml
+methods: [tan]
+datasets: [X-Topic]
+result_file: demo
+
+grid:
+  known_cls_ratio: [0.75]
+  labeled_ratio: [0.5]
+  fold_types: [fold]
+  fold_nums: [5]
+  fold_idxs: [0]
+  seeds: [2025]
+  cluster_num_factor: [1.0]
+
+run:
+  gpus: [0]
+  max_workers: 1
+  slots_per_gpu: 1
+  num_pretrain_epochs: 1
+  num_train_epochs: 1
+  dry_run: false
+
+paths:
+  results_dir: results
+  logs_dir: logs
+
+per_method_extra: {}
+extra_args: {}
+```
+
+## 3. 如何计算组合数量
+
+组合数 = （方法数量）x（数据集数量）x
+以下维度的笛卡尔积大小：
+`known_cls_ratio x labeled_ratio x fold_types x fold_nums x fold_idxs x seeds x cluster_num_factor`。
+
+当组合数量较大时，建议先使用 `dry_run` 检查命令和参数是否符合预期，然后再逐步扩大网格规模。
+
+## 4. `per_method_extra` 使用示例
+```yaml
+per_method_extra:
+  plm_ood-llm:
+    llm_ood: true
+    llm_model: gpt-4.1-mini
+    llm_temperature: 0.0
+    llm_batch_size: 16
+  plm_ood:
+    reg_loss: cosine
+  ab:
+    emb_name: sbert
+    extra_flags: ["--some_flag", "1"]
+```

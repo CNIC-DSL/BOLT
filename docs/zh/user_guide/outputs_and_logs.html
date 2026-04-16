@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>输出与日志导航 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">输出与日志导航</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/outputs_and_logs.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>输出与日志导航<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面说明运行结束后在哪里查找日志、汇总结果和生成的产物，并针对常见问题提供推荐的排查顺序。</p>
+<section id="output-dir">
+<h2>1. 主要输出目录（位于工作目录 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 下）<a class="headerlink" href="#output-dir" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logs/</span></code>
+每个 combo 的运行日志，包括各阶段日志。调试错误时请优先查看此目录。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/</span></code>
+汇总文件和各方法结果的目录。通常包含：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">outputs/</span></code>
+训练/评估产物（模型、预测结果、缓存等），按方法和 combo 组织。</p></li>
+</ul>
+<p>关于 <code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 的说明：</p>
+<ul class="simple">
+<li><p>如果使用 <code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 运行，目录骨架（及链接目录）会被创建，但<strong>没有 combo 阶段日志</strong>和<strong>没有新的汇总记录</strong>是正常的，因为没有 combo 被执行。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>2. 日志目录结构<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>每个 combo 的日志目录通常按以下方式组织：</p>
+<p>logs/{task}/{method}/{dataset}/
+kr{known_cls_ratio}/
+lr{labeled_ratio}/
+{fold_type}<em>{fold_num}</em>{fold_idx}/
+seed{seed}/</p>
+<p>该目录通常包含：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stage1.log</span></code>、<code class="docutils literal notranslate"><span class="pre">stage2.log</span></code>、……：各阶段的 stdout/stderr</p></li>
+</ul>
+<p>在每个阶段日志的开头，通常可以看到两项信息：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span></code>：实际执行的命令</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>：该 combo 的完整参数集（用于复现和调试）</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>3. 结果文件与汇总文件<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="results-csv">
+<h3>3.1 各方法结果文件（<code class="docutils literal notranslate"><span class="pre">results.csv</span></code>）<a class="headerlink" href="#results-csv" title="Link to this heading"></a></h3>
+<p>默认情况下，框架从以下路径读取各方法的结果：
+results/{task}/{method}/results.csv</p>
+<p>框架取该 CSV 的最后一行作为”最新结果记录”，并写入汇总表。</p>
+</section>
+<section id="summary-result-file-csv">
+<h3>3.2 汇总文件（<code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code>）<a class="headerlink" href="#summary-result-file-csv" title="Link to this heading"></a></h3>
+<p>汇总文件位于：
+results/summary_{result_file}.csv</p>
+<p>每当一个 combo 成功收集到结果，汇总表就会追加一行新记录。</p>
+<p>关于 <code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 的说明：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 不会运行阶段、不会写入方法结果，因此汇总表不会追加新行。</p></li>
+</ul>
+</section>
+</section>
+<section id="id4">
+<h2>4. 推荐排查顺序<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>问题 A：某个 combo 失败 / 出现运行时错误</p>
+<ol class="arabic simple">
+<li><p>定位该 combo 对应的 <code class="docutils literal notranslate"><span class="pre">stageX.log</span></code></p></li>
+<li><p>查看错误堆栈和关键参数（<code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>）</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">CMD</span></code> 直接复现单次运行以便调试</p></li>
+</ol>
+<p>问题 B：运行完成但汇总表中没有新记录</p>
+<ol class="arabic simple">
+<li><p>检查是否有阶段返回码为非零（失败时流水线会停止，不会写入汇总）</p></li>
+<li><p>检查 <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code> 是否存在且非空</p></li>
+<li><p>检查方法写入的列是否完整（尤其是指标列和 <code class="docutils literal notranslate"><span class="pre">args</span></code> 字段）</p></li>
+</ol>
+<p>问题 B（init-only 情况）：您使用了 <code class="docutils literal notranslate"><span class="pre">--init-only</span></code></p>
+<ul class="simple">
+<li><p>这是预期行为：<code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 仅初始化工作空间，不执行 combo，因此不会生成 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 或追加汇总记录。</p></li>
+</ul>
+<p>问题 C：输出目录结构不符合预期</p>
+<ol class="arabic simple">
+<li><p>确认 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 指向实验根目录（不要直接指向 <code class="docutils literal notranslate"><span class="pre">outputs</span></code> 子目录）</p></li>
+<li><p>确认 <code class="docutils literal notranslate"><span class="pre">paths.results_dir</span></code> / <code class="docutils literal notranslate"><span class="pre">paths.logs_dir</span></code> 为相对路径（相对路径会在工作目录下创建）</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

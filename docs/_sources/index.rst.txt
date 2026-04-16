@@ -1,5 +1,5 @@
 .. Bolt documentation master file.
-.. title:: Bolt v0.1.0
+.. title:: Bolt v1.0.2
 .. image:: assets/logo.png
 
 =========================================================

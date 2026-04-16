@@ -1,0 +1,245 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>运行与常见操作 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">运行与常见操作</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/run_grid.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>运行与常见操作<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面说明如何启动运行、如何控制规模和并发，以及推荐的工作流程。</p>
+<section id="init-only">
+<h2>0. 仅初始化工作空间（<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>）<a class="headerlink" href="#init-only" title="Link to this heading"></a></h2>
+<p>如果您只想准备工作目录结构而不运行任何 combo，请使用 <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--init-only<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/pretrained_models
+</pre></div>
+</div>
+<p>它会执行的操作：</p>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 下初始化工作空间（例如创建 <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>、<code class="docutils literal notranslate"><span class="pre">results/</span></code>、<code class="docutils literal notranslate"><span class="pre">logs/</span></code>、<code class="docutils literal notranslate"><span class="pre">configs/</span></code> 以及 <code class="docutils literal notranslate"><span class="pre">data/</span></code>、<code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code> 等符号链接）</p></li>
+<li><p>适用于在启动大规模运行前验证路径/权限并确认工作空间布局</p></li>
+</ul>
+<p>它不会执行的操作：</p>
+<ul class="simple">
+<li><p>不会将网格展开为 combo</p></li>
+<li><p>不会执行方法脚本（没有阶段日志）</p></li>
+<li><p>不会收集结果或向汇总表追加新记录</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>1. 基本运行命令<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>安装完成后，您可以从任意目录运行：</p>
+<p>bolt-grid –config grid_gcd.yaml –output-dir ~/tmp –model-dir ~/pretrained_models</p>
+<p>参数说明：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--config</span></code>
+配置文件名或绝对路径。
+如果传入类似 <code class="docutils literal notranslate"><span class="pre">grid_gcd.yaml</span></code> 的文件名，框架会按以下顺序查找：(1) 工作空间的 <code class="docutils literal notranslate"><span class="pre">{output-dir}/configs/</span></code> 目录，(2) 包内置的 <code class="docutils literal notranslate"><span class="pre">configs</span></code> 目录。
+您也可以传入自行复制并修改的配置文件的绝对路径。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>
+工作目录。框架会在该目录下创建 <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>、<code class="docutils literal notranslate"><span class="pre">results/</span></code>、<code class="docutils literal notranslate"><span class="pre">logs/</span></code> 等输出。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>
+模型/缓存目录。建议指向一个稳定、可读写的位置，用于存放预训练模型和缓存。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--data-dir</span></code>
+数据目录。如果省略，框架会回退到包内嵌的 <code class="docutils literal notranslate"><span class="pre">_data</span></code> 目录。工作目录中会创建一个名为 <code class="docutils literal notranslate"><span class="pre">data</span></code> 的符号链接指向该位置。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code>
+CLI 参数，等同于在 YAML 中设置 <code class="docutils literal notranslate"><span class="pre">dry_run:</span> <span class="pre">true</span></code>。启用后会执行 combo 展开和命令构造，但不会启动子进程。适用于快速验证。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>2. 推荐工作流程<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>步骤 0（可选）：初始化工作空间
+bolt-grid –config /abs/path/to/your.yaml –output-dir ~/tmp/exp_001 –model-dir ~/pretrained_models –init-only</p>
+<p>步骤 1：将配置文件复制到您的工作目录并进行修改
+不要将示例配置作为唯一的长期来源。请保留您自己的版本控制副本。</p>
+<p>步骤 2：将网格缩小到最小规模以验证流水线
+首次运行时，只保留：</p>
+<ul class="simple">
+<li><p>1 个数据集</p></li>
+<li><p>1 个方法</p></li>
+<li><p>1 个 seed</p></li>
+<li><p>1 个 <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
+<li><p>将 epochs 设为较小的值</p></li>
+</ul>
+<p>步骤 3：（推荐）使用 <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> 验证 combo 展开和命令
+在 YAML 中设置 <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code>（参见第 3 节），在实际执行前验证 combo 数量和命令构造。</p>
+<p>步骤 4：使用新的输出目录运行
+例如：
+bolt-grid –config /abs/path/to/your.yaml –output-dir ~/tmp/exp_001 –model-dir ~/pretrained_models</p>
+<p>建议为每次大型实验使用独立的 <code class="docutils literal notranslate"><span class="pre">output-dir</span></code>，以便归档、对比和清理。</p>
+</section>
+<section id="dry-run">
+<h2>3. <code class="docutils literal notranslate"><span class="pre">dry_run</span></code>：只打印不执行（推荐首次使用时启用）<a class="headerlink" href="#dry-run" title="Link to this heading"></a></h2>
+<p>在 YAML 的 <code class="docutils literal notranslate"><span class="pre">run</span></code> 中设置：
+run:
+dry_run: true</p>
+<p><code class="docutils literal notranslate"><span class="pre">dry_run</span></code> 会打印每个 combo 将要执行的命令和关键参数，帮助您：</p>
+<ul class="simple">
+<li><p>验证生成的 combo 数量</p></li>
+<li><p>验证方法入口、数据集以及 fold/seed 设置</p></li>
+<li><p>避免在启动大规模运行后才发现配置问题</p></li>
+</ul>
+<p>注意：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">dry_run</span></code> 仍然会执行 combo 展开和命令构造，但不会运行子进程。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--init-only</span></code> 仅初始化工作空间，不会展开 combo。</p></li>
+</ul>
+</section>
+<section id="gpu">
+<h2>4. 并发与 GPU 配置建议<a class="headerlink" href="#gpu" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>典型默认配置：多 GPU，每个 GPU 一个任务
+run:
+gpus: [0,1,2,3]
+max_workers: 4
+slots_per_gpu: 1</p></li>
+<li><p>单 GPU 串行：最稳定的方式
+run:
+gpus: [0]
+max_workers: 1
+slots_per_gpu: 1</p></li>
+<li><p>单 GPU 并发：仅在 GPU 显存充足时使用
+run:
+gpus: [0]
+max_workers: 2
+slots_per_gpu: 2</p></li>
+</ul>
+<p>有效并发上限由以下因素共同决定：
+min(max_workers, GPU 总槽位数, combo 数量)</p>
+</section>
+<section id="oom">
+<h2>5. OOM 重试（可选）<a class="headerlink" href="#oom" title="Link to this heading"></a></h2>
+<p>在 YAML 的 <code class="docutils literal notranslate"><span class="pre">run</span></code> 中，您可以设置：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom:</span> <span class="pre">true</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries:</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec:</span> <span class="pre">15</span></code></p></li>
+</ul>
+<p>这对大规模网格实验非常有用。但如果某个 combo 持续出现 OOM，您仍应调整配置，例如降低并发数、减小 batch size/序列长度、减少 epochs 等。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

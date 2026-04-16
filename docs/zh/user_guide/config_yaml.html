@@ -1,0 +1,264 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>配置文件（YAML）指南 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">配置文件（YAML）指南</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/config_yaml.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="yaml">
+<h1>配置文件（YAML）指南<a class="headerlink" href="#yaml" title="Link to this heading"></a></h1>
+<p>本页面说明一个 YAML 配置文件应包含哪些字段、各字段的含义，以及如何从”小规模验证运行”扩展到”大规模网格实验”。</p>
+<section id="id1">
+<h2>1. 顶层字段概览<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>一个可运行的配置文件通常包含以下顶层字段：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">methods</span></code>
+本次实验要运行的方法列表。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">datasets</span></code>
+本次实验要运行的数据集列表。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">result_file</span></code>
+汇总文件的命名后缀。框架将生成：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">grid</span></code>
+网格搜索空间。每个维度为一个列表，框架取笛卡尔积生成 combo。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run</span></code>
+运行时控制参数（GPU 选择、并发数、训练轮次、dry-run、OOM 重试等）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">paths</span></code>
+输出目录设置（例如 <code class="docutils literal notranslate"><span class="pre">results_dir</span></code>、<code class="docutils literal notranslate"><span class="pre">logs_dir</span></code>）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>
+按方法注入/覆盖额外参数（方法特有的超参或开关）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extra_args</span></code>（可选）
+适用于所有方法的全局额外参数。</p></li>
+</ul>
+<p>注意：方法到任务的映射由框架自动处理（通过内置查找表）。您<strong>不需要</strong>指定 <code class="docutils literal notranslate"><span class="pre">maps</span></code> 字段。</p>
+</section>
+<section id="grid">
+<h2>2. <code class="docutils literal notranslate"><span class="pre">grid</span></code> 字段建议<a class="headerlink" href="#grid" title="Link to this heading"></a></h2>
+<p>常见维度示例：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio:</span> <span class="pre">[0.75]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labeled_ratio:</span> <span class="pre">[0.5]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_types:</span> <span class="pre">[fold]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_nums:</span> <span class="pre">[5]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_idxs:</span> <span class="pre">[0]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seeds:</span> <span class="pre">[2025]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_num_factor:</span> <span class="pre">[1.0]</span></code></p></li>
+</ul>
+<p>有效取值：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>：<code class="docutils literal notranslate"><span class="pre">0.25</span></code>、<code class="docutils literal notranslate"><span class="pre">0.5</span></code>、<code class="docutils literal notranslate"><span class="pre">0.75</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>：<code class="docutils literal notranslate"><span class="pre">0.1</span></code>、<code class="docutils literal notranslate"><span class="pre">0.5</span></code>、<code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_types</span></code>：<code class="docutils literal notranslate"><span class="pre">fold</span></code>、<code class="docutils literal notranslate"><span class="pre">imbalance_fold</span></code></p></li>
+</ul>
+<p>建议做法：</p>
+<ul class="simple">
+<li><p>首次验证流水线时，<code class="docutils literal notranslate"><span class="pre">fold_idxs</span></code> 和 <code class="docutils literal notranslate"><span class="pre">seeds</span></code> 各保留一个值即可。</p></li>
+<li><p>确认流水线正常运行后，再逐步增加 <code class="docutils literal notranslate"><span class="pre">seeds</span></code> / <code class="docutils literal notranslate"><span class="pre">folds</span></code> / <code class="docutils literal notranslate"><span class="pre">ratios</span></code> 以扩大实验规模。</p></li>
+</ul>
+</section>
+<section id="run">
+<h2>3. <code class="docutils literal notranslate"><span class="pre">run</span></code> 字段建议<a class="headerlink" href="#run" title="Link to this heading"></a></h2>
+<p>常见字段：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gpus:</span> <span class="pre">[0,1,2,3]</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_workers:</span> <span class="pre">4</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slots_per_gpu:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">num_train_epochs:</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dry_run:</span> <span class="pre">false</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom:</span> <span class="pre">true</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries:</span> <span class="pre">2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec:</span> <span class="pre">15</span></code></p></li>
+</ul>
+<p>建议做法：</p>
+<ul class="simple">
+<li><p>首次运行时，设置 <code class="docutils literal notranslate"><span class="pre">dry_run:</span> <span class="pre">true</span></code> 来验证生成的 combo 数量以及命令构造是否符合预期。您也可以使用 <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> CLI 参数达到同样效果。</p></li>
+<li><p>并发设置建议从”每个 GPU 一个任务”开始，然后根据 GPU 显存余量调整 <code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code>。</p></li>
+</ul>
+</section>
+<section id="paths">
+<h2>4. <code class="docutils literal notranslate"><span class="pre">paths</span></code> 字段建议<a class="headerlink" href="#paths" title="Link to this heading"></a></h2>
+<p>常见设置：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">results_dir:</span> <span class="pre">results</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logs_dir:</span> <span class="pre">logs</span></code></p></li>
+</ul>
+<p>大多数情况下使用相对路径即可。相对路径会在工作目录（<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>）下创建，便于将整次运行作为一个整体归档。</p>
+</section>
+<section id="per-method-extra">
+<h2>5. <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>：按方法注入参数<a class="headerlink" href="#per-method-extra" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> 用于仅为特定方法设置参数。示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">per_method_extra</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tan</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">backbone</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bert-base-uncased</span>
+<span class="w">  </span><span class="nt">ab</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">emb_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sbert</span>
+<span class="w">    </span><span class="nt">temperature</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.07</span>
+</pre></div>
+</div>
+<p>注意事项：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> 下的键必须与 <code class="docutils literal notranslate"><span class="pre">methods</span></code> 中列出的方法名一致。</p></li>
+<li><p>注入的字段会与基础 <code class="docutils literal notranslate"><span class="pre">args</span></code> 合并后传递给方法执行脚本，同时也会写入日志中的 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 以支持可复现性。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>6. 最小可运行示例<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">methods</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">tan</span><span class="p p-Indicator">]</span>
+<span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">X-Topic</span><span class="p p-Indicator">]</span>
+<span class="nt">result_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">demo</span>
+
+<span class="nt">grid</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">known_cls_ratio</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.75</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">labeled_ratio</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0.5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">fold</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_nums</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">5</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">fold_idxs</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">seeds</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">2025</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">cluster_num_factor</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1.0</span><span class="p p-Indicator">]</span>
+
+<span class="nt">run</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gpus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">max_workers</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">slots_per_gpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">num_pretrain_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">num_train_epochs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">dry_run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">paths</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">results_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">results</span>
+<span class="w">  </span><span class="nt">logs_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">logs</span>
+
+<span class="nt">per_method_extra</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

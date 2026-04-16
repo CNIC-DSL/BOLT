@@ -1,0 +1,56 @@
+# 自动结果收集与汇总
+
+每个实验组合完成后，**bolt-lab** 会自动收集对应的结果记录并追加到统一的汇总表中，方便后续比较和分析。
+
+## 1. 结果文件约定
+
+默认情况下，框架从以下位置读取每个方法的结果文件：
+./results/{task}/{method}/results.csv
+
+其中：
+- `task` 为 `gcd` 或 `openset`
+- `method` 为方法名称（例如 `tan`、`plm_ood`、`ab` 等）
+
+结果由 `core.py` 中的 `_collect_latest_result()` 收集，它读取该 CSV 的**最后一行**作为"最新结果记录"。
+
+注意：
+- 如果 `results.csv` 不存在或为空，框架不会向汇总表写入任何内容，并会打印一条提示信息。
+- 因此，每个方法脚本必须确保在完成后写入上述位置，且 CSV 包含关键指标列。
+
+## 2. 去重机制
+
+在启动一个实验组合之前，框架会检查该组合是否已经完成。这由 `core.py` 中的 `_is_already_done()` 处理，它读取 `results/{task}/{method}/results.csv` 中每个方法的 CSV，并检查以下字段：`method`、`dataset`、`known_cls_ratio`、`labeled_ratio`、`seed`、`fold_idx`、`fold_num`、`fold_type`、`num_train_epochs`。如果找到匹配的行，则跳过该组合。
+
+## 3. 汇总文件位置与命名
+
+汇总文件由 `core.py` 中的 `_write_summary()` 写入 YAML 中 `paths.results_dir` 指定的目录下：
+{results_dir}/summary_{result_file}.csv
+
+其中 `result_file` 来自 YAML 的顶层字段 `result_file`。
+
+## 4. 汇总表包含哪些字段
+
+汇总表至少包含：
+- `method`、`dataset`
+- `known_cls_ratio`、`labeled_ratio`、`cluster_num_factor`、`seed`
+- 指标列（因任务类型而异）
+- `args`：一个 JSON 字符串，记录关键运行参数（用于复现和去重）
+
+一般来说：
+- 常见的 GCD 指标包括 `ACC`、`H-Score`、`K-ACC`、`N-ACC`、`ARI`、`NMI` 等
+- 常见的 OpenSet 指标包括 `F1`、`K-F1`、`N-F1` 等
+
+## 5. 常见问题：为什么汇总表中没有写入内容
+
+按以下顺序排查：
+1) 子任务是否失败？
+   检查 `logs/` 下该组合对应的阶段日志，确认是否有错误堆栈跟踪或非零返回码。
+2) `results.csv` 是否已生成？
+   确认 `./results/{task}/{method}/results.csv` 存在，且 CSV 至少有一行结果数据。
+3) 结果列是否完整？
+   如果方法脚本写入的列与框架期望的列差异较大，汇总可能缺少字段或指标为空。建议在方法侧统一列名，或在方法输出中补全所需字段。
+
+## 6. 使用建议
+
+- 比较方法时，直接使用 `summary_{result_file}.csv` 作为主要分析入口。
+- 如果需要区分多次大规模运行，更改 `result_file` 以生成不同的汇总文件，避免互相覆盖。

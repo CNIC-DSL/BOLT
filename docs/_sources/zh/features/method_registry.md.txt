@@ -1,0 +1,60 @@
+# 方法注册与执行流水线
+
+bolt-lab 通过**方法注册表**将 `method` 名称映射到可执行脚本、默认配置和执行阶段。
+
+本页说明：
+- 方法如何被解析为 `gcd` / `openset`
+- 阶段如何组织（单阶段或多阶段）
+- 每次运行时参数如何传递给子进程
+
+## 1. 从方法到任务
+
+框架使用内置查找表（`configs/base.py` 中的 `_METHOD_TASK_MAP`）将每个方法解析为对应的任务类型（`gcd` 或 `openset`）。在 `methods/registry.py` 中定义了一个统一的 `METHOD_REGISTRY`，包含所有两种任务类型的方法条目。
+
+## 2. 注册表结构
+
+每个方法对应一个注册表条目，包含以下内容：
+- `task`：`gcd` 或 `openset`
+- `stages`：阶段列表
+- `config`：方法的默认配置文件路径，以相对路径形式指定（例如 `"gcd/tan.yaml"`）。这些相对路径通过 `core.py` 中的工作区查找来解析。
+- `output_base`：方法的默认输出根目录（例如 `./outputs/gcd/tan`）
+
+`stages` 是一个列表。每个阶段通常包含：
+- `entry`：该阶段调用的脚本入口点（用于定位/识别可执行文件）
+- `cli_builder`：组装命令行参数的函数（最终生成子进程命令）
+
+CLI 构建函数分别组织在 `methods/builders_gcd.py`（用于 GCD 方法）和 `methods/builders_openset.py`（用于 OpenSet 方法）中。
+
+因此，一个方法可以是：
+- 单阶段：`stages` 只有 1 项（大多数基线方法属于此类）
+- 多阶段：`stages` 有多项（例如预训练 -> 微调的流水线）
+
+## 3. 参数如何传递给子进程
+
+对于每次运行，框架构建一个 `args_json`，包含 `dataset`、比例、fold、seed、GPU、epochs 等关键字段，并通过两种方式传递：
+1) 写入环境变量 `ARGS_JSON`（以便在日志中完整记录）
+2) 通过命令行参数传递给脚本（由 `cli_builder` 组装）
+
+在日志文件的开头，通常可以看到：
+- `CMD`：实际执行的命令
+- `ARGS_JSON`：该组合的完整参数 JSON
+
+这为复现和调试单次实验运行提供了清晰的依据。
+
+## 4. BERT 模型选择规则（默认逻辑）
+
+在某些任务中，`cli_builder` 会根据数据集自动选择中文或英文 BERT 目录。中文数据集集合在 `core.py` 中硬编码为 `{"ecdt", "thucnews"}`。例如：
+- `ecdt` / `thucnews`：使用 `bert-base-chinese`
+- 其他：使用 `bert-base-uncased`
+
+使用 `bolt-grid` 时，建议将 `--model-dir` 指向您机器上稳定的预训练模型目录，以便多个实验可以复用缓存和权重文件。
+
+## 5. 扩展：添加新方法需要做什么
+
+总体来说，您需要完成以下步骤：
+1) 在统一的 `METHOD_REGISTRY`（位于 `methods/registry.py`）中添加新的方法条目：
+   - 指定 `task`、`config`（以相对路径形式）和 `output_base`
+   - 配置 `stages` 和 `cli_builder`（在对应的 `methods/builders_*.py` 模块中添加构建函数）
+2) 确保方法脚本将结果写入框架可收集的位置（参见 `auto_summary` 页面）
+3) 在 `configs/base.py` 的 `_METHOD_TASK_MAP` 中添加该方法，并在 YAML 的 `methods` 中引用它
+4) 先用小规模网格 + `dry_run` 验证命令和参数，然后再扩大规模进行大批量运行

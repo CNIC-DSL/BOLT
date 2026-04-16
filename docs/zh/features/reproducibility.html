@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>可复现性与重复运行控制 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">可复现性与重复运行控制</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/features/reproducibility.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>可复现性与重复运行控制<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>大规模网格实验中的常见需求包括：</p>
+<ul class="simple">
+<li><p>能够准确复现实验</p></li>
+<li><p>避免重复运行相同的组合</p></li>
+<li><p>需要时强制重新运行</p></li>
+</ul>
+<p>本页说明 bolt-lab 在这三个方面的设计与推荐实践。</p>
+<section id="id2">
+<h2>1. 可复现性的核心要素<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>每个实验组合由以下参数共同定义：</p>
+<ul class="simple">
+<li><p>method / dataset</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code> / <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code> / <code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_type</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_num</span></code> / <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
+<li><p>seed</p></li>
+<li><p>训练轮次（<code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs</span></code> / <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>）</p></li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> 注入的额外参数（例如 <code class="docutils literal notranslate"><span class="pre">backbone</span></code>、<code class="docutils literal notranslate"><span class="pre">reg_loss</span></code>、<code class="docutils literal notranslate"><span class="pre">extra_flags</span></code> 等）</p></li>
+</ul>
+<p>运行时，这些信息被记录为 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 并写入对应阶段日志的开头，作为复现的依据。</p>
+</section>
+<section id="id3">
+<h2>2. 推荐实践：输出隔离<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>建议为每次大规模实验使用独立的 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>，例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">~/tmp/exp_gcd_001</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">~/tmp/exp_openset_20251225</span></code></p></li>
+</ul>
+<p>这确保了：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">logs/results/outputs</span></code> 互不干扰</p></li>
+<li><p>运行时环境和配置快照与该次实验一一对应</p></li>
+<li><p>整个运行可以方便地打包、迁移和归档</p></li>
+</ul>
+<p>其他建议：</p>
+<ul class="simple">
+<li><p>将使用的 YAML 配置纳入版本控制（或与输出目录一起归档）</p></li>
+<li><p>使用固定的 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 来复用模型缓存</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>3. 避免重复运行：跳过已有记录<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>当框架检测到某方法在 <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code> 已有 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code>，且文件中包含与当前组合参数匹配的记录（包括 <code class="docutils literal notranslate"><span class="pre">method</span></code>、<code class="docutils literal notranslate"><span class="pre">dataset</span></code>、<code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_type</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_num</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_idx</span></code>、<code class="docutils literal notranslate"><span class="pre">seed</span></code> 和 <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>），则会跳过该组合的执行，避免重复计算。</p>
+<p>将”跳过重复组合”视为默认行为：在大规模实验中，它可以显著节省时间和资源。</p>
+</section>
+<section id="id5">
+<h2>4. 如何强制重新运行<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>如果需要重新运行相同的组合（例如代码更新、修复 bug 或方法实现变更后），可以使用以下方法之一：</p>
+<ol class="arabic simple">
+<li><p>更改 <code class="docutils literal notranslate"><span class="pre">result_file</span></code><br />
+通过更改 YAML 字段 <code class="docutils literal notranslate"><span class="pre">result_file</span></code>，生成新的汇总文件，便于与旧结果区分。</p></li>
+<li><p>使用新的 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code><br />
+将输出写入新的工作目录，避免覆盖旧目录下的产物和日志。</p></li>
+<li><p>清除目标方法的 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code><br />
+如果您明确了解影响范围，可以删除：
+./results/{task}/{method}/results.csv
+然后重新运行目标组合，框架会重新收集结果。</p></li>
+</ol>
+<p>实践中推荐前两种方法（更安全且可追溯）。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

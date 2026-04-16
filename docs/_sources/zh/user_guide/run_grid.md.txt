@@ -1,0 +1,114 @@
+# 运行与常见操作
+
+本页面说明如何启动运行、如何控制规模和并发，以及推荐的工作流程。
+
+## 0. 仅初始化工作空间（`--init-only`）
+
+如果您只想准备工作目录结构而不运行任何 combo，请使用 `--init-only`：
+```bash
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/pretrained_models
+```
+它会执行的操作：
+- 在 `--output-dir` 下初始化工作空间（例如创建 `outputs/`、`results/`、`logs/`、`configs/` 以及 `data/`、`pretrained_models/` 等符号链接）
+- 适用于在启动大规模运行前验证路径/权限并确认工作空间布局
+
+它不会执行的操作：
+- 不会将网格展开为 combo
+- 不会执行方法脚本（没有阶段日志）
+- 不会收集结果或向汇总表追加新记录
+
+## 1. 基本运行命令
+
+安装完成后，您可以从任意目录运行：
+
+bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/pretrained_models
+
+参数说明：
+- `--config`
+  配置文件名或绝对路径。
+  如果传入类似 `grid_gcd.yaml` 的文件名，框架会按以下顺序查找：(1) 工作空间的 `{output-dir}/configs/` 目录，(2) 包内置的 `configs` 目录。
+  您也可以传入自行复制并修改的配置文件的绝对路径。
+
+- `--output-dir`
+  工作目录。框架会在该目录下创建 `outputs/`、`results/`、`logs/` 等输出。
+
+- `--model-dir`
+  模型/缓存目录。建议指向一个稳定、可读写的位置，用于存放预训练模型和缓存。
+
+- `--data-dir`
+  数据目录。如果省略，框架会回退到包内嵌的 `_data` 目录。工作目录中会创建一个名为 `data` 的符号链接指向该位置。
+
+- `--dry-run`
+  CLI 参数，等同于在 YAML 中设置 `dry_run: true`。启用后会执行 combo 展开和命令构造，但不会启动子进程。适用于快速验证。
+
+## 2. 推荐工作流程
+
+步骤 0（可选）：初始化工作空间
+bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models --init-only
+
+步骤 1：将配置文件复制到您的工作目录并进行修改
+不要将示例配置作为唯一的长期来源。请保留您自己的版本控制副本。
+
+步骤 2：将网格缩小到最小规模以验证流水线
+首次运行时，只保留：
+- 1 个数据集
+- 1 个方法
+- 1 个 seed
+- 1 个 `fold_idx`
+- 将 epochs 设为较小的值
+
+步骤 3：（推荐）使用 `dry_run` 验证 combo 展开和命令
+在 YAML 中设置 `dry_run=true`（参见第 3 节），在实际执行前验证 combo 数量和命令构造。
+
+步骤 4：使用新的输出目录运行
+例如：
+bolt-grid --config /abs/path/to/your.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models
+
+建议为每次大型实验使用独立的 `output-dir`，以便归档、对比和清理。
+
+## 3. `dry_run`：只打印不执行（推荐首次使用时启用）
+
+在 YAML 的 `run` 中设置：
+run:
+  dry_run: true
+
+`dry_run` 会打印每个 combo 将要执行的命令和关键参数，帮助您：
+- 验证生成的 combo 数量
+- 验证方法入口、数据集以及 fold/seed 设置
+- 避免在启动大规模运行后才发现配置问题
+
+注意：
+- `dry_run` 仍然会执行 combo 展开和命令构造，但不会运行子进程。
+- `--init-only` 仅初始化工作空间，不会展开 combo。
+
+## 4. 并发与 GPU 配置建议
+
+- 典型默认配置：多 GPU，每个 GPU 一个任务
+  run:
+    gpus: [0,1,2,3]
+    max_workers: 4
+    slots_per_gpu: 1
+
+- 单 GPU 串行：最稳定的方式
+  run:
+    gpus: [0]
+    max_workers: 1
+    slots_per_gpu: 1
+
+- 单 GPU 并发：仅在 GPU 显存充足时使用
+  run:
+    gpus: [0]
+    max_workers: 2
+    slots_per_gpu: 2
+
+有效并发上限由以下因素共同决定：
+min(max_workers, GPU 总槽位数, combo 数量)
+
+## 5. OOM 重试（可选）
+
+在 YAML 的 `run` 中，您可以设置：
+- `retry_on_oom: true`
+- `max_retries: 2`
+- `retry_backoff_sec: 15`
+
+这对大规模网格实验非常有用。但如果某个 combo 持续出现 OOM，您仍应调整配置，例如降低并发数、减小 batch size/序列长度、减少 epochs 等。

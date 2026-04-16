@@ -1,0 +1,255 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>扩展网格维度 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">扩展网格维度</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/developer_guide/add_grid_dimension.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>扩展网格维度<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页说明如何添加一个新的可扫描维度（网格维度），例如 <code class="docutils literal notranslate"><span class="pre">backbone</span></code>、<code class="docutils literal notranslate"><span class="pre">temperature</span></code>、<code class="docutils literal notranslate"><span class="pre">reg_loss</span></code> 等。</p>
+<p>在当前实现中，有两种可选路径：</p>
+<ul class="simple">
+<li><p>路径 A：该维度仅与一个（或少数几个）方法相关 – 使用 <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>（无需修改运行器）</p></li>
+<li><p>路径 B：该维度必须参与全局笛卡尔积 – 必须修改运行器和 <code class="docutils literal notranslate"><span class="pre">args_json</span></code>（需要代码变更）</p></li>
+</ul>
+<section id="i-a-per-method-extra">
+<h2>I. 路径 A：通过 <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> 注入（推荐首选）<a class="headerlink" href="#i-a-per-method-extra" title="Link to this heading"></a></h2>
+<p>适用场景：</p>
+<ul class="simple">
+<li><p>新参数仅影响一个或少数方法</p></li>
+<li><p>不需要该参数参与”全局组合数量计算”</p></li>
+<li><p>希望以最小改动完成集成</p></li>
+</ul>
+<p>操作方法：</p>
+<ol class="arabic simple">
+<li><p>在 YAML 中为目标方法添加 <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>：
+per_method_extra:
+plm_ood:
+reg_loss: cosine
+tan:
+backbone: ./pretrained_models/bert-base-uncased</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> 或方法脚本中从 <code class="docutils literal notranslate"><span class="pre">args_json</span></code> 读取该字段并转换为 CLI 参数</p></li>
+</ol>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">args_json</span></code> 在 <code class="docutils literal notranslate"><span class="pre">make_base_args</span></code> 中合并了来自 <code class="docutils literal notranslate"><span class="pre">method_specs[method]</span></code> 的字段</p></li>
+<li><p>该字段会记录在日志中的 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 中，用于可复现性</p></li>
+</ul>
+<p>优势：</p>
+<ul class="simple">
+<li><p>无需更改 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中的组合生成逻辑</p></li>
+<li><p>不影响其他方法</p></li>
+</ul>
+</section>
+<section id="ii-b">
+<h2>II. 路径 B：添加真正的网格维度（需要代码变更）<a class="headerlink" href="#ii-b" title="Link to this heading"></a></h2>
+<p>适用场景：</p>
+<ul class="simple">
+<li><p>该参数必须参与网格展开，形成完整的笛卡尔积组合集</p></li>
+<li><p>希望在汇总表中按该维度比较和分析结果</p></li>
+<li><p>该维度跨多个方法共享，希望统一控制</p></li>
+</ul>
+<p>需要进行以下更改：</p>
+<section id="yaml-grid">
+<h3>第一步：在 YAML 的 <code class="docutils literal notranslate"><span class="pre">grid</span></code> 下添加新的维度列表<a class="headerlink" href="#yaml-grid" title="Link to this heading"></a></h3>
+<p>示例：
+grid:
+…
+backbone: [“bert-base-uncased”, “bert-base-chinese”]</p>
+</section>
+<section id="configs-base-py">
+<h3>第二步：修改 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中的组合展开逻辑<a class="headerlink" href="#configs-base-py" title="Link to this heading"></a></h3>
+<p>组合展开使用 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中 <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> 内的 <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code>。<code class="docutils literal notranslate"><span class="pre">cli.py</span></code> 中的运行器遍历这些实验对象。
+因此您需要：</p>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">GridConfig</span></code> 上添加新维度作为字段</p></li>
+<li><p>将其包含在 <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> 内的 <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> 调用中</p></li>
+<li><p>确保生成的实验对象携带新值，以便 <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> 可以将其传递到 <code class="docutils literal notranslate"><span class="pre">worker</span></code> / <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
+</ul>
+</section>
+<section id="core-make-base-args-args-json">
+<h3>第三步：在 <code class="docutils literal notranslate"><span class="pre">core.make_base_args</span></code> 中将新维度写入 <code class="docutils literal notranslate"><span class="pre">args_json</span></code><a class="headerlink" href="#core-make-base-args-args-json" title="Link to this heading"></a></h3>
+<p>示例：
+args_json[“backbone”] = backbone</p>
+<p>确保：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> 可以读取该字段并传递给方法脚本</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 包含该字段（用于可复现性）</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>第四步：更新去重跳过的匹配字段（如果依赖此机制）<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<p>当前实现从 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 读取历史记录并按若干字段过滤。
+如果 <code class="docutils literal notranslate"><span class="pre">backbone</span></code> 是区分实验的重要维度，请将其加入匹配字段集，以避免将不同骨干网络的实验视为相同组合。</p>
+</section>
+<section id="id3">
+<h3>第五步：确保结果收集和汇总反映该维度<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<p>建议方法在写入 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 时将 <code class="docutils literal notranslate"><span class="pre">backbone</span></code> 记录在 <code class="docutils literal notranslate"><span class="pre">args</span></code> 字段（JSON）中，以保持汇总的可追溯性。</p>
+</section>
+</section>
+<section id="iii">
+<h2>III. 推荐的开发与验证顺序<a class="headerlink" href="#iii" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>先使用路径 A（<code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>）使方法正常运行，并正确写入 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 和汇总</p></li>
+<li><p>仅在该维度确实需要全局/网格展开时，才进入路径 B</p></li>
+<li><p>每次更改后，用最小网格验证：</p></li>
+</ol>
+<ul class="simple">
+<li><p>1 个方法</p></li>
+<li><p>1 个数据集</p></li>
+<li><p>1 个 seed</p></li>
+<li><p>1 个 fold</p></li>
+<li><p>新维度的 1-2 个值
+确保组合数量和汇总记录符合预期</p></li>
+</ul>
+</section>
+<section id="iv">
+<h2>IV. 常见问题<a class="headerlink" href="#iv" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>组合数量不符合预期</p></li>
+</ol>
+<ul class="simple">
+<li><p>检查新维度是否确实进入了 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中 <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> 的 <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> 调用</p></li>
+<li><p>检查实验对象是否携带该值并将其传递到 <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
+</ul>
+<ol class="arabic simple" start="2">
+<li><p>参数传递缺失</p></li>
+</ol>
+<ul class="simple">
+<li><p>检查阶段日志开头的 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 是否包含该字段</p></li>
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 包含但行为未改变，检查 <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> 是否将其转换为实际的 CLI 参数</p></li>
+</ul>
+<ol class="arabic simple" start="3">
+<li><p>汇总无法区分不同值</p></li>
+</ol>
+<ul class="simple">
+<li><p>确认该字段记录在 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 的 <code class="docutils literal notranslate"><span class="pre">args</span></code>（JSON）列中</p></li>
+<li><p>如果依赖”跳过重复组合”机制，确认该字段包含在匹配逻辑中</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

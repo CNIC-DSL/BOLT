@@ -36,7 +36,7 @@ Additional recommendations:
 
 ## 3. Avoiding Duplicate Runs: Skipping Existing Records
 
-When the framework detects that a method already has a `results.csv`, and that the file contains a record matching the current combo parameters, it will skip executing that combo to avoid duplicate computation.
+When the framework detects that a method already has a `results.csv` at `results/{task}/{method}/results.csv`, and that the file contains a record matching the current combo parameters (including `method`, `dataset`, `known_cls_ratio`, `labeled_ratio`, `fold_type`, `fold_num`, `fold_idx`, `seed`, and `num_train_epochs`), it will skip executing that combo to avoid duplicate computation.
 
 Treat “skip duplicated combos” as the default behavior: it can significantly save time and resources in large-scale experiments.
 
@@ -45,7 +45,7 @@ Treat “skip duplicated combos” as the default behavior: it can significantly
 If you need to rerun the same combo (e.g., after code updates, bug fixes, or method implementation changes), use one of the following approaches:
 
 1) Change `result_file`  
-By changing the YAML field `result_file`, you generate new summary and index files, making it easy to distinguish from old results.
+By changing the YAML field `result_file`, you generate new summary files, making it easy to distinguish from old results.
 
 2) Use a new `--output-dir`  
 Write outputs to a new working directory to avoid overwriting artifacts and logs under the old directory.

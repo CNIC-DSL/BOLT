@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Datasets Overview &mdash; Bolt 0.1.0 documentation</title>
+  <title>Datasets Overview &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -67,7 +67,7 @@
 <li class="toctree-l1"><a class="reference internal" href="config_yaml.html">Configuration File (YAML) Guide</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Datasets Overview</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#dataset-list-organized-based-on-the-paper-description">1. Dataset List (Organized Based on the Paper Description)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#common-usage-in-configuration-files-abbreviation-tips">2. Common Usage in Configuration Files (Abbreviation Tips)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#common-usage-in-configuration-files">2. Common Usage in Configuration Files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="run_grid.html">Running and Common Operations</a></li>
@@ -120,6 +120,7 @@
 <li><p>20NG (20 Newsgroups)</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">20NG</span></code></p></li>
 <li><p>Description: About 20,000 newsgroup posts, distributed approximately evenly across 20 categories.</p></li>
 <li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
 <li><p>Source: https://people.csail.mit.edu/jrennie/20Newsgroups/</p></li>
@@ -128,6 +129,7 @@
 <li><p>THUCNews</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">thucnews</span></code></p></li>
 <li><p>Description: A large-scale Chinese news classification corpus, collected from Sina News RSS history data between 2005 and 2011.</p></li>
 <li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
 <li><p>Source: http://thuctc.thunlp.org/</p></li>
@@ -136,42 +138,48 @@
 <li><p>Yahoo (Yahoo! Answers Topic Classification)</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">Yahoo</span></code></p></li>
 <li><p>Description: A topic classification dataset from Yahoo! Answers, containing 10 coarse-grained topic classes.</p></li>
 <li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
 <li><p>Source: https://www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification/data</p></li>
 </ul>
 <ol class="arabic simple" start="4">
-<li><p>BANK (BANKING77)</p></li>
+<li><p>BANKING77</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">banking</span></code></p></li>
 <li><p>Description: An English banking customer-service intent dataset with 13,083 utterances annotated with 77 fine-grained intent classes.</p></li>
 <li><p>Source: https://huggingface.co/datasets/PolyAI/banking77</p></li>
 </ul>
 <ol class="arabic simple" start="5">
-<li><p>S.O. (StackOverflow)</p></li>
+<li><p>StackOverflow</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">stackoverflow</span></code></p></li>
 <li><p>Description: A short-text title dataset from Stack Overflow with 20,000 examples, labeled with 20 technical topic tags.</p></li>
 <li><p>Source: https://github.com/jacoxu/StackOverflow</p></li>
 </ul>
 <ol class="arabic simple" start="6">
-<li><p>CLINC (CLINC150)</p></li>
+<li><p>CLINC150</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">clinc</span></code></p></li>
 <li><p>Description: An intent classification dataset covering 150 in-domain intents, commonly used to evaluate out-of-domain / open-set scenarios.</p></li>
 <li><p>Source: https://archive.ics.uci.edu/dataset/570/clinc150</p></li>
 </ul>
 <ol class="arabic simple" start="7">
-<li><p>HWU (HWU-64)</p></li>
+<li><p>HWU-64</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">hwu</span></code></p></li>
 <li><p>Description: An English multi-domain intent detection dataset (e.g., news, IoT, etc.) covering 64 intents, commonly used in dialogue system research.</p></li>
 <li><p>Source: https://service.tib.eu/ldmservice/en/dataset/hwu64</p></li>
 </ul>
 <ol class="arabic simple" start="8">
-<li><p>ECDT (SMP-ECDT)</p></li>
+<li><p>SMP-ECDT</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">ecdt</span></code></p></li>
 <li><p>Description: A Chinese intent classification dataset (SMP-ECDT), used in the paper for Chinese intent recognition scenarios.</p></li>
 <li><p>Source: https://arxiv.org/pdf/1709.10217</p></li>
 </ul>
@@ -179,6 +187,7 @@
 <li><p>TREC</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">TREC</span></code></p></li>
 <li><p>Description: An open-domain factoid question classification dataset (Question Classification).</p></li>
 <li><p>Source: https://huggingface.co/datasets/CogComp/trec</p></li>
 </ul>
@@ -186,6 +195,7 @@
 <li><p>M-CID</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">mcid</span></code></p></li>
 <li><p>Description: A multilingual COVID-19 intent detection dataset with 6,871 utterances and 16 intents. In this work, we only use the English utterances to construct the experimental version.</p></li>
 <li><p>Source: https://openreview.net/pdf?id=Ku-nv600bNM</p></li>
 </ul>
@@ -193,17 +203,27 @@
 <li><p>DBpedia</p></li>
 </ol>
 <ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">DBPedia</span></code></p></li>
 <li><p>Description: A text classification dataset related to ontology/classes from DBpedia, a structured knowledge base extracted from Wikipedia. The paper constructs a sampled version for comparison.</p></li>
 <li><p>Our constructed version: We sampled 10,000 texts for experiments.</p></li>
 <li><p>Source: https://huggingface.co/datasets/DeveloperOats/DBPedia_Classes</p></li>
 </ul>
+<ol class="arabic simple" start="12">
+<li><p>X-Topic</p></li>
+</ol>
+<ul class="simple">
+<li><p>YAML name: <code class="docutils literal notranslate"><span class="pre">X-Topic</span></code></p></li>
+<li><p>Description: A cross-topic text classification dataset used in generalized category discovery evaluation.</p></li>
+</ul>
 </section>
-<section id="common-usage-in-configuration-files-abbreviation-tips">
-<h2>2. Common Usage in Configuration Files (Abbreviation Tips)<a class="headerlink" href="#common-usage-in-configuration-files-abbreviation-tips" title="Link to this heading"></a></h2>
-<p>In YAML, datasets are typically specified as strings, for example:
-datasets: [20NG, THUCNews, Yahoo, BANK, S.O., CLINC, HWU, ECDT, TREC, M-CID, DBpedia]</p>
-<p>Different repository versions may use slightly different spellings for dataset names (e.g., “S.O.” vs “StackOverflow”).
-If you encounter an error like “dataset not found”, it is recommended to first check the actual supported dataset name list in the data-loading code, and keep the YAML names consistent with it.</p>
+<section id="common-usage-in-configuration-files">
+<h2>2. Common Usage in Configuration Files<a class="headerlink" href="#common-usage-in-configuration-files" title="Link to this heading"></a></h2>
+<p>In YAML, datasets are specified using the exact YAML names listed above. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">datasets</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">banking</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">clinc</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">stackoverflow</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">hwu</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">mcid</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">20NG</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">DBPedia</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">TREC</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">Yahoo</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">thucnews</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">ecdt</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">X-Topic</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>Note: Dataset names are <strong>case-sensitive</strong>. Use the exact YAML names shown above. For example, use <code class="docutils literal notranslate"><span class="pre">banking</span></code> (not <code class="docutils literal notranslate"><span class="pre">BANK</span></code>), <code class="docutils literal notranslate"><span class="pre">clinc</span></code> (not <code class="docutils literal notranslate"><span class="pre">CLINC</span></code>), and <code class="docutils literal notranslate"><span class="pre">thucnews</span></code> (not <code class="docutils literal notranslate"><span class="pre">THUCNews</span></code>).</p>
+<p>Chinese datasets (<code class="docutils literal notranslate"><span class="pre">ecdt</span></code>, <code class="docutils literal notranslate"><span class="pre">thucnews</span></code>) will automatically use <code class="docutils literal notranslate"><span class="pre">bert-base-chinese</span></code> as the backbone; all other datasets use <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code>.</p>
 </section>
 </section>
 

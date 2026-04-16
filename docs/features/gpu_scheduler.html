@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GPU Concurrency Scheduling &mdash; Bolt 0.1.0 documentation</title>
+  <title>GPU Concurrency Scheduling &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -58,7 +58,10 @@
 <li class="toctree-l1"><a class="reference internal" href="method_registry.html">Method Registration and Execution Pipeline</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">GPU Concurrency Scheduling</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#key-parameters">1. Key Parameters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#runtime-behavior">2. Runtime Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#runtime-behavior">2. Runtime Behavior</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cpu-only-fallback">CPU-Only Fallback</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#recommended-configuration-examples">3. Recommended Configuration Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#use-dry-run-to-check-before-enabling-concurrency">4. Use <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> to Check Before Enabling Concurrency</a></li>
 </ul>
@@ -136,6 +139,10 @@ effective_concurrency = min(max_workers, total_GPU_tokens, number_of_combos)</p>
 <li><p>With multiple GPUs, tasks are naturally distributed across different GPUs</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code> can increase throughput when GPU memory allows</p></li>
 </ul>
+<section id="cpu-only-fallback">
+<h3>CPU-Only Fallback<a class="headerlink" href="#cpu-only-fallback" title="Link to this heading"></a></h3>
+<p>When <code class="docutils literal notranslate"><span class="pre">gpus</span></code> is empty (i.e., <code class="docutils literal notranslate"><span class="pre">gpus:</span> <span class="pre">[]</span></code>), the framework falls back to CPU-only mode: a single <code class="docutils literal notranslate"><span class="pre">None</span></code> token is used, providing one slot with no GPU binding. In this mode, <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> is not set, and the subprocess runs on CPU. This is useful for methods that do not require GPU resources or for quick debugging.</p>
+</section>
 </section>
 <section id="recommended-configuration-examples">
 <h2>3. Recommended Configuration Examples<a class="headerlink" href="#recommended-configuration-examples" title="Link to this heading"></a></h2>

@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Method Registration and Execution Pipeline &mdash; Bolt 0.1.0 documentation</title>
+  <title>Method Registration and Execution Pipeline &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -120,12 +120,7 @@
 </ul>
 <section id="from-method-to-task">
 <h2>1. From Method to Task<a class="headerlink" href="#from-method-to-task" title="Link to this heading"></a></h2>
-<p>In YAML, <code class="docutils literal notranslate"><span class="pre">maps</span></code> declares the mapping between methods and task types:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">maps.gcd</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">gcd</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">maps.openset</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
-</ul>
-<p>The framework maps each method in <code class="docutils literal notranslate"><span class="pre">methods</span></code> to a task (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>) and selects the corresponding registry.</p>
+<p>The framework uses a built-in lookup table (<code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>) to resolve each method to its task type (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>). There is one unified <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> defined in <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code> that contains entries for all methods across both tasks.</p>
 </section>
 <section id="registry-structure">
 <h2>2. Registry Structure<a class="headerlink" href="#registry-structure" title="Link to this heading"></a></h2>
@@ -133,7 +128,7 @@
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>: <code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">stages</span></code>: a list of stages</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: the default config file path for the method (e.g., <code class="docutils literal notranslate"><span class="pre">configs/gcd/tan.yaml</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>: the default config file path for the method, specified as a relative path (e.g., <code class="docutils literal notranslate"><span class="pre">&quot;gcd/tan.yaml&quot;</span></code>). These relative paths are resolved through workspace lookup in <code class="docutils literal notranslate"><span class="pre">core.py</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">output_base</span></code>: the default output root for the method (e.g., <code class="docutils literal notranslate"><span class="pre">./outputs/gcd/tan</span></code>)</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">stages</span></code> is a list. Each stage typically contains:</p>
@@ -141,6 +136,7 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">entry</span></code>: the script entry point invoked by this stage (for locating/identifying the executable)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cli_builder</span></code>: a function that assembles command-line arguments (it ultimately generates the subprocess command)</p></li>
 </ul>
+<p>CLI builder functions are organized into <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code> (for GCD methods) and <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code> (for OpenSet methods).</p>
 <p>Therefore, a method can be:</p>
 <ul class="simple">
 <li><p>Single-stage: <code class="docutils literal notranslate"><span class="pre">stages</span></code> has only 1 item (most baselines fall into this category)</p></li>
@@ -163,7 +159,7 @@
 </section>
 <section id="bert-model-selection-rule-default-logic">
 <h2>4. BERT Model Selection Rule (Default Logic)<a class="headerlink" href="#bert-model-selection-rule-default-logic" title="Link to this heading"></a></h2>
-<p>In some tasks, <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> automatically chooses the Chinese or English BERT directory based on the dataset. For example:</p>
+<p>In some tasks, <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> automatically chooses the Chinese or English BERT directory based on the dataset. The set of Chinese datasets is hardcoded as <code class="docutils literal notranslate"><span class="pre">{&quot;ecdt&quot;,</span> <span class="pre">&quot;thucnews&quot;}</span></code> in <code class="docutils literal notranslate"><span class="pre">core.py</span></code>. For example:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">ecdt</span></code> / <code class="docutils literal notranslate"><span class="pre">thucnews</span></code>: use <code class="docutils literal notranslate"><span class="pre">bert-base-chinese</span></code></p></li>
 <li><p>otherwise: use <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code></p></li>
@@ -174,14 +170,14 @@
 <h2>5. Extension: What You Need to Do to Add a New Method<a class="headerlink" href="#extension-what-you-need-to-do-to-add-a-new-method" title="Link to this heading"></a></h2>
 <p>In general, you need to complete the following:</p>
 <ol class="arabic simple">
-<li><p>Add a new method entry in the corresponding registry (<code class="docutils literal notranslate"><span class="pre">gcd</span></code> or <code class="docutils literal notranslate"><span class="pre">openset</span></code>):</p>
+<li><p>Add a new method entry in the unified <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> (in <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code>):</p>
 <ul class="simple">
-<li><p>specify <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code>, and <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
-<li><p>configure <code class="docutils literal notranslate"><span class="pre">stages</span></code> and <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code></p></li>
+<li><p>specify <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code> (as a relative path), and <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
+<li><p>configure <code class="docutils literal notranslate"><span class="pre">stages</span></code> and <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> (adding the builder function to the appropriate <code class="docutils literal notranslate"><span class="pre">methods/builders_*.py</span></code> module)</p></li>
 </ul>
 </li>
 <li><p>Ensure the method script writes results to the location the framework can collect (see the <code class="docutils literal notranslate"><span class="pre">auto_summary</span></code> page)</p></li>
-<li><p>Add the method to the corresponding task set in YAML <code class="docutils literal notranslate"><span class="pre">maps</span></code>, and reference it in <code class="docutils literal notranslate"><span class="pre">methods</span></code></p></li>
+<li><p>Add the method to <code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>, and reference it in <code class="docutils literal notranslate"><span class="pre">methods</span></code> in your YAML</p></li>
 <li><p>First validate commands and parameters with a small grid + <code class="docutils literal notranslate"><span class="pre">dry_run</span></code>, then scale up for large runs</p></li>
 </ol>
 </section>

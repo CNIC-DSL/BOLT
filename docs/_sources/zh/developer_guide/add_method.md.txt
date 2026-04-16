@@ -1,0 +1,107 @@
+# 添加新方法
+
+本页说明如何将新方法集成到 bolt-lab 中，使其能够：
+- 被 YAML 配置引用并进入网格调度
+- 正确执行（单阶段或多阶段）
+- 完成后自动收集结果并写入汇总表
+
+## I. 集成概述
+
+添加新方法通常涉及三部分：
+1) 方法脚本（实际的训练/评估代码）
+2) 方法配置（`configs/yaml_files/` 下的 YAML）
+3) 注册与命令构建（`methods/builders_gcd.py` 或 `methods/builders_openset.py`）
+
+## II. 第一步：准备方法脚本和输出
+
+1) 位置
+- 方法脚本放置在：`methods/_builtin/_src/<MethodDir>/`
+- 例如，名为 `MyMethod` 的方法放在 `methods/_builtin/_src/MyMethod/`
+
+2) 输出要求（必须满足）
+方法完成后，**必须**写入：
+./results/{task}/{method}/results.csv
+
+要求：
+- CSV 必须至少包含一行结果
+- 建议包含 `args` 列（JSON 字符串），用于去重和溯源
+- 指标列因方法而异，但建议与已有方法保持一致（以便公平的横向比较）
+
+## III. 第二步：添加方法配置文件
+
+为新方法添加默认配置：
+- GCD：`configs/yaml_files/gcd/<method>.yaml`
+- OpenSet：`configs/yaml_files/openset/<method>.yaml`
+
+注意 `configs/` 内的 `yaml_files/` 子目录层级。
+
+建议：
+- 将通用参数放在顶层
+- 如果不同数据集需要不同参数，可添加 `dataset_specific_configs`（可选）
+
+## IV. 第三步：实现 `cli_builder`（命令构建函数）
+
+在对应文件中添加新的命令构建函数：
+- GCD：`methods/builders_gcd.py`
+- OpenSet：`methods/builders_openset.py`
+
+命令构建的基本原则：
+1) 从 `args_json` 读取通用字段：
+- `dataset` / `known_cls_ratio` / `labeled_ratio`
+- `fold_type` / `fold_num` / `fold_idx`
+- `seed` / `gpu_id`
+- `num_pretrain_epochs` / `num_train_epochs`
+- `config`（默认配置路径）
+2) 同样从 `args_json` 读取方法特定参数（来自 `per_method_extra` 或未来的网格维度）
+3) 使用 `_src_path("MethodName", "run.py")` 解析打包方法脚本的路径
+4) 输出必须是一个 **argv 列表**，例如：
+[sys.executable, str(_src_path("MyMethod", "run.py")), "--arg1", "v1", ...]
+
+推荐模式：
+- 如果您的方法可以复用通用标志，请复用已有的 `_common_env` / `_common_flags` / `_epoch_flags` 逻辑
+- 如果需要额外标志，在 `args_json` 中定义 `extra_flags`（列表）并在 `cli_builder` 中追加
+
+## V. 第四步：在 `METHOD_REGISTRY` 中注册方法
+
+1) 导入统一注册表
+- 从 `methods/registry.py` 导入 `METHOD_REGISTRY`
+- GCD 和 OpenSet 方法都注册到同一个共享注册表中
+
+2) 使用 `MethodSpec` 数据类添加新条目
+
+`MethodSpec` 数据类包含以下字段：`task`、`stages`、`config`、`output_base`。
+
+METHOD_REGISTRY["<method>"] = MethodSpec(
+  task="gcd" or "openset",
+  stages=[
+    {"entry": "<script path>", "cli_builder": <function_name>},
+    ...（多阶段方法添加更多项）
+  ],
+  config="configs/yaml_files/<task>/<method>.yaml",
+  output_base="./outputs/<task>/<method>",
+)
+
+注意：
+- `stages` 的数量决定方法是单阶段还是多阶段
+- `entry` 用于标识阶段入口点（主要用于可读性和调试）
+- `output_base` 包含在 `args_json` 中（用于组织输出目录）
+
+## VI. 第五步：在 YAML 中声明并测试运行
+
+1) 在 `methods` 中引用该方法：
+methods: [<method>]
+
+2) 首次运行使用最小网格和 `dry_run`
+- 先设置 `dry_run=true` 验证命令和参数
+- 然后设置 `dry_run=false`，用 1 个 seed + 1 个 fold 运行
+
+## VII. 常见集成问题
+
+1) 运行成功但汇总表中没有新记录
+- 首先检查 `./results/{task}/{method}/results.csv` 是否已写入
+- 然后检查 `results.csv` 是否包含可读的最后一行结果
+
+2) 参数未传递
+- 检查 `stage1.log` 或 `stage2.log` 开头的 `ARGS_JSON`
+- 确认 `cli_builder` 从 `args_json` 中读取了对应字段
+- 如果使用了 `per_method_extra`，确认方法名称匹配且字段名称一致

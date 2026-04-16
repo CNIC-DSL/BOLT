@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>核心概念 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">核心概念</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/concepts.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>核心概念<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面对 <strong>bolt-lab</strong> 文档中反复出现的关键术语进行统一说明，帮助您快速理解配置和输出内容。</p>
+<section id="gcd-openset">
+<h2>1. 任务：<code class="docutils literal notranslate"><span class="pre">gcd</span></code> 与 <code class="docutils literal notranslate"><span class="pre">openset</span></code><a class="headerlink" href="#gcd-openset" title="Link to this heading"></a></h2>
+<p>bolt-lab 目前支持两类任务：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">gcd</span></code>：广义类别发现（Generalized Category Discovery）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openset</span></code>：开放集识别 / 开放集分类（Open-set Recognition / Open-set Classification）</p></li>
+</ul>
+<p>在配置文件中，方法按特定任务进行分组。框架据此选择对应的执行入口以及指标/结果字段。</p>
+</section>
+<section id="id2">
+<h2>2. 方法：算法（实现）<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">method</span></code> 是您要运行的算法名称，例如 <code class="docutils literal notranslate"><span class="pre">tan</span></code>、<code class="docutils literal notranslate"><span class="pre">ab</span></code>、<code class="docutils literal notranslate"><span class="pre">plm_ood</span></code> 等。
+同一方法可以在不同的数据集、划分方式和超参组合下多次运行。</p>
+<p>方法与任务之间的映射关系由框架内部查找表自动处理（<code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code>），无需在 YAML 中手动声明。</p>
+</section>
+<section id="id3">
+<h2>3. 数据集<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">dataset</span></code> 是一个数据集标识符（字符串）。
+框架会将 <code class="docutils literal notranslate"><span class="pre">methods</span> <span class="pre">x</span> <span class="pre">datasets</span> <span class="pre">x</span> <span class="pre">grid</span></code> 展开为实验组合的笛卡尔积，然后逐一调度执行。</p>
+</section>
+<section id="id4">
+<h2>4. 网格：超参搜索空间<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">grid</span></code> 描述了要扫描的参数维度。常见维度包括：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>：已知类别比例</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>：有标注数据比例</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_types</span> <span class="pre">/</span> <span class="pre">fold_nums</span> <span class="pre">/</span> <span class="pre">fold_idxs</span></code>：数据划分策略及索引</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">seeds</span></code>：随机种子</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>：簇数倍数（部分方法使用）</p></li>
+</ul>
+<p>每个维度为一个列表，框架对所有维度取笛卡尔积。</p>
+</section>
+<section id="combo">
+<h2>5. Combo：实验组合（最小执行单元）<a class="headerlink" href="#combo" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">combo</span></code> 是最小执行单元，通常由以下参数唯一确定：</p>
+<ul class="simple">
+<li><p>任务、方法、数据集</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">fold_type</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_num</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_idx</span></code></p></li>
+<li><p>seed</p></li>
+<li><p>训练轮次（<code class="docutils literal notranslate"><span class="pre">num_pretrain_epochs</span></code>、<code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>）</p></li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> 注入的附加参数</p></li>
+</ul>
+<p>对于每个 combo，框架会生成日志和输出产物，并将结果汇总到汇总表中。</p>
+</section>
+<section id="stage">
+<h2>6. Stage：多阶段流水线（按方法划分）<a class="headerlink" href="#stage" title="Link to this heading"></a></h2>
+<p>部分方法由多个阶段组成（例如先预训练再微调）。每个阶段称为一个 <code class="docutils literal notranslate"><span class="pre">stage</span></code>。
+框架按顺序执行 <code class="docutils literal notranslate"><span class="pre">stage1</span></code>、<code class="docutils literal notranslate"><span class="pre">stage2</span></code>、……如果某个阶段失败，该 combo 即判定为失败，后续阶段将不再执行。</p>
+</section>
+<section id="workdir-output-dir">
+<h2>7. Workdir：工作目录（<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>）<a class="headerlink" href="#workdir-output-dir" title="Link to this heading"></a></h2>
+<p>您在运行时通过 <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> 指定工作目录。
+框架会在该目录下组织 <code class="docutils literal notranslate"><span class="pre">logs/</span></code>、<code class="docutils literal notranslate"><span class="pre">results/</span></code>、<code class="docutils literal notranslate"><span class="pre">outputs/</span></code> 等输出，同时保留本次运行的配置副本，以支持可复现性和归档。</p>
+</section>
+<section id="summary-summary-result-file-csv">
+<h2>8. Summary：汇总表（<code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code>）<a class="headerlink" href="#summary-summary-result-file-csv" title="Link to this heading"></a></h2>
+<p>每个 combo 完成后，框架会尝试收集该方法的最新结果记录，并追加到汇总表中：
+results/summary_{result_file}.csv</p>
+<p>汇总表是后续对比分析的首选入口。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

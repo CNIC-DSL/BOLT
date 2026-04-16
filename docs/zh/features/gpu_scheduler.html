@@ -1,0 +1,195 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPU 并发调度 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">GPU 并发调度</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/features/gpu_scheduler.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="gpu">
+<h1>GPU 并发调度<a class="headerlink" href="#gpu" title="Link to this heading"></a></h1>
+<p>bolt-lab 的并发模型围绕 <strong>GPU 令牌池</strong>构建：任务启动前获取一个令牌，任务完成后归还令牌。这控制了并发级别和 GPU 绑定行为。</p>
+<section id="id1">
+<h2>1. 关键参数<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">run.gpus</span></code><br />
+指定可用 GPU 列表，例如 <code class="docutils literal notranslate"><span class="pre">[0,1,2]</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.slots_per_gpu</span></code>（默认：1）<br />
+每个 GPU 提供多少个令牌。<code class="docutils literal notranslate"><span class="pre">slots_per_gpu=2</span></code> 表示允许同一个 GPU 同时运行 2 个任务（适用于小模型/小 batch size 场景）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.max_workers</span></code><br />
+最大并发工作线程数。实际并发数为：
+effective_concurrency = min(max_workers, total_GPU_tokens, number_of_combos)</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2>2. 运行时行为<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>组合启动前，从令牌池获取一个 <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>。</p></li>
+<li><p>子进程启动时，设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code> 以绑定到获取的 <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>。</p></li>
+<li><p>组合完成后，归还令牌，以便后续组合复用。</p></li>
+</ul>
+<p>该机制具有以下特性：</p>
+<ul class="simple">
+<li><p>并发数有上限，防止无限并行导致 GPU 显存耗尽</p></li>
+<li><p>使用多个 GPU 时，任务会自然分布到不同的 GPU 上</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code> 可在显存允许时提高吞吐量</p></li>
+</ul>
+<section id="cpu">
+<h3>仅 CPU 回退模式<a class="headerlink" href="#cpu" title="Link to this heading"></a></h3>
+<p>当 <code class="docutils literal notranslate"><span class="pre">gpus</span></code> 为空（即 <code class="docutils literal notranslate"><span class="pre">gpus:</span> <span class="pre">[]</span></code>）时，框架回退到仅 CPU 模式：使用一个 <code class="docutils literal notranslate"><span class="pre">None</span></code> 令牌，提供一个槽位且不绑定 GPU。在此模式下，不设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code>，子进程在 CPU 上运行。这适用于不需要 GPU 资源的方法或快速调试。</p>
+</section>
+</section>
+<section id="id3">
+<h2>3. 推荐配置示例<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
+<li><p>单 GPU，严格串行（最稳定）
+run:
+gpus: [0]
+max_workers: 1
+slots_per_gpu: 1</p></li>
+<li><p>多 GPU，每个 GPU 一个任务（常用默认配置）
+run:
+gpus: [0,1,2,3]
+max_workers: 4
+slots_per_gpu: 1</p></li>
+<li><p>单 GPU 多任务（仅在显存充足时使用）
+run:
+gpus: [0]
+max_workers: 2
+slots_per_gpu: 2</p></li>
+</ol>
+</section>
+<section id="dry-run">
+<h2>4. 启用并发前先用 <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> 检查<a class="headerlink" href="#dry-run" title="Link to this heading"></a></h2>
+<p>首次配置并发时，建议先设置 <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code>：</p>
+<ul class="simple">
+<li><p>仅打印将要执行的命令和参数</p></li>
+<li><p>帮助确认方法入口点、数据集、fold/seed 组合等是否符合预期</p></li>
+<li><p>避免在启动大量组合后才发现配置错误</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

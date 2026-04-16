@@ -1,35 +1,38 @@
 # Architecture and Execution Flow
 
-This page is intended for developers who want to extend or modify the system. It explains bolt-lab’s core execution chain, key data structures, and the responsibility boundaries across modules.
+This page is intended for developers who want to extend or modify the system. It explains bolt-lab's core execution chain, key data structures, and the responsibility boundaries across modules.
 
 ## I. End-to-End Data Flow (From YAML to Summarized Results)
 
 ### 1) Entry Point: `bolt-grid`
-- The CLI accepts arguments: `--config`, `--output-dir`, `--model-dir`
-- After resolving the config file to a concrete path, it hands control to the runner (which reads the YAML and starts scheduling)
+- The CLI entry point is `bolt_lab.cli:main` (defined in `cli.py`)
+- It accepts arguments: `--config`, `--output-dir`, `--model-dir`, `--data-dir`, `--init-only`, `--dry-run`, `--overwrite-configs`
+- After resolving the config file to a concrete path, it hands control to the execution engine in `core.py`
 
-### 2) Runner: `run_grid.py`
-- Reads the YAML and validates required fields:
-  `maps / methods / datasets / grid / run / paths / result_file / per_method_extra`
-- Calls `set_paths(results_dir, logs_dir, result_file)` to initialize:
+### 2) Config Parsing and Workspace Initialization
+- The YAML is parsed via `GridConfig.from_grid_yaml()` in `configs/base.py`
+- Required fields are validated:
+  `methods / datasets / grid / run / paths / result_file / per_method_extra / extra_args`
+- Path setup is performed inline in `cli.py` (lines 59-63), initializing:
   - `results/summary_{result_file}.csv`
-  - `results/seen_index_{result_file}.json`
   - the `logs/` root directory
-- Expands each dimension in `grid` into experiment combinations (combos), forming a task list `combos`
-- Builds a GPU token pool (a `Queue`):
+- Workspace initialization is handled by `workspace.py:init_workspace()`
+
+### 3) Combo Expansion and Scheduling
+- `GridConfig.iter_experiments()` expands each dimension in `grid` into experiment combinations (combos) using `itertools.product`, forming the full task list
+- A GPU token pool (a `Queue`) is built:
   - `run.gpus` specifies the list of available GPUs
   - `run.slots_per_gpu` determines how many tokens each GPU provides
   - total tokens = `len(gpus) * slots_per_gpu`
-- Schedules tasks concurrently via `ThreadPoolExecutor`:
+- Tasks are scheduled concurrently via `ThreadPoolExecutor`:
   - each worker acquires a `gpu_id` when starting
   - returns the `gpu_id` when finished
   - concurrency = `min(max_workers, total_tokens, number_of_combos)`
 
-### 3) Single-Combo Execution: `utils.run_combo()`
-- Looks up method definitions from the two registries:
-  - `cli_gcd.METHOD_REGISTRY_GCD`
-  - `cli_openset.METHOD_REGISTRY_OPENSET`
-- Builds `args_json` (`make_base_args`):
+### 4) Single-Combo Execution: `core.py`
+- Looks up method definitions from the unified registry:
+  - `methods.registry.METHOD_REGISTRY`
+- Builds `args_json` via `core.py:make_base_args()`:
   - includes key fields such as method/dataset/ratios/fold/seed/GPU/epochs
   - merges method-specific extra fields from `per_method_extra[method]`
 - Executes stages:
@@ -40,29 +43,43 @@ This page is intended for developers who want to extend or modify the system. It
     - writing `CMD` and `ARGS_JSON` at the beginning of the stage log
     - launching the subprocess and waiting for the return code
   - if any stage returns a non-zero code, the combo fails and subsequent stages will not run
+- Log path convention: `logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/`
+  - Each stage produces its own log file (`stage1.log`, `stage2.log`, etc.)
 
-### 4) Result Collection and Summarization: `collect_latest_result()` + `write_summary()`
+### 5) Result Collection and Summarization: `_collect_latest_result()` + `_write_summary()`
 - After all stages succeed, the framework attempts to read:
   `./results/{task}/{method}/results.csv`
-  and uses the last row as the “latest result”
+  and uses the last row as the "latest result"
 - If successful, it appends one row to:
   `results/summary_{result_file}.csv`
-- If the result file is missing or empty, it prints a message like “Finished but no results found” and does not write to the summary
+- If the result file is missing or empty, it prints a message like "Finished but no results found" and does not write to the summary
+- Skip logic is handled by `_is_already_done()` in `core.py`
 
 ## II. Key Modules and Responsibility Boundaries
 
-### 1) `run_grid.py` (Scheduling Layer)
-- Responsible for: parsing YAML, expanding combos, concurrent scheduling, OOM retry policy (optional)
+### 1) `cli.py` (Entry Point)
+- Responsible for: CLI argument parsing, path setup (inline, lines 59-63), handing control to the execution engine
 - Not responsible for: method-internal training logic or metric computation
 
-### 2) `cli_gcd.py` / `cli_openset.py` (Method Registration and Command Building)
+### 2) `core.py` (Execution and Summarization Layer)
+- Responsible for: constructing `args_json` (`make_base_args()`), running stages, organizing log directories, collecting results (`_collect_latest_result()`), writing the summary (`_write_summary()`), and skip detection (`_is_already_done()`)
+- Responsible for: writing `CMD` and `ARGS_JSON` for each stage (for reproducibility and debugging)
+- Not responsible for: YAML parsing or workspace initialization
+
+### 3) `methods/builders_gcd.py` / `methods/builders_openset.py` (Method Registration and Command Building)
 - Responsible for: mapping a method to stages, and providing `cli_builder` for each stage
 - Responsible for: defining default config paths and default `output_base`
 - Not responsible for: writing results during execution (this is handled by the method scripts)
 
-### 3) `utils.py` (Execution and Summarization Layer)
-- Responsible for: constructing `args_json`, running stages, organizing log directories, collecting results, and writing the summary
-- Responsible for: writing `CMD` and `ARGS_JSON` for each stage (for reproducibility and debugging)
+### 4) `methods/registry.py` (Unified Method Registry)
+- Contains the single `METHOD_REGISTRY` dict that maps method names to their specs
+- Both `builders_gcd.py` and `builders_openset.py` register into this shared registry
+
+### 5) `configs/base.py` (Config Parsing)
+- Responsible for: `GridConfig.from_grid_yaml()` and `GridConfig.iter_experiments()`
+
+### 6) `workspace.py` (Workspace Initialization)
+- Responsible for: `init_workspace()` which sets up the directory structure for a run
 
 ## III. Reproducibility Conventions
 
@@ -84,5 +101,6 @@ Method scripts must write this file at the end of execution; otherwise, the fram
 - Useful for checking combo counts, parameter passing, and whether command construction matches expectations
 
 ### 2) Reproduce from Stage Logs
-- Locate `stageX.log` for the failed combo
-- Copy `CMD` and `ARGS_JSON`, and reproduce/debug by aligning with the method script’s argument parsing logic
+- Locate `stage1.log` or `stage2.log` for the failed combo under the log path:
+  `logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/`
+- Copy `CMD` and `ARGS_JSON`, and reproduce/debug by aligning with the method script's argument parsing logic

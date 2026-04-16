@@ -11,23 +11,24 @@ Where:
 - `task` is `gcd` or `openset`
 - `method` is the method name (e.g., `tan`, `plm_ood`, `ab`, etc.)
 
-The framework reads the **last row** of this CSV as the “latest result record”.
+Results are collected by `_collect_latest_result()` in `core.py`, which reads the **last row** of this CSV as the "latest result record".
 
 Notes:
 - If `results.csv` does not exist or is empty, the framework will not write anything to the summary table and will print a message.
 - Therefore, each method script must ensure it writes to the location above after finishing, and that the CSV includes the key metric columns.
 
-## 2. Summary File Location and Naming
+## 2. Deduplication
 
-The summary file is written under `paths.results_dir` from the YAML:
+Before launching an experiment combo, the framework checks whether it has already been completed. This is handled by `_is_already_done()` in `core.py`, which reads the per-method CSV at `results/{task}/{method}/results.csv` and checks the following fields: `method`, `dataset`, `known_cls_ratio`, `labeled_ratio`, `seed`, `fold_idx`, `fold_num`, `fold_type`, `num_train_epochs`. If a matching row is found, the combo is skipped.
+
+## 3. Summary File Location and Naming
+
+The summary file is written by `_write_summary()` in `core.py` under `paths.results_dir` from the YAML:
 {results_dir}/summary_{result_file}.csv
-
-An index file is also generated:
-{results_dir}/seen_index_{result_file}.json
 
 Here, `result_file` comes from the top-level YAML field `result_file`.
 
-## 3. What Fields Are Included in the Summary Table
+## 4. What Fields Are Included in the Summary Table
 
 At minimum, the summary table includes:
 - `method`, `dataset`
@@ -39,7 +40,7 @@ In general:
 - Common GCD metrics include `ACC`, `H-Score`, `K-ACC`, `N-ACC`, `ARI`, `NMI`, etc.
 - Common OpenSet metrics include `F1`, `K-F1`, `N-F1`, etc.
 
-## 4. Common Issue: Why Nothing Was Written to the Summary
+## 5. Common Issue: Why Nothing Was Written to the Summary
 
 Troubleshoot in the following order:
 1) Did the sub-task fail?
@@ -49,7 +50,7 @@ Troubleshoot in the following order:
 3) Are the result columns complete?
    If the columns written by the method script differ significantly from what the framework expects, the summary may be missing fields or metrics may be empty. It is recommended to standardize column names on the method side, or to fill in the required fields in the method outputs.
 
-## 5. Usage Tips
+## 6. Usage Tips
 
 - When comparing methods, use `summary_{result_file}.csv` directly as the primary analysis entry point.
 - If you want to distinguish multiple large runs, change `result_file` to generate separate summary files and avoid overwriting each other.

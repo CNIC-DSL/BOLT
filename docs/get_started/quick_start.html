@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Quick Start &mdash; Bolt 0.1.0 documentation</title>
+  <title>Quick Start &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -111,16 +111,18 @@
              
   <section id="quick-start">
 <h1>Quick Start<a class="headerlink" href="#quick-start" title="Link to this heading"></a></h1>
-<p>Goal of this section: complete a reproducible run with the fewest steps, and clearly understand three key arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, and <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>.</p>
+<p>Goal of this section: complete a reproducible run with the fewest steps, and clearly understand the key arguments: <code class="docutils literal notranslate"><span class="pre">--config</span></code>, <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>, and <code class="docutils literal notranslate"><span class="pre">--data-dir</span></code>.</p>
 <section id="optional-initialize-the-workspace-only-init-only">
 <h2>0. (Optional) Initialize the Workspace Only (<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>)<a class="headerlink" href="#optional-initialize-the-workspace-only-init-only" title="Link to this heading"></a></h2>
 <p>If you want to set up the working directory structure first (without running any experiments), use <code class="docutils literal notranslate"><span class="pre">--init-only</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--init-only<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--init-only<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/pretrained_models
 </pre></div>
 </div>
 <p>What it does:</p>
 <ul class="simple">
-<li><p>Creates/initializes the workspace under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> (e.g., <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>, and linked directories like <code class="docutils literal notranslate"><span class="pre">code/</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/</span></code>, <code class="docutils literal notranslate"><span class="pre">data/</span></code>, <code class="docutils literal notranslate"><span class="pre">pretrained_models/</span></code>)</p></li>
+<li><p>Creates real directories under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>: <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">configs/</span></code></p></li>
+<li><p>Creates symlinks: <code class="docutils literal notranslate"><span class="pre">data</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> (or the package-embedded data if omitted), <code class="docutils literal notranslate"><span class="pre">pretrained_models</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code></p></li>
+<li><p>Copies editable YAML configs from the package into <code class="docutils literal notranslate"><span class="pre">configs/</span></code></p></li>
 <li><p>Useful for checking paths/permissions and confirming your workspace layout before launching a full run</p></li>
 </ul>
 <p>Note:</p>
@@ -131,13 +133,15 @@
 <section id="run-with-a-single-command">
 <h2>1. Run with a Single Command<a class="headerlink" href="#run-with-a-single-command" title="Link to this heading"></a></h2>
 <p>After installation, run the following directly (example uses the GCD configuration):</p>
-<p>bolt-grid –config grid_gcd.yaml –output-dir ~/tmp –model-dir ~/code/bolt/pretrained_models</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>grid_gcd.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp<span class="w"> </span>--model-dir<span class="w"> </span>~/pretrained_models
+</pre></div>
+</div>
 <p>Argument details:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--config</span></code>
 Specifies the configuration file. You can provide:</p>
 <ol class="arabic simple">
-<li><p>A config filename (e.g., <code class="docutils literal notranslate"><span class="pre">grid_gcd.yaml</span></code>): the framework will look for a config with the same name in its built-in <code class="docutils literal notranslate"><span class="pre">configs</span></code> directory.</p></li>
+<li><p>A config filename (e.g., <code class="docutils literal notranslate"><span class="pre">grid_gcd.yaml</span></code>): the framework first looks in <code class="docutils literal notranslate"><span class="pre">{output-dir}/configs/</span></code>, then falls back to the package built-in configs.</p></li>
 <li><p>An absolute path to a config file: used to run a config that you copied and modified yourself.</p></li>
 </ol>
 </li>
@@ -145,13 +149,17 @@ Specifies the configuration file. You can provide:</p>
 Specifies the working directory for this run. All logs (<code class="docutils literal notranslate"><span class="pre">logs/</span></code>), aggregated results (<code class="docutils literal notranslate"><span class="pre">results/</span></code>), and training/evaluation artifacts (<code class="docutils literal notranslate"><span class="pre">outputs/</span></code>) will be written under this directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>
 Specifies the pretrained model and cache directory. It is recommended to point to a stable, readable/writable location so you can reuse already-downloaded model files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> (optional)
+Specifies the datasets directory. If omitted, the package-embedded data is used via a symlink.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> (optional)
+Print experiment commands without executing them. Useful for verifying the grid expansion before a real run.</p></li>
 </ul>
 </section>
 <section id="recommended-first-run-workflow">
 <h2>2. Recommended First-Run Workflow<a class="headerlink" href="#recommended-first-run-workflow" title="Link to this heading"></a></h2>
 <p>To avoid an overly large and time-consuming setup on your first run, use the following workflow:</p>
 <p>Step 0 (optional): Initialize the workspace</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models<span class="w"> </span>--init-only
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/pretrained_models<span class="w"> </span>--init-only
 </pre></div>
 </div>
 <p>Step 1: Copy a config to your own directory
@@ -166,7 +174,7 @@ For the first run, it is recommended to keep only:</p>
 <li><p>Set training epochs to a small value (to validate the pipeline)</p></li>
 </ul>
 <p>Step 3: Run your copied config using an absolute path</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/code/bolt/pretrained_models
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>bolt-grid<span class="w"> </span>--config<span class="w"> </span>/abs/path/to/your_config.yaml<span class="w"> </span>--output-dir<span class="w"> </span>~/tmp/exp_001<span class="w"> </span>--model-dir<span class="w"> </span>~/pretrained_models
 </pre></div>
 </div>
 <p>This ensures:</p>
@@ -191,7 +199,7 @@ For the first run, it is recommended to keep only:</p>
 </ul>
 <p>After completion (init-only):</p>
 <ul class="simple">
-<li><p>You should see the workspace directory skeleton and linked directories under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>;</p></li>
+<li><p>You should see the workspace directory skeleton and symlinks under <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>;</p></li>
 <li><p>It is normal that there are no combo stage logs and no new summary records.</p></li>
 </ul>
 <p>Next, open <code class="docutils literal notranslate"><span class="pre">outputs.md</span></code> to learn how to locate logs and summary results, and the recommended troubleshooting order.</p>

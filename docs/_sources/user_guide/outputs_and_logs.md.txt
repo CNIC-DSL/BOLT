@@ -5,12 +5,11 @@ This page explains where to find logs, aggregated results, and generated artifac
 ## 1. Key Output Directories (Under the Working Directory `--output-dir`)
 
 - `logs/`  
-  Runtime logs for each combo, including per-stage logs and an overall log. Check here first when debugging errors.
+  Runtime logs for each combo, including per-stage logs. Check here first when debugging errors.
 
 - `results/`  
-  Directory for summary and index files. It typically contains:
+  Directory for summary files and per-method results. It typically contains:
   - `summary_{result_file}.csv`
-  - `seen_index_{result_file}.json`
 
 - `outputs/`  
   Training/evaluation artifacts (models, predictions, caches, etc.), organized by method and combo.
@@ -30,7 +29,6 @@ logs/{task}/{method}/{dataset}/
 
 This directory usually contains:
 - `stage1.log`, `stage2.log`, ...: stdout/stderr for each stage
-- `all.log`: key events for the combo (start, return code per stage, end)
 
 At the beginning of each stage log, you will typically see two pieces of information:
 - `CMD`: the actual command executed

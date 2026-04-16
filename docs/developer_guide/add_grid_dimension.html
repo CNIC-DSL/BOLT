@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Extending Grid Dimensions &mdash; Bolt 0.1.0 documentation</title>
+  <title>Extending Grid Dimensions &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -78,8 +78,8 @@
 <li class="toctree-l2"><a class="reference internal" href="#i-path-a-inject-via-per-method-extra-recommended-first">I. Path A: Inject via <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> (Recommended First)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#ii-path-b-add-a-real-grid-dimension-code-changes-required">II. Path B: Add a Real Grid Dimension (Code Changes Required)</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#step-1-add-a-new-dimension-list-under-grid-in-yaml">Step 1: Add a new dimension list under <code class="docutils literal notranslate"><span class="pre">grid</span></code> in YAML</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#step-2-modify-the-combo-expansion-logic-in-run-grid-py">Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args">Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">utils.make_base_args</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-2-modify-the-combo-expansion-logic-in-configs-base-py">Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#step-3-write-the-new-dimension-into-args-json-in-core-make-base-args">Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">core.make_base_args</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#step-4-update-the-duplicate-skip-matching-fields-if-you-rely-on-this-mechanism">Step 4: Update the duplicate-skip matching fields (if you rely on this mechanism)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#step-5-ensure-result-collection-and-the-summary-reflect-this-dimension">Step 5: Ensure result collection and the summary reflect this dimension</a></li>
 </ul>
@@ -146,7 +146,7 @@ backbone: ./pretrained_models/bert-base-uncased</p></li>
 </ul>
 <p>Advantages:</p>
 <ul class="simple">
-<li><p>No need to change the combo-generation logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></p></li>
+<li><p>No need to change the combo-generation logic in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code></p></li>
 <li><p>Does not affect other methods</p></li>
 </ul>
 </section>
@@ -166,18 +166,18 @@ grid:
 …
 backbone: [“bert-base-uncased”, “bert-base-chinese”]</p>
 </section>
-<section id="step-2-modify-the-combo-expansion-logic-in-run-grid-py">
-<h3>Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code><a class="headerlink" href="#step-2-modify-the-combo-expansion-logic-in-run-grid-py" title="Link to this heading"></a></h3>
-<p>Currently, <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code> explicitly reads and expands fixed dimensions (<code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_*</span></code>, <code class="docutils literal notranslate"><span class="pre">seeds</span></code>, <code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>).
+<section id="step-2-modify-the-combo-expansion-logic-in-configs-base-py">
+<h3>Step 2: Modify the combo-expansion logic in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code><a class="headerlink" href="#step-2-modify-the-combo-expansion-logic-in-configs-base-py" title="Link to this heading"></a></h3>
+<p>Combo expansion uses <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> inside <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>. The runner in <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> iterates over these experiment objects.
 Therefore you need to:</p>
 <ul class="simple">
-<li><p>read <code class="docutils literal notranslate"><span class="pre">grid[&quot;backbone&quot;]</span></code> into a local variable</p></li>
-<li><p>add a <code class="docutils literal notranslate"><span class="pre">backbone</span></code> layer into the nested loops</p></li>
-<li><p>include <code class="docutils literal notranslate"><span class="pre">backbone</span></code> as part of the combo tuple and pass it into <code class="docutils literal notranslate"><span class="pre">worker</span></code> / <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
+<li><p>Add the new dimension as a field on <code class="docutils literal notranslate"><span class="pre">GridConfig</span></code></p></li>
+<li><p>Include it in the <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> call inside <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code></p></li>
+<li><p>Ensure the yielded experiment object carries the new value so <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> can pass it into <code class="docutils literal notranslate"><span class="pre">worker</span></code> / <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
 </ul>
 </section>
-<section id="step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args">
-<h3>Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">utils.make_base_args</span></code><a class="headerlink" href="#step-3-write-the-new-dimension-into-args-json-in-utils-make-base-args" title="Link to this heading"></a></h3>
+<section id="step-3-write-the-new-dimension-into-args-json-in-core-make-base-args">
+<h3>Step 3: Write the new dimension into <code class="docutils literal notranslate"><span class="pre">args_json</span></code> in <code class="docutils literal notranslate"><span class="pre">core.make_base_args</span></code><a class="headerlink" href="#step-3-write-the-new-dimension-into-args-json-in-core-make-base-args" title="Link to this heading"></a></h3>
 <p>Example:
 args_json[“backbone”] = backbone</p>
 <p>Make sure:</p>
@@ -218,8 +218,8 @@ Ensure the combo count and summary records match expectations</p></li>
 <li><p>Combo count is not as expected</p></li>
 </ol>
 <ul class="simple">
-<li><p>Check whether the new dimension actually enters the nested loops in <code class="docutils literal notranslate"><span class="pre">run_grid.py</span></code></p></li>
-<li><p>Check whether the combo tuple carries this value and passes it into <code class="docutils literal notranslate"><span class="pre">run_combo</span></code></p></li>
+<li><p>Check whether the new dimension actually enters the <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> call in <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> (<code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>)</p></li>
+<li><p>Check whether the experiment object carries this value and passes it into <code class="docutils literal notranslate"><span class="pre">run_combo</span></code> in <code class="docutils literal notranslate"><span class="pre">cli.py</span></code></p></li>
 </ul>
 <ol class="arabic simple" start="2">
 <li><p>Parameter passing is missing</p></li>

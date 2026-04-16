@@ -1,0 +1,61 @@
+# 安装与环境配置
+
+本节介绍 **bolt-lab** 的环境要求和推荐安装步骤（已在 **CUDA 12.6 + PyTorch cu126** 环境下验证）。
+
+## 系统要求
+
+- Linux + NVIDIA GPU
+- Python 3.10+
+- 已安装 NVIDIA 驱动（可以运行 `nvidia-smi`）
+- 如需安装 `flash-attn`：需要可用的编译工具链，并确保临时目录有足够的可用空间（建议设置 `TMPDIR`）
+
+## 方式 A：从 PyPI 安装（推荐）
+
+```bash
+pip install bolt_lab
+```
+
+## 方式 B：从源码安装
+
+```bash
+git clone https://github.com/CNIC-DSL/BOLT.git
+cd BOLT
+pip install -e .
+```
+
+## 安装 PyTorch 及其余依赖
+
+1) 安装 PyTorch（CUDA 12.6 使用 cu126）
+```bash
+pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu126
+```
+
+2) 安装 NVCC（**仅**此步骤使用 conda）
+```bash
+conda install -c nvidia cuda-nvcc -y
+```
+3) 安装其余 Python 依赖
+```bash
+pip install -r requirements.txt
+```
+
+4) 安装 flash-attn（单独安装以避免构建隔离和缓存相关的失败）
+```bash
+mkdir -p ~/tmp/pip
+TMPDIR=~/tmp/pip
+pip install --no-build-isolation --no-cache-dir flash-attn==2.8.3
+```
+
+## 可选的快速自检（验证安装）
+```bash
+python -c "import torch; print(torch.__version__); print(torch.cuda.is_available())"
+bolt-grid --help
+```
+
+## 常见问题排查
+
+- `torch.cuda.is_available()` 返回 `False`：
+  请先检查 NVIDIA 驱动是否正常工作，以及是否安装了 **cu126** 版本的 PyTorch。
+
+- `flash-attn` 安装失败：
+  常见原因包括临时目录磁盘空间不足（建议设置 `TMPDIR`）、torch/CUDA 版本不匹配，或缺少编译工具。

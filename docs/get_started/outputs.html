@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Output Directory Structure and Notes &mdash; Bolt 0.1.0 documentation</title>
+  <title>Output Directory Structure and Notes &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -129,16 +129,16 @@
 <p>Using <code class="docutils literal notranslate"><span class="pre">--output-dir</span> <span class="pre">~/tmp</span></code> as an example, after running you will see something like the following (example structure):</p>
 <p>~/tmp/
 outputs/            Training/evaluation artifacts (models, predictions, caches, etc.)
-results/            Aggregations and index files (e.g., summary, seen_index, etc.)
+results/            Aggregated per-method results and summary files
 logs/               Runtime logs (for debugging errors and tracking stage progress)
-code/               Snapshot of the code used for this run (records code state)
-configs/            Snapshot of the config used for this run (records config state)
-data/               Data entry directory (may be empty or filled by your data pipeline)
-pretrained_models/  Model entry directory (corresponds to <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>)</p>
+configs/            Copies of the YAML config files used for this run
+data -&gt; …         Symlink to –data-dir (or the package-embedded _data directory)
+pretrained_models -&gt; …  Symlink to –model-dir</p>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>Focus first on <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, and <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p></li>
-<li><p>Directories such as <code class="docutils literal notranslate"><span class="pre">code/</span></code> and <code class="docutils literal notranslate"><span class="pre">configs/</span></code> are used to record the environment state for the run, making reproduction and tracking easier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">configs/</span></code> is a real directory where YAML configuration files are copied from the package, preserving the exact config state for the run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> and <code class="docutils literal notranslate"><span class="pre">pretrained_models</span></code> are symbolic links pointing to the directories you specify via <code class="docutils literal notranslate"><span class="pre">--data-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> respectively.</p></li>
 </ul>
 </section>
 <section id="recommended-usage">
@@ -157,7 +157,7 @@ pretrained_models/  Model entry directory (corresponds to <code class="docutils 
 <h3>3.2 Where to Look First to Diagnose Issues<a class="headerlink" href="#where-to-look-first-to-diagnose-issues" title="Link to this heading"></a></h3>
 <ul class="simple">
 <li><p>Runtime errors, hangs, or stage failures: check <code class="docutils literal notranslate"><span class="pre">logs/</span></code> first. You can usually find the error stack trace and the failed stage there.</p></li>
-<li><p>Experiment summary results: check <code class="docutils literal notranslate"><span class="pre">results/</span></code> (typically contains summary files, indexes, etc.).</p></li>
+<li><p>Experiment summary results: check <code class="docutils literal notranslate"><span class="pre">results/</span></code> (typically contains per-method result files and summary CSVs).</p></li>
 <li><p>Model and prediction artifacts: check <code class="docutils literal notranslate"><span class="pre">outputs/</span></code>.</p></li>
 </ul>
 </section>

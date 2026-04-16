@@ -1,0 +1,62 @@
+# 预训练模型准备
+
+在运行过程中，本项目会从 `--model-dir` 指定的目录读取预训练模型和嵌入/编码器模型。为确保可复现性并避免运行时自动下载导致的失败，建议在首次运行前手动将以下模型下载到本地。
+
+## 1. 所需模型列表
+
+以下模型需要用户自行下载并放置在 `--model-dir` 下（建议目录名与以下列表保持一致）：
+
+1) bert-base-chinese
+- 用途：中文数据集相关方法的 PLM/骨干模型
+- 推荐来源：Hugging Face (`google-bert/bert-base-chinese`)
+
+2) bert-base-uncased
+- 用途：英文数据集相关方法的 PLM/骨干模型
+- 推荐来源：Hugging Face (`google-bert/bert-base-uncased`)
+
+3) stsb-roberta-base
+- 用途：部分方法使用的句子嵌入/语义编码器模型（Sentence Transformer）
+- 推荐来源：Hugging Face (`sentence-transformers/stsb-roberta-base-v2`)
+  注意：如果你的配置/代码中将目录名硬编码为 `stsb-roberta-base`，可以将下载的文件夹重命名为 `stsb-roberta-base` 以保持兼容。
+
+4) Meta-Llama-3.1-8B-Instruct
+- 用途：LLM 相关方法（如启用）
+- 推荐来源：Hugging Face (`meta-llama/Llama-3.1-8B-Instruct`)
+  注意：该模型通常需要在 Hugging Face 账户上接受许可协议/申请访问权限后才能下载。
+
+## 2. 推荐目录布局
+
+假设你将 `--model-dir` 设为 `/path/to/pretrained_models`，推荐的结构如下：
+
+/path/to/pretrained_models/
+  bert-base-chinese/
+  bert-base-uncased/
+  stsb-roberta-base/
+  Meta-Llama-3.1-8B-Instruct/
+
+运行示例：
+bolt-grid --config grid_gcd.yaml --output-dir ~/tmp/exp_001 --model-dir /path/to/pretrained_models
+
+## 3. 下载方法（示例）
+
+方法 A：使用 `huggingface-cli`（推荐）
+1) 安装并登录
+pip install -U huggingface_hub
+huggingface-cli login
+
+2) 下载到目标目录
+huggingface-cli download google-bert/bert-base-chinese --local-dir /path/to/pretrained_models/bert-base-chinese
+huggingface-cli download google-bert/bert-base-uncased --local-dir /path/to/pretrained_models/bert-base-uncased
+huggingface-cli download sentence-transformers/stsb-roberta-base-v2 --local-dir /path/to/pretrained_models/stsb-roberta-base
+huggingface-cli download meta-llama/Llama-3.1-8B-Instruct --local-dir /path/to/pretrained_models/Meta-Llama-3.1-8B-Instruct
+
+方法 B：使用 `git lfs`（可选）
+适合将权重文件作为 Git 仓库管理的场景。请确保已安装 `git-lfs`，并确保网络连接和磁盘空间充足。
+
+## 4. 常见问题排查
+
+- 模型未找到或下载访问被拒绝：
+  请先确认是否需要登录 Hugging Face，以及是否需要在网站上接受许可协议（LLM 模型常见此要求）。
+
+- 程序在运行时仍尝试在线下载：
+  请检查配置/代码中引用的模型目录名是否与本地文件夹名完全一致（特别注意大小写和连字符）。

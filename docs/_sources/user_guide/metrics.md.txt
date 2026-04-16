@@ -54,6 +54,6 @@ Reading tips:
 
 ## 4. Relation to Method Implementations
 
-Different methods may write additional columns in `results.csv` (e.g., loss, runtime, extra hyperparameters).
+The framework does not enforce specific metric columns -- they are convention-based and written by individual method scripts. Different methods may write additional columns in `results.csv` (e.g., loss, runtime, extra hyperparameters).
 During aggregation, the framework typically keeps core fields and appends `args` to ensure traceability.
 If you need extra metrics to appear in the summary table, it is recommended to standardize the result column names on the method side and ensure they are written to `results/{task}/{method}/results.csv`.

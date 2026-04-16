@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Installation and Environment Setup &mdash; Bolt 0.1.0 documentation</title>
+  <title>Installation and Environment Setup &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -49,7 +49,9 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Installation and Environment Setup</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation-steps-run-in-order">Installation Steps (run in order)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#option-a-install-from-pypi-recommended">Option A: Install from PyPI (recommended)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#option-b-install-from-source">Option B: Install from source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-pytorch-and-remaining-dependencies">Install PyTorch and remaining dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#optional-quick-self-check-verify-installation">Optional Quick Self-Check (verify installation)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a></li>
 </ul>
@@ -115,38 +117,46 @@
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p>Linux + NVIDIA GPU</p></li>
-<li><p>Python 3.10</p></li>
+<li><p>Python 3.10+</p></li>
 <li><p>NVIDIA driver installed (you can run <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code>)</p></li>
 <li><p>If you need to install <code class="docutils literal notranslate"><span class="pre">flash-attn</span></code>: a working build toolchain is required, and you must ensure sufficient free space in the temporary directory (recommended to set <code class="docutils literal notranslate"><span class="pre">TMPDIR</span></code>)</p></li>
 </ul>
 </section>
-<section id="installation-steps-run-in-order">
-<h2>Installation Steps (run in order)<a class="headerlink" href="#installation-steps-run-in-order" title="Link to this heading"></a></h2>
-<ol class="arabic simple">
-<li><p>Install bolt-lab (wheel package)</p></li>
-</ol>
+<section id="option-a-install-from-pypi-recommended">
+<h2>Option A: Install from PyPI (recommended)<a class="headerlink" href="#option-a-install-from-pypi-recommended" title="Link to this heading"></a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>bolt_lab
 </pre></div>
 </div>
-<ol class="arabic simple" start="2">
+</section>
+<section id="option-b-install-from-source">
+<h2>Option B: Install from source<a class="headerlink" href="#option-b-install-from-source" title="Link to this heading"></a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/CNIC-DSL/BOLT.git
+<span class="nb">cd</span><span class="w"> </span>BOLT
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
+</section>
+<section id="install-pytorch-and-remaining-dependencies">
+<h2>Install PyTorch and remaining dependencies<a class="headerlink" href="#install-pytorch-and-remaining-dependencies" title="Link to this heading"></a></h2>
+<ol class="arabic simple">
 <li><p>Install PyTorch (CUDA 12.6 uses cu126)</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="nv">torch</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span><span class="nv">torchvision</span><span class="o">==</span><span class="m">0</span>.23.0<span class="w"> </span><span class="nv">torchaudio</span><span class="o">==</span><span class="m">2</span>.8.0<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cu126
 </pre></div>
 </div>
-<ol class="arabic simple" start="3">
+<ol class="arabic simple" start="2">
 <li><p>Install NVCC (use conda <strong>only</strong> for this step)</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>install<span class="w"> </span>-c<span class="w"> </span>nvidia<span class="w"> </span>cuda-nvcc<span class="w"> </span>-y
 </pre></div>
 </div>
-<ol class="arabic simple" start="4">
+<ol class="arabic simple" start="3">
 <li><p>Install the remaining Python dependencies</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
 </pre></div>
 </div>
-<ol class="arabic simple" start="5">
+<ol class="arabic simple" start="4">
 <li><p>Install flash-attn (install separately to avoid build isolation and cache-related failures)</p></li>
 </ol>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>-p<span class="w"> </span>~/tmp/pip

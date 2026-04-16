@@ -1,0 +1,194 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>指标指南 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">指标指南</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/user_guide/metrics.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>指标指南<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面说明汇总表中常见指标的含义以及如何解读它们。不同任务使用不同的指标字段；以下描述最常见的约定。</p>
+<section id="id2">
+<h2>1. 汇总表字段结构<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code> 通常包含两类字段：</p>
+<ul class="simple">
+<li><p>实验设置字段：<code class="docutils literal notranslate"><span class="pre">method</span></code>、<code class="docutils literal notranslate"><span class="pre">dataset</span></code>、<code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>、<code class="docutils literal notranslate"><span class="pre">seed</span></code>（以及可能的 fold 信息和额外超参）</p></li>
+<li><p>指标字段：因任务而异（例如 <code class="docutils literal notranslate"><span class="pre">ACC</span></code>、<code class="docutils literal notranslate"><span class="pre">H-Score</span></code>、<code class="docutils literal notranslate"><span class="pre">F1</span></code> 等）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code>：一个 JSON 字符串，记录关键运行参数（用于可复现性和去重）</p></li>
+</ul>
+<p>推荐的解读方式：</p>
+<ul class="simple">
+<li><p>横向对比：固定 <code class="docutils literal notranslate"><span class="pre">dataset</span></code> / ratios / folds，比较不同方法之间的指标差异</p></li>
+<li><p>纵向对比：固定 <code class="docutils literal notranslate"><span class="pre">method</span></code>，比较不同 ratios / seeds / folds 下的稳定性和趋势</p></li>
+</ul>
+</section>
+<section id="gcd">
+<h2>2. 常见 GCD 指标（示例）<a class="headerlink" href="#gcd" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ACC</span></code>
+整体聚类/分类准确率（具体定义取决于方法实现，通常反映整体分配质量）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">H-Score</span></code>
+一个综合指标，旨在平衡已知类和新类的性能；常用作整体评估分数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K-ACC</span></code>
+已知类准确率。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N-ACC</span></code>
+新类准确率。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARI</span></code>（Adjusted Rand Index，调整兰德指数）
+衡量聚类结果与真实标签之间的一致性，已对随机一致性进行校正。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NMI</span></code>（Normalized Mutual Information，归一化互信息）
+衡量聚类与真实标签之间的互信息一致性，取值通常在 [0, 1] 范围内。</p></li>
+</ul>
+<p>解读建议：</p>
+<ul class="simple">
+<li><p>如果某方法 <code class="docutils literal notranslate"><span class="pre">K-ACC</span></code> 高但 <code class="docutils literal notranslate"><span class="pre">N-ACC</span></code> 低，通常表明其新类发现能力较弱。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">H-Score</span></code> 通常更适合用于整体排名，但仍应结合分解后的 K/N 指标来理解具体原因。</p></li>
+</ul>
+</section>
+<section id="openset">
+<h2>3. 常见 OpenSet 指标（示例）<a class="headerlink" href="#openset" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">F1</span></code>
+整体 F1 分数（精确率和召回率的调和平均数），用作通用评估指标。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K-F1</span></code>
+已知类的 F1 分数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">N-F1</span></code>
+新类/未知类的 F1 分数。</p></li>
+</ul>
+<p>解读建议：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">K-F1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">N-F1</span></code> 之间通常存在权衡关系。</p></li>
+<li><p>仅看整体 <code class="docutils literal notranslate"><span class="pre">F1</span></code> 可能会掩盖未知类识别的弱点，因此建议同时查看 <code class="docutils literal notranslate"><span class="pre">K-F1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">N-F1</span></code>。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>4. 与方法实现的关系<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>框架不强制要求特定的指标列 – 它们基于约定，由各方法脚本自行写入。不同方法可能会在 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 中写入额外的列（例如 loss、运行时间、额外超参等）。
+汇总时，框架通常保留核心字段并追加 <code class="docutils literal notranslate"><span class="pre">args</span></code> 以确保可追溯性。
+如果您需要额外的指标出现在汇总表中，建议在方法侧统一结果列名，并确保它们被写入 <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

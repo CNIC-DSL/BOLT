@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Outputs and Log Navigation &mdash; Bolt 0.1.0 documentation</title>
+  <title>Outputs and Log Navigation &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -119,12 +119,11 @@
 <h2>1. Key Output Directories (Under the Working Directory <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>)<a class="headerlink" href="#key-output-directories-under-the-working-directory-output-dir" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">logs/</span></code><br />
-Runtime logs for each combo, including per-stage logs and an overall log. Check here first when debugging errors.</p></li>
+Runtime logs for each combo, including per-stage logs. Check here first when debugging errors.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">results/</span></code><br />
-Directory for summary and index files. It typically contains:</p>
+Directory for summary files and per-method results. It typically contains:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">seen_index_{result_file}.json</span></code></p></li>
 </ul>
 </li>
 <li><p><code class="docutils literal notranslate"><span class="pre">outputs/</span></code><br />
@@ -146,7 +145,6 @@ seed{seed}/</p>
 <p>This directory usually contains:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">stage1.log</span></code>, <code class="docutils literal notranslate"><span class="pre">stage2.log</span></code>, …: stdout/stderr for each stage</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">all.log</span></code>: key events for the combo (start, return code per stage, end)</p></li>
 </ul>
 <p>At the beginning of each stage log, you will typically see two pieces of information:</p>
 <ul class="simple">

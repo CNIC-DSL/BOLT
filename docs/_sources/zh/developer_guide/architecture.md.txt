@@ -1,0 +1,106 @@
+# 架构与执行流程
+
+本页面面向希望扩展或修改系统的开发者，介绍 bolt-lab 的核心执行链、关键数据结构以及各模块的职责边界。
+
+## I. 端到端数据流（从 YAML 到汇总结果）
+
+### 1) 入口点：`bolt-grid`
+- CLI 入口点为 `bolt_lab.cli:main`（定义在 `cli.py` 中）
+- 接受参数：`--config`、`--output-dir`、`--model-dir`、`--data-dir`、`--init-only`、`--dry-run`、`--overwrite-configs`
+- 将配置文件解析为具体路径后，将控制权交给 `core.py` 中的执行引擎
+
+### 2) 配置解析与工作区初始化
+- YAML 通过 `configs/base.py` 中的 `GridConfig.from_grid_yaml()` 解析
+- 校验必需字段：
+  `methods / datasets / grid / run / paths / result_file / per_method_extra / extra_args`
+- 路径设置在 `cli.py` 中内联完成（第 59-63 行），初始化：
+  - `results/summary_{result_file}.csv`
+  - `logs/` 根目录
+- 工作区初始化由 `workspace.py:init_workspace()` 处理
+
+### 3) 组合展开与调度
+- `GridConfig.iter_experiments()` 使用 `itertools.product` 将 `grid` 中的各维度展开为实验组合（combos），形成完整的任务列表
+- 构建 GPU 令牌池（一个 `Queue`）：
+  - `run.gpus` 指定可用 GPU 列表
+  - `run.slots_per_gpu` 决定每个 GPU 提供多少令牌
+  - 总令牌数 = `len(gpus) * slots_per_gpu`
+- 通过 `ThreadPoolExecutor` 并发调度任务：
+  - 每个工作线程启动时获取一个 `gpu_id`
+  - 完成后归还 `gpu_id`
+  - 并发数 = `min(max_workers, total_tokens, number_of_combos)`
+
+### 4) 单组合执行：`core.py`
+- 从统一注册表查找方法定义：
+  - `methods.registry.METHOD_REGISTRY`
+- 通过 `core.py:make_base_args()` 构建 `args_json`：
+  - 包含 method/dataset/ratios/fold/seed/GPU/epochs 等关键字段
+  - 合并来自 `per_method_extra[method]` 的方法特定额外字段
+- 执行各阶段：
+  - 每个阶段通过 `cli_builder(args_json, stage_idx)` 生成 argv 命令
+  - `run_stage()` 负责：
+    - 设置 `ARGS_JSON` 环境变量（用于日志和可复现性）
+    - 设置 `CUDA_VISIBLE_DEVICES`（绑定到获取的 `gpu_id`）
+    - 在阶段日志开头写入 `CMD` 和 `ARGS_JSON`
+    - 启动子进程并等待返回码
+  - 如果任何阶段返回非零码，该组合失败，后续阶段不再执行
+- 日志路径约定：`logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/`
+  - 每个阶段生成自己的日志文件（`stage1.log`、`stage2.log` 等）
+
+### 5) 结果收集与汇总：`_collect_latest_result()` + `_write_summary()`
+- 所有阶段成功后，框架尝试读取：
+  `./results/{task}/{method}/results.csv`
+  并使用最后一行作为"最新结果"
+- 如果成功，则向以下文件追加一行：
+  `results/summary_{result_file}.csv`
+- 如果结果文件缺失或为空，则打印类似 "Finished but no results found" 的信息，不写入汇总
+- 跳过逻辑由 `core.py` 中的 `_is_already_done()` 处理
+
+## II. 关键模块与职责边界
+
+### 1) `cli.py`（入口点）
+- 负责：CLI 参数解析、路径设置（内联，第 59-63 行）、将控制权交给执行引擎
+- 不负责：方法内部的训练逻辑或指标计算
+
+### 2) `core.py`（执行与汇总层）
+- 负责：构建 `args_json`（`make_base_args()`）、运行各阶段、组织日志目录、收集结果（`_collect_latest_result()`）、写入汇总（`_write_summary()`）、跳过检测（`_is_already_done()`）
+- 负责：为每个阶段写入 `CMD` 和 `ARGS_JSON`（用于可复现性和调试）
+- 不负责：YAML 解析或工作区初始化
+
+### 3) `methods/builders_gcd.py` / `methods/builders_openset.py`（方法注册与命令构建）
+- 负责：将方法映射到阶段，并为每个阶段提供 `cli_builder`
+- 负责：定义默认配置路径和默认 `output_base`
+- 不负责：执行期间写入结果（这由方法脚本处理）
+
+### 4) `methods/registry.py`（统一方法注册表）
+- 包含唯一的 `METHOD_REGISTRY` 字典，将方法名称映射到其规格
+- `builders_gcd.py` 和 `builders_openset.py` 都注册到这个共享的注册表中
+
+### 5) `configs/base.py`（配置解析）
+- 负责：`GridConfig.from_grid_yaml()` 和 `GridConfig.iter_experiments()`
+
+### 6) `workspace.py`（工作区初始化）
+- 负责：`init_workspace()` 为一次运行设置目录结构
+
+## III. 可复现性约定
+
+### 1) `ARGS_JSON` 作为最小复现闭环
+- 在每个阶段日志的开头，您会看到：
+  - `CMD`（实际执行的命令）
+  - `ARGS_JSON`（完整参数 JSON）
+因此，复现实验通常只需直接复制日志中的命令和参数即可。
+
+### 2) 结果文件路径约定
+- 自动汇总依赖于以下约定：
+  `./results/{task}/{method}/results.csv`
+方法脚本必须在执行结束时写入此文件；否则框架无法自动收集和汇总结果。
+
+## IV. 开发者常用调试技巧
+
+### 1) `dry_run`
+- 在 YAML 的 `run` 下设置 `dry_run=true`，可打印命令和 `ARGS_JSON` 而不实际执行
+- 用于检查组合数量、参数传递以及命令构建是否符合预期
+
+### 2) 从阶段日志复现
+- 在日志路径下找到失败组合的 `stage1.log` 或 `stage2.log`：
+  `logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/`
+- 复制 `CMD` 和 `ARGS_JSON`，对照方法脚本的参数解析逻辑进行复现/调试

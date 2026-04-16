@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reproducibility and Duplicate-Run Control &mdash; Bolt 0.1.0 documentation</title>
+  <title>Reproducibility and Duplicate-Run Control &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -151,7 +151,7 @@
 </section>
 <section id="avoiding-duplicate-runs-skipping-existing-records">
 <h2>3. Avoiding Duplicate Runs: Skipping Existing Records<a class="headerlink" href="#avoiding-duplicate-runs-skipping-existing-records" title="Link to this heading"></a></h2>
-<p>When the framework detects that a method already has a <code class="docutils literal notranslate"><span class="pre">results.csv</span></code>, and that the file contains a record matching the current combo parameters, it will skip executing that combo to avoid duplicate computation.</p>
+<p>When the framework detects that a method already has a <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> at <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code>, and that the file contains a record matching the current combo parameters (including <code class="docutils literal notranslate"><span class="pre">method</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span></code>, <code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_type</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_num</span></code>, <code class="docutils literal notranslate"><span class="pre">fold_idx</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span></code>, and <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>), it will skip executing that combo to avoid duplicate computation.</p>
 <p>Treat “skip duplicated combos” as the default behavior: it can significantly save time and resources in large-scale experiments.</p>
 </section>
 <section id="how-to-force-a-rerun">
@@ -159,7 +159,7 @@
 <p>If you need to rerun the same combo (e.g., after code updates, bug fixes, or method implementation changes), use one of the following approaches:</p>
 <ol class="arabic simple">
 <li><p>Change <code class="docutils literal notranslate"><span class="pre">result_file</span></code><br />
-By changing the YAML field <code class="docutils literal notranslate"><span class="pre">result_file</span></code>, you generate new summary and index files, making it easy to distinguish from old results.</p></li>
+By changing the YAML field <code class="docutils literal notranslate"><span class="pre">result_file</span></code>, you generate new summary files, making it easy to distinguish from old results.</p></li>
 <li><p>Use a new <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code><br />
 Write outputs to a new working directory to avoid overwriting artifacts and logs under the old directory.</p></li>
 <li><p>Clean the target method’s <code class="docutils literal notranslate"><span class="pre">results.csv</span></code><br />

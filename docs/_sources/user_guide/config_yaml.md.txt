@@ -1,38 +1,37 @@
 # Configuration File (YAML) Guide
 
-This page explains what fields a YAML configuration should contain, what each field means, and how to scale from “small verification runs” to “large grid experiments”.
+This page explains what fields a YAML configuration should contain, what each field means, and how to scale from "small verification runs" to "large grid experiments".
 
 ## 1. Top-Level Fields Overview
 
 A runnable configuration file typically includes the following top-level fields:
 
-- `maps`  
-  Declares which task (`gcd` or `openset`) each method belongs to.
-
-- `methods`  
+- `methods`
   The list of methods to run in this experiment.
 
-- `datasets`  
+- `datasets`
   The list of datasets to run in this experiment.
 
-- `result_file`  
-  A naming suffix for summary/index files. The framework will generate:
+- `result_file`
+  A naming suffix for the summary file. The framework will generate:
   - `results/summary_{result_file}.csv`
-  - `results/seen_index_{result_file}.json`
 
-- `grid`  
+- `grid`
   The grid search space. Each dimension is a list, and the framework takes the Cartesian product to generate combos.
 
-- `run`  
+- `run`
   Runtime control parameters (GPU selection, concurrency, epochs, dry-run, OOM retry, etc.).
 
-- `paths`  
+- `paths`
   Output directory settings (e.g., `results_dir`, `logs_dir`).
 
-- `per_method_extra`  
+- `per_method_extra`
   Per-method injection/override of extra parameters (method-specific hyperparameters or switches).
 
-Missing any required field will cause the configuration to be non-runnable.
+- `extra_args` (optional)
+  Global extra arguments that apply to all methods.
+
+Note: Method-to-task mapping is handled automatically by the framework (via a built-in lookup table). You do **not** need to specify a `maps` field.
 
 ## 2. Recommendations for the `grid` Field
 
@@ -44,6 +43,11 @@ Common dimension examples:
 - `fold_idxs: [0]`
 - `seeds: [2025]`
 - `cluster_num_factor: [1.0]`
+
+Valid values:
+- `known_cls_ratio`: `0.25`, `0.5`, `0.75`
+- `labeled_ratio`: `0.1`, `0.5`, `1.0`
+- `fold_types`: `fold`, `imbalance_fold`
 
 Recommended practice:
 - For the first pipeline verification, keep only one value for `fold_idxs` and one value for `seeds`.
@@ -61,11 +65,10 @@ Common fields:
 - `retry_on_oom: true`
 - `max_retries: 2`
 - `retry_backoff_sec: 15`
-- `only_collect: false`
 
 Recommended practice:
-- For the first run, set `dry_run=true` to verify the number of generated combos and whether command construction matches your expectations.
-- For concurrency, start with “one task per GPU”, then adjust `slots_per_gpu` based on your available GPU memory headroom.
+- For the first run, set `dry_run: true` to verify the number of generated combos and whether command construction matches your expectations. You can also use the `--dry-run` CLI flag to achieve the same effect.
+- For concurrency, start with "one task per GPU", then adjust `slots_per_gpu` based on your available GPU memory headroom.
 
 ## 4. Recommendations for the `paths` Field
 
@@ -79,12 +82,14 @@ In most cases, keeping these as relative paths is sufficient. Relative paths wil
 
 `per_method_extra` is used to set parameters for a specific method only. Example:
 
+```yaml
 per_method_extra:
   tan:
     backbone: bert-base-uncased
   ab:
     emb_name: sbert
     temperature: 0.07
+```
 
 Notes:
 - Keys under `per_method_extra` must match the method names listed in `methods`.
@@ -92,12 +97,8 @@ Notes:
 
 ## 6. Minimal Runnable Example
 ```yaml
-maps:
-  gcd: [tan]
-  openset: []
-
 methods: [tan]
-datasets: [XTopic]
+datasets: [X-Topic]
 result_file: demo
 
 grid:

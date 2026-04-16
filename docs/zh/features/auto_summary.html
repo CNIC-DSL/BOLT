@@ -1,0 +1,196 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>自动结果收集与汇总 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">自动结果收集与汇总</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/features/auto_summary.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>自动结果收集与汇总<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>每个实验组合完成后，<strong>bolt-lab</strong> 会自动收集对应的结果记录并追加到统一的汇总表中，方便后续比较和分析。</p>
+<section id="id2">
+<h2>1. 结果文件约定<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>默认情况下，框架从以下位置读取每个方法的结果文件：
+./results/{task}/{method}/results.csv</p>
+<p>其中：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">task</span></code> 为 <code class="docutils literal notranslate"><span class="pre">gcd</span></code> 或 <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> 为方法名称（例如 <code class="docutils literal notranslate"><span class="pre">tan</span></code>、<code class="docutils literal notranslate"><span class="pre">plm_ood</span></code>、<code class="docutils literal notranslate"><span class="pre">ab</span></code> 等）</p></li>
+</ul>
+<p>结果由 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code> 收集，它读取该 CSV 的<strong>最后一行</strong>作为”最新结果记录”。</p>
+<p>注意：</p>
+<ul class="simple">
+<li><p>如果 <code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 不存在或为空，框架不会向汇总表写入任何内容，并会打印一条提示信息。</p></li>
+<li><p>因此，每个方法脚本必须确保在完成后写入上述位置，且 CSV 包含关键指标列。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>2. 去重机制<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>在启动一个实验组合之前，框架会检查该组合是否已经完成。这由 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code> 处理，它读取 <code class="docutils literal notranslate"><span class="pre">results/{task}/{method}/results.csv</span></code> 中每个方法的 CSV，并检查以下字段：<code class="docutils literal notranslate"><span class="pre">method</span></code>、<code class="docutils literal notranslate"><span class="pre">dataset</span></code>、<code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">seed</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_idx</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_num</span></code>、<code class="docutils literal notranslate"><span class="pre">fold_type</span></code>、<code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code>。如果找到匹配的行，则跳过该组合。</p>
+</section>
+<section id="id4">
+<h2>3. 汇总文件位置与命名<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>汇总文件由 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code> 写入 YAML 中 <code class="docutils literal notranslate"><span class="pre">paths.results_dir</span></code> 指定的目录下：
+{results_dir}/summary_{result_file}.csv</p>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">result_file</span></code> 来自 YAML 的顶层字段 <code class="docutils literal notranslate"><span class="pre">result_file</span></code>。</p>
+</section>
+<section id="id5">
+<h2>4. 汇总表包含哪些字段<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>汇总表至少包含：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code>、<code class="docutils literal notranslate"><span class="pre">dataset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">known_cls_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">labeled_ratio</span></code>、<code class="docutils literal notranslate"><span class="pre">cluster_num_factor</span></code>、<code class="docutils literal notranslate"><span class="pre">seed</span></code></p></li>
+<li><p>指标列（因任务类型而异）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code>：一个 JSON 字符串，记录关键运行参数（用于复现和去重）</p></li>
+</ul>
+<p>一般来说：</p>
+<ul class="simple">
+<li><p>常见的 GCD 指标包括 <code class="docutils literal notranslate"><span class="pre">ACC</span></code>、<code class="docutils literal notranslate"><span class="pre">H-Score</span></code>、<code class="docutils literal notranslate"><span class="pre">K-ACC</span></code>、<code class="docutils literal notranslate"><span class="pre">N-ACC</span></code>、<code class="docutils literal notranslate"><span class="pre">ARI</span></code>、<code class="docutils literal notranslate"><span class="pre">NMI</span></code> 等</p></li>
+<li><p>常见的 OpenSet 指标包括 <code class="docutils literal notranslate"><span class="pre">F1</span></code>、<code class="docutils literal notranslate"><span class="pre">K-F1</span></code>、<code class="docutils literal notranslate"><span class="pre">N-F1</span></code> 等</p></li>
+</ul>
+</section>
+<section id="id6">
+<h2>5. 常见问题：为什么汇总表中没有写入内容<a class="headerlink" href="#id6" title="Link to this heading"></a></h2>
+<p>按以下顺序排查：</p>
+<ol class="arabic simple">
+<li><p>子任务是否失败？
+检查 <code class="docutils literal notranslate"><span class="pre">logs/</span></code> 下该组合对应的阶段日志，确认是否有错误堆栈跟踪或非零返回码。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">results.csv</span></code> 是否已生成？
+确认 <code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code> 存在，且 CSV 至少有一行结果数据。</p></li>
+<li><p>结果列是否完整？
+如果方法脚本写入的列与框架期望的列差异较大，汇总可能缺少字段或指标为空。建议在方法侧统一列名，或在方法输出中补全所需字段。</p></li>
+</ol>
+</section>
+<section id="id7">
+<h2>6. 使用建议<a class="headerlink" href="#id7" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>比较方法时，直接使用 <code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code> 作为主要分析入口。</p></li>
+<li><p>如果需要区分多次大规模运行，更改 <code class="docutils literal notranslate"><span class="pre">result_file</span></code> 以生成不同的汇总文件，避免互相覆盖。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

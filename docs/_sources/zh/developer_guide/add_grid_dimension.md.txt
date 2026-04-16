@@ -1,0 +1,98 @@
+# 扩展网格维度
+
+本页说明如何添加一个新的可扫描维度（网格维度），例如 `backbone`、`temperature`、`reg_loss` 等。
+
+在当前实现中，有两种可选路径：
+- 路径 A：该维度仅与一个（或少数几个）方法相关 -- 使用 `per_method_extra`（无需修改运行器）
+- 路径 B：该维度必须参与全局笛卡尔积 -- 必须修改运行器和 `args_json`（需要代码变更）
+
+## I. 路径 A：通过 `per_method_extra` 注入（推荐首选）
+
+适用场景：
+- 新参数仅影响一个或少数方法
+- 不需要该参数参与"全局组合数量计算"
+- 希望以最小改动完成集成
+
+操作方法：
+1) 在 YAML 中为目标方法添加 `per_method_extra`：
+per_method_extra:
+  plm_ood:
+    reg_loss: cosine
+  tan:
+    backbone: ./pretrained_models/bert-base-uncased
+
+2) 在 `cli_builder` 或方法脚本中从 `args_json` 读取该字段并转换为 CLI 参数
+- `args_json` 在 `make_base_args` 中合并了来自 `method_specs[method]` 的字段
+- 该字段会记录在日志中的 `ARGS_JSON` 中，用于可复现性
+
+优势：
+- 无需更改 `configs/base.py` 中的组合生成逻辑
+- 不影响其他方法
+
+## II. 路径 B：添加真正的网格维度（需要代码变更）
+
+适用场景：
+- 该参数必须参与网格展开，形成完整的笛卡尔积组合集
+- 希望在汇总表中按该维度比较和分析结果
+- 该维度跨多个方法共享，希望统一控制
+
+需要进行以下更改：
+
+### 第一步：在 YAML 的 `grid` 下添加新的维度列表
+
+示例：
+grid:
+  ...
+  backbone: ["bert-base-uncased", "bert-base-chinese"]
+
+### 第二步：修改 `configs/base.py` 中的组合展开逻辑
+
+组合展开使用 `configs/base.py` 中 `GridConfig.iter_experiments()` 内的 `itertools.product`。`cli.py` 中的运行器遍历这些实验对象。
+因此您需要：
+- 在 `GridConfig` 上添加新维度作为字段
+- 将其包含在 `GridConfig.iter_experiments()` 内的 `itertools.product` 调用中
+- 确保生成的实验对象携带新值，以便 `cli.py` 可以将其传递到 `worker` / `run_combo`
+
+### 第三步：在 `core.make_base_args` 中将新维度写入 `args_json`
+
+示例：
+args_json["backbone"] = backbone
+
+确保：
+- `cli_builder` 可以读取该字段并传递给方法脚本
+- `ARGS_JSON` 包含该字段（用于可复现性）
+
+### 第四步：更新去重跳过的匹配字段（如果依赖此机制）
+
+当前实现从 `results.csv` 读取历史记录并按若干字段过滤。
+如果 `backbone` 是区分实验的重要维度，请将其加入匹配字段集，以避免将不同骨干网络的实验视为相同组合。
+
+### 第五步：确保结果收集和汇总反映该维度
+
+建议方法在写入 `results.csv` 时将 `backbone` 记录在 `args` 字段（JSON）中，以保持汇总的可追溯性。
+
+## III. 推荐的开发与验证顺序
+
+1) 先使用路径 A（`per_method_extra`）使方法正常运行，并正确写入 `results.csv` 和汇总
+2) 仅在该维度确实需要全局/网格展开时，才进入路径 B
+3) 每次更改后，用最小网格验证：
+- 1 个方法
+- 1 个数据集
+- 1 个 seed
+- 1 个 fold
+- 新维度的 1-2 个值
+确保组合数量和汇总记录符合预期
+
+## IV. 常见问题
+
+1) 组合数量不符合预期
+- 检查新维度是否确实进入了 `configs/base.py` 中 `GridConfig.iter_experiments()` 的 `itertools.product` 调用
+- 检查实验对象是否携带该值并将其传递到 `cli.py` 中的 `run_combo`
+
+2) 参数传递缺失
+- 检查阶段日志开头的 `ARGS_JSON` 是否包含该字段
+- 如果 `ARGS_JSON` 包含但行为未改变，检查 `cli_builder` 是否将其转换为实际的 CLI 参数
+
+3) 汇总无法区分不同值
+- 确认该字段记录在 `results.csv` 的 `args`（JSON）列中
+- 如果依赖"跳过重复组合"机制，确认该字段包含在匹配逻辑中

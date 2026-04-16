@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Core Concepts &mdash; Bolt 0.1.0 documentation</title>
+  <title>Core Concepts &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -128,11 +128,7 @@
 <h2>2. Method: Algorithms (Implementations)<a class="headerlink" href="#method-algorithms-implementations" title="Link to this heading"></a></h2>
 <p>A <code class="docutils literal notranslate"><span class="pre">method</span></code> is the name of the algorithm you want to run, such as <code class="docutils literal notranslate"><span class="pre">tan</span></code>, <code class="docutils literal notranslate"><span class="pre">ab</span></code>, <code class="docutils literal notranslate"><span class="pre">plm_ood</span></code>, etc.
 The same method can be run multiple times under different datasets, splits, and hyperparameter combinations.</p>
-<p>The relationship between methods and tasks is defined by the <code class="docutils literal notranslate"><span class="pre">maps</span></code> field in YAML:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">maps.gcd</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">gcd</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">maps.openset</span></code>: the set of methods belonging to <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
-</ul>
+<p>The relationship between methods and tasks is handled automatically by the framework’s internal lookup table (<code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>). You do not need to specify any <code class="docutils literal notranslate"><span class="pre">maps</span></code> field in YAML.</p>
 </section>
 <section id="dataset">
 <h2>3. Dataset<a class="headerlink" href="#dataset" title="Link to this heading"></a></h2>
@@ -172,7 +168,7 @@ The framework executes <code class="docutils literal notranslate"><span class="p
 <section id="workdir-working-directory-output-dir">
 <h2>7. Workdir: Working Directory (<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>)<a class="headerlink" href="#workdir-working-directory-output-dir" title="Link to this heading"></a></h2>
 <p>You specify the working directory via <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> at runtime.
-The framework organizes outputs such as <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, and <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> under this directory, and also keeps configuration/environment snapshots for the run to support reproducibility and archiving.</p>
+The framework organizes outputs such as <code class="docutils literal notranslate"><span class="pre">logs/</span></code>, <code class="docutils literal notranslate"><span class="pre">results/</span></code>, and <code class="docutils literal notranslate"><span class="pre">outputs/</span></code> under this directory, and also keeps configuration copies for the run to support reproducibility and archiving.</p>
 </section>
 <section id="summary-summary-table-summary-result-file-csv">
 <h2>8. Summary: Summary Table (<code class="docutils literal notranslate"><span class="pre">summary_{result_file}.csv</span></code>)<a class="headerlink" href="#summary-summary-table-summary-result-file-csv" title="Link to this heading"></a></h2>

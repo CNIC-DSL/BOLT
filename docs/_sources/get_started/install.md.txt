@@ -5,32 +5,41 @@ This section describes the environment requirements and the recommended installa
 ## Requirements
 
 - Linux + NVIDIA GPU
-- Python 3.10
+- Python 3.10+
 - NVIDIA driver installed (you can run `nvidia-smi`)
 - If you need to install `flash-attn`: a working build toolchain is required, and you must ensure sufficient free space in the temporary directory (recommended to set `TMPDIR`)
 
-## Installation Steps (run in order)
+## Option A: Install from PyPI (recommended)
 
-1) Install bolt-lab (wheel package)
 ```bash
 pip install bolt_lab
 ```
 
-2) Install PyTorch (CUDA 12.6 uses cu126) 
+## Option B: Install from source
+
+```bash
+git clone https://github.com/CNIC-DSL/BOLT.git
+cd BOLT
+pip install -e .
+```
+
+## Install PyTorch and remaining dependencies
+
+1) Install PyTorch (CUDA 12.6 uses cu126)
 ```bash
 pip install torch==2.8.0 torchvision==0.23.0 torchaudio==2.8.0 --index-url https://download.pytorch.org/whl/cu126
 ```
 
-3) Install NVCC (use conda **only** for this step)
+2) Install NVCC (use conda **only** for this step)
 ```bash
 conda install -c nvidia cuda-nvcc -y
 ```
-4) Install the remaining Python dependencies
+3) Install the remaining Python dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-5) Install flash-attn (install separately to avoid build isolation and cache-related failures)
+4) Install flash-attn (install separately to avoid build isolation and cache-related failures)
 ```bash
 mkdir -p ~/tmp/pip
 TMPDIR=~/tmp/pip

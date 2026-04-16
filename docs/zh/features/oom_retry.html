@@ -1,0 +1,179 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OOM 重试机制 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OOM 重试机制</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/features/oom_retry.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="oom">
+<h1>OOM 重试机制<a class="headerlink" href="#oom" title="Link to this heading"></a></h1>
+<p>在 GPU 训练中，CUDA OOM（显存不足）是常见的失败模式。bolt-lab 提供了可控的自动 OOM 重试机制，以提高大规模网格实验的完成率。</p>
+<section id="id1">
+<h2>1. 触发条件<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<p>如果子进程抛出 <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> 且错误信息包含：</p>
+<ul class="simple">
+<li><p>“CUDA out of memory”</p></li>
+<li><p>或 “out of memory”
+框架会将其视为 OOM 事件。</p></li>
+</ul>
+</section>
+<section id="run">
+<h2>2. 可配置参数（在 <code class="docutils literal notranslate"><span class="pre">run</span></code> 中）<a class="headerlink" href="#run" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_on_oom</span></code>（默认：true）<br />
+是否启用 OOM 重试。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_retries</span></code>（默认：2）<br />
+最大重试次数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">retry_backoff_sec</span></code>（默认：15.0）<br />
+每次重试前的等待秒数，以等待 GPU 显存和缓冲区释放。</p></li>
+</ul>
+<p>示例：
+run:
+retry_on_oom: true
+max_retries: 3
+retry_backoff_sec: 30</p>
+</section>
+<section id="id2">
+<h2>3. 重试行为<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>OOM 发生后，框架等待退避秒数，然后重新启动该组合。</p></li>
+<li><p>如果配置了多个 GPU，重试时可能获取到不同的 GPU 令牌，相当于”换一个 GPU 重试”。</p></li>
+<li><p>如果达到 <code class="docutils literal notranslate"><span class="pre">max_retries</span></code> 后组合仍然失败，则标记为失败，该组合的流水线停止（需要手动调试或调整配置后重新运行）。</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2>4. 处理 OOM 的建议操作（按优先级排序）<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>如果同一组合反复出现 OOM，建议按以下顺序处理：</p>
+<ol class="arabic simple">
+<li><p>降低并发：减少 <code class="docutils literal notranslate"><span class="pre">max_workers</span></code> 或 <code class="docutils literal notranslate"><span class="pre">slots_per_gpu</span></code></p></li>
+<li><p>降低训练开销：减小 batch size / <code class="docutils literal notranslate"><span class="pre">max_length</span></code> / <code class="docutils literal notranslate"><span class="pre">num_train_epochs</span></code></p></li>
+<li><p>调整模型/骨干网络：换用更小的骨干网络或禁用内存消耗大的功能</p></li>
+<li><p>使用显存更大的 GPU，或减少同一 GPU 上运行的任务数量</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

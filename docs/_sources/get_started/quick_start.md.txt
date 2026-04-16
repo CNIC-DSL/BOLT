@@ -1,16 +1,18 @@
 # Quick Start
 
-Goal of this section: complete a reproducible run with the fewest steps, and clearly understand three key arguments: `--config`, `--output-dir`, and `--model-dir`.
+Goal of this section: complete a reproducible run with the fewest steps, and clearly understand the key arguments: `--config`, `--output-dir`, `--model-dir`, and `--data-dir`.
 
 ## 0. (Optional) Initialize the Workspace Only (`--init-only`)
 
 If you want to set up the working directory structure first (without running any experiments), use `--init-only`:
 ```bash
-bolt-grid --init-only --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+bolt-grid --init-only --output-dir ~/tmp --model-dir ~/pretrained_models
 ```
 
 What it does:
-- Creates/initializes the workspace under `--output-dir` (e.g., `logs/`, `results/`, `outputs/`, and linked directories like `code/`, `configs/`, `data/`, `pretrained_models/`)
+- Creates real directories under `--output-dir`: `outputs/`, `results/`, `logs/`, `configs/`
+- Creates symlinks: `data` -> `--data-dir` (or the package-embedded data if omitted), `pretrained_models` -> `--model-dir`
+- Copies editable YAML configs from the package into `configs/`
 - Useful for checking paths/permissions and confirming your workspace layout before launching a full run
 
 Note:
@@ -20,17 +22,23 @@ Note:
 
 After installation, run the following directly (example uses the GCD configuration):
 
-bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/code/bolt/pretrained_models
+```bash
+bolt-grid --config grid_gcd.yaml --output-dir ~/tmp --model-dir ~/pretrained_models
+```
 
 Argument details:
 - `--config`
   Specifies the configuration file. You can provide:
-  1) A config filename (e.g., `grid_gcd.yaml`): the framework will look for a config with the same name in its built-in `configs` directory.
+  1) A config filename (e.g., `grid_gcd.yaml`): the framework first looks in `{output-dir}/configs/`, then falls back to the package built-in configs.
   2) An absolute path to a config file: used to run a config that you copied and modified yourself.
 - `--output-dir`
   Specifies the working directory for this run. All logs (`logs/`), aggregated results (`results/`), and training/evaluation artifacts (`outputs/`) will be written under this directory.
 - `--model-dir`
   Specifies the pretrained model and cache directory. It is recommended to point to a stable, readable/writable location so you can reuse already-downloaded model files.
+- `--data-dir` (optional)
+  Specifies the datasets directory. If omitted, the package-embedded data is used via a symlink.
+- `--dry-run` (optional)
+  Print experiment commands without executing them. Useful for verifying the grid expansion before a real run.
 
 ## 2. Recommended First-Run Workflow
 
@@ -38,13 +46,13 @@ To avoid an overly large and time-consuming setup on your first run, use the fol
 
 Step 0 (optional): Initialize the workspace
 ```bash
-bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models --init-only
+bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models --init-only
 ```
 
 Step 1: Copy a config to your own directory
 For example, copy an internal/built-in config out (choose the path according to your setup), then modify the copied version.
 
-Step 2: Shrink the config to a “minimal runnable scale”
+Step 2: Shrink the config to a "minimal runnable scale"
 For the first run, it is recommended to keep only:
 - 1 dataset
 - 1 method
@@ -54,7 +62,7 @@ For the first run, it is recommended to keep only:
 
 Step 3: Run your copied config using an absolute path
 ```bash
-bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/code/bolt/pretrained_models
+bolt-grid --config /abs/path/to/your_config.yaml --output-dir ~/tmp/exp_001 --model-dir ~/pretrained_models
 ```
 
 This ensures:
@@ -74,7 +82,7 @@ After completion (a real run):
 - The summary file under `results/` should append new records when combos successfully produce results.
 
 After completion (init-only):
-- You should see the workspace directory skeleton and linked directories under `--output-dir`;
+- You should see the workspace directory skeleton and symlinks under `--output-dir`;
 - It is normal that there are no combo stage logs and no new summary records.
 
 Next, open `outputs.md` to learn how to locate logs and summary results, and the recommended troubleshooting order.

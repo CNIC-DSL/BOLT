@@ -1,0 +1,205 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>方法注册与执行流水线 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">方法注册与执行流水线</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/features/method_registry.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>方法注册与执行流水线<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>bolt-lab 通过<strong>方法注册表</strong>将 <code class="docutils literal notranslate"><span class="pre">method</span></code> 名称映射到可执行脚本、默认配置和执行阶段。</p>
+<p>本页说明：</p>
+<ul class="simple">
+<li><p>方法如何被解析为 <code class="docutils literal notranslate"><span class="pre">gcd</span></code> / <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
+<li><p>阶段如何组织（单阶段或多阶段）</p></li>
+<li><p>每次运行时参数如何传递给子进程</p></li>
+</ul>
+<section id="id2">
+<h2>1. 从方法到任务<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
+<p>框架使用内置查找表（<code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code>）将每个方法解析为对应的任务类型（<code class="docutils literal notranslate"><span class="pre">gcd</span></code> 或 <code class="docutils literal notranslate"><span class="pre">openset</span></code>）。在 <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code> 中定义了一个统一的 <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code>，包含所有两种任务类型的方法条目。</p>
+</section>
+<section id="id3">
+<h2>2. 注册表结构<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<p>每个方法对应一个注册表条目，包含以下内容：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">task</span></code>：<code class="docutils literal notranslate"><span class="pre">gcd</span></code> 或 <code class="docutils literal notranslate"><span class="pre">openset</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stages</span></code>：阶段列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">config</span></code>：方法的默认配置文件路径，以相对路径形式指定（例如 <code class="docutils literal notranslate"><span class="pre">&quot;gcd/tan.yaml&quot;</span></code>）。这些相对路径通过 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的工作区查找来解析。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_base</span></code>：方法的默认输出根目录（例如 <code class="docutils literal notranslate"><span class="pre">./outputs/gcd/tan</span></code>）</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">stages</span></code> 是一个列表。每个阶段通常包含：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">entry</span></code>：该阶段调用的脚本入口点（用于定位/识别可执行文件）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cli_builder</span></code>：组装命令行参数的函数（最终生成子进程命令）</p></li>
+</ul>
+<p>CLI 构建函数分别组织在 <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code>（用于 GCD 方法）和 <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code>（用于 OpenSet 方法）中。</p>
+<p>因此，一个方法可以是：</p>
+<ul class="simple">
+<li><p>单阶段：<code class="docutils literal notranslate"><span class="pre">stages</span></code> 只有 1 项（大多数基线方法属于此类）</p></li>
+<li><p>多阶段：<code class="docutils literal notranslate"><span class="pre">stages</span></code> 有多项（例如预训练 -&gt; 微调的流水线）</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2>3. 参数如何传递给子进程<a class="headerlink" href="#id4" title="Link to this heading"></a></h2>
+<p>对于每次运行，框架构建一个 <code class="docutils literal notranslate"><span class="pre">args_json</span></code>，包含 <code class="docutils literal notranslate"><span class="pre">dataset</span></code>、比例、fold、seed、GPU、epochs 等关键字段，并通过两种方式传递：</p>
+<ol class="arabic simple">
+<li><p>写入环境变量 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>（以便在日志中完整记录）</p></li>
+<li><p>通过命令行参数传递给脚本（由 <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> 组装）</p></li>
+</ol>
+<p>在日志文件的开头，通常可以看到：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span></code>：实际执行的命令</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>：该组合的完整参数 JSON</p></li>
+</ul>
+<p>这为复现和调试单次实验运行提供了清晰的依据。</p>
+</section>
+<section id="bert">
+<h2>4. BERT 模型选择规则（默认逻辑）<a class="headerlink" href="#bert" title="Link to this heading"></a></h2>
+<p>在某些任务中，<code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> 会根据数据集自动选择中文或英文 BERT 目录。中文数据集集合在 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中硬编码为 <code class="docutils literal notranslate"><span class="pre">{&quot;ecdt&quot;,</span> <span class="pre">&quot;thucnews&quot;}</span></code>。例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ecdt</span></code> / <code class="docutils literal notranslate"><span class="pre">thucnews</span></code>：使用 <code class="docutils literal notranslate"><span class="pre">bert-base-chinese</span></code></p></li>
+<li><p>其他：使用 <code class="docutils literal notranslate"><span class="pre">bert-base-uncased</span></code></p></li>
+</ul>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code> 时，建议将 <code class="docutils literal notranslate"><span class="pre">--model-dir</span></code> 指向您机器上稳定的预训练模型目录，以便多个实验可以复用缓存和权重文件。</p>
+</section>
+<section id="id5">
+<h2>5. 扩展：添加新方法需要做什么<a class="headerlink" href="#id5" title="Link to this heading"></a></h2>
+<p>总体来说，您需要完成以下步骤：</p>
+<ol class="arabic simple">
+<li><p>在统一的 <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code>（位于 <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code>）中添加新的方法条目：</p>
+<ul class="simple">
+<li><p>指定 <code class="docutils literal notranslate"><span class="pre">task</span></code>、<code class="docutils literal notranslate"><span class="pre">config</span></code>（以相对路径形式）和 <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
+<li><p>配置 <code class="docutils literal notranslate"><span class="pre">stages</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code>（在对应的 <code class="docutils literal notranslate"><span class="pre">methods/builders_*.py</span></code> 模块中添加构建函数）</p></li>
+</ul>
+</li>
+<li><p>确保方法脚本将结果写入框架可收集的位置（参见 <code class="docutils literal notranslate"><span class="pre">auto_summary</span></code> 页面）</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 的 <code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code> 中添加该方法，并在 YAML 的 <code class="docutils literal notranslate"><span class="pre">methods</span></code> 中引用它</p></li>
+<li><p>先用小规模网格 + <code class="docutils literal notranslate"><span class="pre">dry_run</span></code> 验证命令和参数，然后再扩大规模进行大批量运行</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

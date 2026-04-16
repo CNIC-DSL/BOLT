@@ -1,0 +1,58 @@
+# 可复现性与重复运行控制
+
+大规模网格实验中的常见需求包括：
+- 能够准确复现实验
+- 避免重复运行相同的组合
+- 需要时强制重新运行
+
+本页说明 bolt-lab 在这三个方面的设计与推荐实践。
+
+## 1. 可复现性的核心要素
+
+每个实验组合由以下参数共同定义：
+- method / dataset
+- `known_cls_ratio` / `labeled_ratio` / `cluster_num_factor`
+- `fold_type` / `fold_num` / `fold_idx`
+- seed
+- 训练轮次（`num_pretrain_epochs` / `num_train_epochs`）
+- 通过 `per_method_extra` 注入的额外参数（例如 `backbone`、`reg_loss`、`extra_flags` 等）
+
+运行时，这些信息被记录为 `ARGS_JSON` 并写入对应阶段日志的开头，作为复现的依据。
+
+## 2. 推荐实践：输出隔离
+
+建议为每次大规模实验使用独立的 `--output-dir`，例如：
+- `~/tmp/exp_gcd_001`
+- `~/tmp/exp_openset_20251225`
+
+这确保了：
+- `logs/results/outputs` 互不干扰
+- 运行时环境和配置快照与该次实验一一对应
+- 整个运行可以方便地打包、迁移和归档
+
+其他建议：
+- 将使用的 YAML 配置纳入版本控制（或与输出目录一起归档）
+- 使用固定的 `--model-dir` 来复用模型缓存
+
+## 3. 避免重复运行：跳过已有记录
+
+当框架检测到某方法在 `results/{task}/{method}/results.csv` 已有 `results.csv`，且文件中包含与当前组合参数匹配的记录（包括 `method`、`dataset`、`known_cls_ratio`、`labeled_ratio`、`fold_type`、`fold_num`、`fold_idx`、`seed` 和 `num_train_epochs`），则会跳过该组合的执行，避免重复计算。
+
+将"跳过重复组合"视为默认行为：在大规模实验中，它可以显著节省时间和资源。
+
+## 4. 如何强制重新运行
+
+如果需要重新运行相同的组合（例如代码更新、修复 bug 或方法实现变更后），可以使用以下方法之一：
+
+1) 更改 `result_file`  
+通过更改 YAML 字段 `result_file`，生成新的汇总文件，便于与旧结果区分。
+
+2) 使用新的 `--output-dir`  
+将输出写入新的工作目录，避免覆盖旧目录下的产物和日志。
+
+3) 清除目标方法的 `results.csv`  
+如果您明确了解影响范围，可以删除：
+./results/{task}/{method}/results.csv
+然后重新运行目标组合，框架会重新收集结果。
+
+实践中推荐前两种方法（更安全且可追溯）。

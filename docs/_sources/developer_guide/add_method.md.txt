@@ -9,14 +9,14 @@ This page explains how to integrate a new method into bolt-lab so that it can:
 
 Adding a new method typically involves three parts:
 1) Method script (the actual training/evaluation code)
-2) Method configuration (YAML under `configs/`)
-3) Registration and command construction (`cli_gcd.py` or `cli_openset.py`)
+2) Method configuration (YAML under `configs/yaml_files/`)
+3) Registration and command construction (`methods/builders_gcd.py` or `methods/builders_openset.py`)
 
 ## II. Step 1: Prepare the Method Script and Outputs
 
 1) Location
-- GCD methods are typically placed under: `code/gcd/...`
-- OpenSet methods are typically placed under: `code/openset/...`
+- Method scripts are placed under: `methods/_builtin/_src/<MethodDir>/`
+- For example, a method called `MyMethod` would live at `methods/_builtin/_src/MyMethod/`
 
 2) Output requirements (mandatory)
 After the method finishes, it **must** write:
@@ -30,8 +30,10 @@ Requirements:
 ## III. Step 2: Add a Method Configuration File
 
 Add a default config for the new method:
-- GCD: `configs/gcd/<method>.yaml`
-- OpenSet: `configs/openset/<method>.yaml`
+- GCD: `configs/yaml_files/gcd/<method>.yaml`
+- OpenSet: `configs/yaml_files/openset/<method>.yaml`
+
+Note the `yaml_files/` subdirectory level inside `configs/`.
 
 Recommendations:
 - Put common parameters at the top level
@@ -40,8 +42,8 @@ Recommendations:
 ## IV. Step 3: Implement `cli_builder` (Command Builder Function)
 
 Add a new command builder function in the corresponding file:
-- GCD: `cli_gcd.py`
-- OpenSet: `cli_openset.py`
+- GCD: `methods/builders_gcd.py`
+- OpenSet: `methods/builders_openset.py`
 
 Basic principles for command construction:
 1) Read common fields from `args_json`:
@@ -51,8 +53,9 @@ Basic principles for command construction:
 - `num_pretrain_epochs` / `num_train_epochs`
 - `config` (default config path)
 2) Read method-specific parameters from `args_json` as well (from `per_method_extra` or future grid dimensions)
-3) Output must be an **argv list**, for example:
-[sys.executable, "code/xxx/run.py", "--arg1", "v1", ...]
+3) Use `_src_path("MethodName", "run.py")` to resolve the path to bundled method scripts
+4) Output must be an **argv list**, for example:
+[sys.executable, str(_src_path("MyMethod", "run.py")), "--arg1", "v1", ...]
 
 Recommended pattern:
 - If your method can reuse common flags, reuse existing `_common_env` / `_common_flags` / `_epoch_flags` logic
@@ -60,21 +63,23 @@ Recommended pattern:
 
 ## V. Step 4: Register the Method in `METHOD_REGISTRY`
 
-1) Choose the correct registry
-- GCD: `METHOD_REGISTRY_GCD` (in `cli_gcd.py`)
-- OpenSet: `METHOD_REGISTRY_OPENSET` (in `cli_openset.py`)
+1) Import the unified registry
+- Import `METHOD_REGISTRY` from `methods/registry.py`
+- Both GCD and OpenSet methods register into this single shared registry
 
-2) Add a new entry
+2) Add a new entry using the `MethodSpec` dataclass
 
-"<method>": {
-  "task": "gcd" or "openset",
-  "stages": [
+The `MethodSpec` dataclass has the following fields: `task`, `stages`, `config`, `output_base`.
+
+METHOD_REGISTRY["<method>"] = MethodSpec(
+  task="gcd" or "openset",
+  stages=[
     {"entry": "<script path>", "cli_builder": <function_name>},
     ... (add more items for multi-stage methods)
   ],
-  "config": "configs/<task>/<method>.yaml",
-  "output_base": "./outputs/<task>/<method>",
-}
+  config="configs/yaml_files/<task>/<method>.yaml",
+  output_base="./outputs/<task>/<method>",
+)
 
 Notes:
 - The number of `stages` determines whether the method is single-stage or multi-stage
@@ -83,10 +88,7 @@ Notes:
 
 ## VI. Step 5: Declare It in YAML and Test Run
 
-1) Add the method into the corresponding task set under `maps`:
-maps:
-  gcd: [..., <method>]
-  openset: [...]
+1) Add the method to `_METHOD_TASK_MAP` in `configs/base.py` (to map the method name to its task type), and add it to `METHOD_REGISTRY` in `methods/registry.py`.
 
 2) Reference the method in `methods`:
 methods: [<method>]
@@ -102,6 +104,6 @@ methods: [<method>]
 - Then check whether `results.csv` contains a readable last-row result
 
 2) Parameters are not passed through
-- Check `ARGS_JSON` at the beginning of `stageX.log`
+- Check `ARGS_JSON` at the beginning of `stage1.log` or `stage2.log`
 - Confirm that `cli_builder` reads the corresponding fields from `args_json`
 - If using `per_method_extra`, confirm the method name matches and field names are consistent

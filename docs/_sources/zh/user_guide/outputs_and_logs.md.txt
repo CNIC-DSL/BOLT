@@ -1,0 +1,73 @@
+# 输出与日志导航
+
+本页面说明运行结束后在哪里查找日志、汇总结果和生成的产物，并针对常见问题提供推荐的排查顺序。
+
+## 1. 主要输出目录（位于工作目录 `--output-dir` 下）
+
+- `logs/`
+  每个 combo 的运行日志，包括各阶段日志。调试错误时请优先查看此目录。
+
+- `results/`
+  汇总文件和各方法结果的目录。通常包含：
+  - `summary_{result_file}.csv`
+
+- `outputs/`
+  训练/评估产物（模型、预测结果、缓存等），按方法和 combo 组织。
+
+关于 `--init-only` 的说明：
+- 如果使用 `--init-only` 运行，目录骨架（及链接目录）会被创建，但**没有 combo 阶段日志**和**没有新的汇总记录**是正常的，因为没有 combo 被执行。
+
+## 2. 日志目录结构
+
+每个 combo 的日志目录通常按以下方式组织：
+
+logs/{task}/{method}/{dataset}/
+  kr{known_cls_ratio}/
+  lr{labeled_ratio}/
+  {fold_type}_{fold_num}_{fold_idx}/
+  seed{seed}/
+
+该目录通常包含：
+- `stage1.log`、`stage2.log`、……：各阶段的 stdout/stderr
+
+在每个阶段日志的开头，通常可以看到两项信息：
+- `CMD`：实际执行的命令
+- `ARGS_JSON`：该 combo 的完整参数集（用于复现和调试）
+
+## 3. 结果文件与汇总文件
+
+### 3.1 各方法结果文件（`results.csv`）
+
+默认情况下，框架从以下路径读取各方法的结果：
+results/{task}/{method}/results.csv
+
+框架取该 CSV 的最后一行作为"最新结果记录"，并写入汇总表。
+
+### 3.2 汇总文件（`summary_{result_file}.csv`）
+
+汇总文件位于：
+results/summary_{result_file}.csv
+
+每当一个 combo 成功收集到结果，汇总表就会追加一行新记录。
+
+关于 `--init-only` 的说明：
+- `--init-only` 不会运行阶段、不会写入方法结果，因此汇总表不会追加新行。
+
+## 4. 推荐排查顺序
+
+问题 A：某个 combo 失败 / 出现运行时错误
+1) 定位该 combo 对应的 `stageX.log`
+2) 查看错误堆栈和关键参数（`ARGS_JSON`）
+3) 使用 `CMD` 直接复现单次运行以便调试
+
+问题 B：运行完成但汇总表中没有新记录
+1) 检查是否有阶段返回码为非零（失败时流水线会停止，不会写入汇总）
+2) 检查 `results/{task}/{method}/results.csv` 是否存在且非空
+3) 检查方法写入的列是否完整（尤其是指标列和 `args` 字段）
+
+问题 B（init-only 情况）：您使用了 `--init-only`
+- 这是预期行为：`--init-only` 仅初始化工作空间，不执行 combo，因此不会生成 `results.csv` 或追加汇总记录。
+
+问题 C：输出目录结构不符合预期
+1) 确认 `--output-dir` 指向实验根目录（不要直接指向 `outputs` 子目录）
+2) 确认 `paths.results_dir` / `paths.logs_dir` 为相对路径（相对路径会在工作目录下创建）

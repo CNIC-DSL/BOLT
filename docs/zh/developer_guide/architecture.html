@@ -1,0 +1,315 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>架构与执行流程 &mdash; Bolt 0.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Bolt
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/install.html">Installation and Environment Setup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/quick_start.html">Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/pretrained_models.html">Pretrained Model Preparation (Pretrained Models)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/outputs.html">Output Directory Structure and Notes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Framework Features</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../features/yaml_experiment_spec.html">YAML Experiment Specification</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/method_registry.html">Method Registration and Execution Pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/gpu_scheduler.html">GPU Concurrency Scheduling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/oom_retry.html">OOM Retry Mechanism</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/auto_summary.html">Automatic Result Collection and Summarization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../features/reproducibility.html">Reproducibility and Duplicate-Run Control</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/concepts.html">Core Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/config_yaml.html">Configuration File (YAML) Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/datasets.html">Datasets Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/run_grid.html">Running and Common Operations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/outputs_and_logs.html">Outputs and Log Navigation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/metrics.html">Metrics Guide</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Developer Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/architecture.html">Architecture and Execution Flow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_method.html">Adding a New Method</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_dataset.html">Integrating a New Dataset</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer_guide/add_grid_dimension.html">Extending Grid Dimensions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Bolt</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">架构与执行流程</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/zh/developer_guide/architecture.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1>架构与执行流程<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
+<p>本页面面向希望扩展或修改系统的开发者，介绍 bolt-lab 的核心执行链、关键数据结构以及各模块的职责边界。</p>
+<section id="i-yaml">
+<h2>I. 端到端数据流（从 YAML 到汇总结果）<a class="headerlink" href="#i-yaml" title="Link to this heading"></a></h2>
+<section id="bolt-grid">
+<h3>1) 入口点：<code class="docutils literal notranslate"><span class="pre">bolt-grid</span></code><a class="headerlink" href="#bolt-grid" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>CLI 入口点为 <code class="docutils literal notranslate"><span class="pre">bolt_lab.cli:main</span></code>（定义在 <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> 中）</p></li>
+<li><p>接受参数：<code class="docutils literal notranslate"><span class="pre">--config</span></code>、<code class="docutils literal notranslate"><span class="pre">--output-dir</span></code>、<code class="docutils literal notranslate"><span class="pre">--model-dir</span></code>、<code class="docutils literal notranslate"><span class="pre">--data-dir</span></code>、<code class="docutils literal notranslate"><span class="pre">--init-only</span></code>、<code class="docutils literal notranslate"><span class="pre">--dry-run</span></code>、<code class="docutils literal notranslate"><span class="pre">--overwrite-configs</span></code></p></li>
+<li><p>将配置文件解析为具体路径后，将控制权交给 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的执行引擎</p></li>
+</ul>
+</section>
+<section id="id2">
+<h3>2) 配置解析与工作区初始化<a class="headerlink" href="#id2" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>YAML 通过 <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">GridConfig.from_grid_yaml()</span></code> 解析</p></li>
+<li><p>校验必需字段：
+<code class="docutils literal notranslate"><span class="pre">methods</span> <span class="pre">/</span> <span class="pre">datasets</span> <span class="pre">/</span> <span class="pre">grid</span> <span class="pre">/</span> <span class="pre">run</span> <span class="pre">/</span> <span class="pre">paths</span> <span class="pre">/</span> <span class="pre">result_file</span> <span class="pre">/</span> <span class="pre">per_method_extra</span> <span class="pre">/</span> <span class="pre">extra_args</span></code></p></li>
+<li><p>路径设置在 <code class="docutils literal notranslate"><span class="pre">cli.py</span></code> 中内联完成（第 59-63 行），初始化：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">logs/</span></code> 根目录</p></li>
+</ul>
+</li>
+<li><p>工作区初始化由 <code class="docutils literal notranslate"><span class="pre">workspace.py:init_workspace()</span></code> 处理</p></li>
+</ul>
+</section>
+<section id="id3">
+<h3>3) 组合展开与调度<a class="headerlink" href="#id3" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">itertools.product</span></code> 将 <code class="docutils literal notranslate"><span class="pre">grid</span></code> 中的各维度展开为实验组合（combos），形成完整的任务列表</p></li>
+<li><p>构建 GPU 令牌池（一个 <code class="docutils literal notranslate"><span class="pre">Queue</span></code>）：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.gpus</span></code> 指定可用 GPU 列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run.slots_per_gpu</span></code> 决定每个 GPU 提供多少令牌</p></li>
+<li><p>总令牌数 = <code class="docutils literal notranslate"><span class="pre">len(gpus)</span> <span class="pre">*</span> <span class="pre">slots_per_gpu</span></code></p></li>
+</ul>
+</li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">ThreadPoolExecutor</span></code> 并发调度任务：</p>
+<ul>
+<li><p>每个工作线程启动时获取一个 <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code></p></li>
+<li><p>完成后归还 <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code></p></li>
+<li><p>并发数 = <code class="docutils literal notranslate"><span class="pre">min(max_workers,</span> <span class="pre">total_tokens,</span> <span class="pre">number_of_combos)</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="core-py">
+<h3>4) 单组合执行：<code class="docutils literal notranslate"><span class="pre">core.py</span></code><a class="headerlink" href="#core-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>从统一注册表查找方法定义：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">methods.registry.METHOD_REGISTRY</span></code></p></li>
+</ul>
+</li>
+<li><p>通过 <code class="docutils literal notranslate"><span class="pre">core.py:make_base_args()</span></code> 构建 <code class="docutils literal notranslate"><span class="pre">args_json</span></code>：</p>
+<ul>
+<li><p>包含 method/dataset/ratios/fold/seed/GPU/epochs 等关键字段</p></li>
+<li><p>合并来自 <code class="docutils literal notranslate"><span class="pre">per_method_extra[method]</span></code> 的方法特定额外字段</p></li>
+</ul>
+</li>
+<li><p>执行各阶段：</p>
+<ul>
+<li><p>每个阶段通过 <code class="docutils literal notranslate"><span class="pre">cli_builder(args_json,</span> <span class="pre">stage_idx)</span></code> 生成 argv 命令</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">run_stage()</span></code> 负责：</p>
+<ul>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 环境变量（用于日志和可复现性）</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">CUDA_VISIBLE_DEVICES</span></code>（绑定到获取的 <code class="docutils literal notranslate"><span class="pre">gpu_id</span></code>）</p></li>
+<li><p>在阶段日志开头写入 <code class="docutils literal notranslate"><span class="pre">CMD</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code></p></li>
+<li><p>启动子进程并等待返回码</p></li>
+</ul>
+</li>
+<li><p>如果任何阶段返回非零码，该组合失败，后续阶段不再执行</p></li>
+</ul>
+</li>
+<li><p>日志路径约定：<code class="docutils literal notranslate"><span class="pre">logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/</span></code></p>
+<ul>
+<li><p>每个阶段生成自己的日志文件（<code class="docutils literal notranslate"><span class="pre">stage1.log</span></code>、<code class="docutils literal notranslate"><span class="pre">stage2.log</span></code> 等）</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="collect-latest-result-write-summary">
+<h3>5) 结果收集与汇总：<code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code> + <code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code><a class="headerlink" href="#collect-latest-result-write-summary" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>所有阶段成功后，框架尝试读取：
+<code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code>
+并使用最后一行作为”最新结果”</p></li>
+<li><p>如果成功，则向以下文件追加一行：
+<code class="docutils literal notranslate"><span class="pre">results/summary_{result_file}.csv</span></code></p></li>
+<li><p>如果结果文件缺失或为空，则打印类似 “Finished but no results found” 的信息，不写入汇总</p></li>
+<li><p>跳过逻辑由 <code class="docutils literal notranslate"><span class="pre">core.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code> 处理</p></li>
+</ul>
+</section>
+</section>
+<section id="ii">
+<h2>II. 关键模块与职责边界<a class="headerlink" href="#ii" title="Link to this heading"></a></h2>
+<section id="cli-py">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">cli.py</span></code>（入口点）<a class="headerlink" href="#cli-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>负责：CLI 参数解析、路径设置（内联，第 59-63 行）、将控制权交给执行引擎</p></li>
+<li><p>不负责：方法内部的训练逻辑或指标计算</p></li>
+</ul>
+</section>
+<section id="id4">
+<h3>2) <code class="docutils literal notranslate"><span class="pre">core.py</span></code>（执行与汇总层）<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>负责：构建 <code class="docutils literal notranslate"><span class="pre">args_json</span></code>（<code class="docutils literal notranslate"><span class="pre">make_base_args()</span></code>）、运行各阶段、组织日志目录、收集结果（<code class="docutils literal notranslate"><span class="pre">_collect_latest_result()</span></code>）、写入汇总（<code class="docutils literal notranslate"><span class="pre">_write_summary()</span></code>）、跳过检测（<code class="docutils literal notranslate"><span class="pre">_is_already_done()</span></code>）</p></li>
+<li><p>负责：为每个阶段写入 <code class="docutils literal notranslate"><span class="pre">CMD</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>（用于可复现性和调试）</p></li>
+<li><p>不负责：YAML 解析或工作区初始化</p></li>
+</ul>
+</section>
+<section id="methods-builders-gcd-py-methods-builders-openset-py">
+<h3>3) <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code> / <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code>（方法注册与命令构建）<a class="headerlink" href="#methods-builders-gcd-py-methods-builders-openset-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>负责：将方法映射到阶段，并为每个阶段提供 <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code></p></li>
+<li><p>负责：定义默认配置路径和默认 <code class="docutils literal notranslate"><span class="pre">output_base</span></code></p></li>
+<li><p>不负责：执行期间写入结果（这由方法脚本处理）</p></li>
+</ul>
+</section>
+<section id="methods-registry-py">
+<h3>4) <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code>（统一方法注册表）<a class="headerlink" href="#methods-registry-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>包含唯一的 <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> 字典，将方法名称映射到其规格</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">builders_gcd.py</span></code> 和 <code class="docutils literal notranslate"><span class="pre">builders_openset.py</span></code> 都注册到这个共享的注册表中</p></li>
+</ul>
+</section>
+<section id="configs-base-py">
+<h3>5) <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code>（配置解析）<a class="headerlink" href="#configs-base-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>负责：<code class="docutils literal notranslate"><span class="pre">GridConfig.from_grid_yaml()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">GridConfig.iter_experiments()</span></code></p></li>
+</ul>
+</section>
+<section id="workspace-py">
+<h3>6) <code class="docutils literal notranslate"><span class="pre">workspace.py</span></code>（工作区初始化）<a class="headerlink" href="#workspace-py" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>负责：<code class="docutils literal notranslate"><span class="pre">init_workspace()</span></code> 为一次运行设置目录结构</p></li>
+</ul>
+</section>
+</section>
+<section id="iii">
+<h2>III. 可复现性约定<a class="headerlink" href="#iii" title="Link to this heading"></a></h2>
+<section id="args-json">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 作为最小复现闭环<a class="headerlink" href="#args-json" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>在每个阶段日志的开头，您会看到：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">CMD</span></code>（实际执行的命令）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>（完整参数 JSON）
+因此，复现实验通常只需直接复制日志中的命令和参数即可。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id5">
+<h3>2) 结果文件路径约定<a class="headerlink" href="#id5" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>自动汇总依赖于以下约定：
+<code class="docutils literal notranslate"><span class="pre">./results/{task}/{method}/results.csv</span></code>
+方法脚本必须在执行结束时写入此文件；否则框架无法自动收集和汇总结果。</p></li>
+</ul>
+</section>
+</section>
+<section id="iv">
+<h2>IV. 开发者常用调试技巧<a class="headerlink" href="#iv" title="Link to this heading"></a></h2>
+<section id="dry-run">
+<h3>1) <code class="docutils literal notranslate"><span class="pre">dry_run</span></code><a class="headerlink" href="#dry-run" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>在 YAML 的 <code class="docutils literal notranslate"><span class="pre">run</span></code> 下设置 <code class="docutils literal notranslate"><span class="pre">dry_run=true</span></code>，可打印命令和 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> 而不实际执行</p></li>
+<li><p>用于检查组合数量、参数传递以及命令构建是否符合预期</p></li>
+</ul>
+</section>
+<section id="id6">
+<h3>2) 从阶段日志复现<a class="headerlink" href="#id6" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>在日志路径下找到失败组合的 <code class="docutils literal notranslate"><span class="pre">stage1.log</span></code> 或 <code class="docutils literal notranslate"><span class="pre">stage2.log</span></code>：
+<code class="docutils literal notranslate"><span class="pre">logs/{task}/{method}/{dataset}/kr{kcr}/lr{lr}/{fold_type}_{fold_num}_{fold_idx}/seed{seed}/</span></code></p></li>
+<li><p>复制 <code class="docutils literal notranslate"><span class="pre">CMD</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code>，对照方法脚本的参数解析逻辑进行复现/调试</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, CNIC-DSL.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

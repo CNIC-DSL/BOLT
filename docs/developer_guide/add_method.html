@@ -6,17 +6,17 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adding a New Method &mdash; Bolt 0.1.0 documentation</title>
+  <title>Adding a New Method &mdash; Bolt 0.3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=01f34227"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../_static/documentation_options.js?v=e259d695"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
     <script src="../_static/js/theme.js"></script>
@@ -124,8 +124,8 @@
 <p>Adding a new method typically involves three parts:</p>
 <ol class="arabic simple">
 <li><p>Method script (the actual training/evaluation code)</p></li>
-<li><p>Method configuration (YAML under <code class="docutils literal notranslate"><span class="pre">configs/</span></code>)</p></li>
-<li><p>Registration and command construction (<code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code> or <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code>)</p></li>
+<li><p>Method configuration (YAML under <code class="docutils literal notranslate"><span class="pre">configs/yaml_files/</span></code>)</p></li>
+<li><p>Registration and command construction (<code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code> or <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code>)</p></li>
 </ol>
 </section>
 <section id="ii-step-1-prepare-the-method-script-and-outputs">
@@ -134,8 +134,8 @@
 <li><p>Location</p></li>
 </ol>
 <ul class="simple">
-<li><p>GCD methods are typically placed under: <code class="docutils literal notranslate"><span class="pre">code/gcd/...</span></code></p></li>
-<li><p>OpenSet methods are typically placed under: <code class="docutils literal notranslate"><span class="pre">code/openset/...</span></code></p></li>
+<li><p>Method scripts are placed under: <code class="docutils literal notranslate"><span class="pre">methods/_builtin/_src/&lt;MethodDir&gt;/</span></code></p></li>
+<li><p>For example, a method called <code class="docutils literal notranslate"><span class="pre">MyMethod</span></code> would live at <code class="docutils literal notranslate"><span class="pre">methods/_builtin/_src/MyMethod/</span></code></p></li>
 </ul>
 <ol class="arabic simple" start="2">
 <li><p>Output requirements (mandatory)
@@ -153,9 +153,10 @@ After the method finishes, it <strong>must</strong> write:
 <h2>III. Step 2: Add a Method Configuration File<a class="headerlink" href="#iii-step-2-add-a-method-configuration-file" title="Link to this heading"></a></h2>
 <p>Add a default config for the new method:</p>
 <ul class="simple">
-<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">configs/gcd/&lt;method&gt;.yaml</span></code></p></li>
-<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">configs/openset/&lt;method&gt;.yaml</span></code></p></li>
+<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">configs/yaml_files/gcd/&lt;method&gt;.yaml</span></code></p></li>
+<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">configs/yaml_files/openset/&lt;method&gt;.yaml</span></code></p></li>
 </ul>
+<p>Note the <code class="docutils literal notranslate"><span class="pre">yaml_files/</span></code> subdirectory level inside <code class="docutils literal notranslate"><span class="pre">configs/</span></code>.</p>
 <p>Recommendations:</p>
 <ul class="simple">
 <li><p>Put common parameters at the top level</p></li>
@@ -166,8 +167,8 @@ After the method finishes, it <strong>must</strong> write:
 <h2>IV. Step 3: Implement <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> (Command Builder Function)<a class="headerlink" href="#iv-step-3-implement-cli-builder-command-builder-function" title="Link to this heading"></a></h2>
 <p>Add a new command builder function in the corresponding file:</p>
 <ul class="simple">
-<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code></p></li>
-<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code></p></li>
+<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">methods/builders_gcd.py</span></code></p></li>
+<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">methods/builders_openset.py</span></code></p></li>
 </ul>
 <p>Basic principles for command construction:</p>
 <ol class="arabic simple">
@@ -182,8 +183,9 @@ After the method finishes, it <strong>must</strong> write:
 </ul>
 <ol class="arabic simple" start="2">
 <li><p>Read method-specific parameters from <code class="docutils literal notranslate"><span class="pre">args_json</span></code> as well (from <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code> or future grid dimensions)</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">_src_path(&quot;MethodName&quot;,</span> <span class="pre">&quot;run.py&quot;)</span></code> to resolve the path to bundled method scripts</p></li>
 <li><p>Output must be an <strong>argv list</strong>, for example:
-[sys.executable, “code/xxx/run.py”, “–arg1”, “v1”, …]</p></li>
+[sys.executable, str(_src_path(“MyMethod”, “run.py”)), “–arg1”, “v1”, …]</p></li>
 </ol>
 <p>Recommended pattern:</p>
 <ul class="simple">
@@ -194,24 +196,25 @@ After the method finishes, it <strong>must</strong> write:
 <section id="v-step-4-register-the-method-in-method-registry">
 <h2>V. Step 4: Register the Method in <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code><a class="headerlink" href="#v-step-4-register-the-method-in-method-registry" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p>Choose the correct registry</p></li>
+<li><p>Import the unified registry</p></li>
 </ol>
 <ul class="simple">
-<li><p>GCD: <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY_GCD</span></code> (in <code class="docutils literal notranslate"><span class="pre">cli_gcd.py</span></code>)</p></li>
-<li><p>OpenSet: <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY_OPENSET</span></code> (in <code class="docutils literal notranslate"><span class="pre">cli_openset.py</span></code>)</p></li>
+<li><p>Import <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> from <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code></p></li>
+<li><p>Both GCD and OpenSet methods register into this single shared registry</p></li>
 </ul>
 <ol class="arabic simple" start="2">
-<li><p>Add a new entry</p></li>
+<li><p>Add a new entry using the <code class="docutils literal notranslate"><span class="pre">MethodSpec</span></code> dataclass</p></li>
 </ol>
-<p>“<method>”: {
-“task”: “gcd” or “openset”,
-“stages”: [
+<p>The <code class="docutils literal notranslate"><span class="pre">MethodSpec</span></code> dataclass has the following fields: <code class="docutils literal notranslate"><span class="pre">task</span></code>, <code class="docutils literal notranslate"><span class="pre">stages</span></code>, <code class="docutils literal notranslate"><span class="pre">config</span></code>, <code class="docutils literal notranslate"><span class="pre">output_base</span></code>.</p>
+<p>METHOD_REGISTRY[”<method>”] = MethodSpec(
+task=”gcd” or “openset”,
+stages=[
 {“entry”: “<script path>”, “cli_builder”: &lt;function_name&gt;},
 … (add more items for multi-stage methods)
 ],
-“config”: “configs/<task>/<method>.yaml”,
-“output_base”: “./outputs/<task>/<method>”,
-}</p>
+config=”configs/yaml_files/<task>/<method>.yaml”,
+output_base=”./outputs/<task>/<method>”,
+)</p>
 <p>Notes:</p>
 <ul class="simple">
 <li><p>The number of <code class="docutils literal notranslate"><span class="pre">stages</span></code> determines whether the method is single-stage or multi-stage</p></li>
@@ -222,10 +225,7 @@ After the method finishes, it <strong>must</strong> write:
 <section id="vi-step-5-declare-it-in-yaml-and-test-run">
 <h2>VI. Step 5: Declare It in YAML and Test Run<a class="headerlink" href="#vi-step-5-declare-it-in-yaml-and-test-run" title="Link to this heading"></a></h2>
 <ol class="arabic simple">
-<li><p>Add the method into the corresponding task set under <code class="docutils literal notranslate"><span class="pre">maps</span></code>:
-maps:
-gcd: […, <method>]
-openset: […]</p></li>
+<li><p>Add the method to <code class="docutils literal notranslate"><span class="pre">_METHOD_TASK_MAP</span></code> in <code class="docutils literal notranslate"><span class="pre">configs/base.py</span></code> (to map the method name to its task type), and add it to <code class="docutils literal notranslate"><span class="pre">METHOD_REGISTRY</span></code> in <code class="docutils literal notranslate"><span class="pre">methods/registry.py</span></code>.</p></li>
 <li><p>Reference the method in <code class="docutils literal notranslate"><span class="pre">methods</span></code>:
 methods: [<method>]</p></li>
 <li><p>For the first run, use a minimal grid and <code class="docutils literal notranslate"><span class="pre">dry_run</span></code></p></li>
@@ -248,7 +248,7 @@ methods: [<method>]</p></li>
 <li><p>Parameters are not passed through</p></li>
 </ol>
 <ul class="simple">
-<li><p>Check <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> at the beginning of <code class="docutils literal notranslate"><span class="pre">stageX.log</span></code></p></li>
+<li><p>Check <code class="docutils literal notranslate"><span class="pre">ARGS_JSON</span></code> at the beginning of <code class="docutils literal notranslate"><span class="pre">stage1.log</span></code> or <code class="docutils literal notranslate"><span class="pre">stage2.log</span></code></p></li>
 <li><p>Confirm that <code class="docutils literal notranslate"><span class="pre">cli_builder</span></code> reads the corresponding fields from <code class="docutils literal notranslate"><span class="pre">args_json</span></code></p></li>
 <li><p>If using <code class="docutils literal notranslate"><span class="pre">per_method_extra</span></code>, confirm the method name matches and field names are consistent</p></li>
 </ul>

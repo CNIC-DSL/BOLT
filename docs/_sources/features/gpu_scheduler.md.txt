@@ -25,6 +25,10 @@ This mechanism has the following properties:
 - With multiple GPUs, tasks are naturally distributed across different GPUs
 - `slots_per_gpu` can increase throughput when GPU memory allows
 
+### CPU-Only Fallback
+
+When `gpus` is empty (i.e., `gpus: []`), the framework falls back to CPU-only mode: a single `None` token is used, providing one slot with no GPU binding. In this mode, `CUDA_VISIBLE_DEVICES` is not set, and the subprocess runs on CPU. This is useful for methods that do not require GPU resources or for quick debugging.
+
 ## 3. Recommended Configuration Examples
 
 1) Single GPU, strictly serial (most stable)

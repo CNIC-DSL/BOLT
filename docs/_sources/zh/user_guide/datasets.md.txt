@@ -1,0 +1,83 @@
+# 数据集概览
+
+本项目涵盖多种文本分类/意图识别数据集，包括英文和中文场景。本页面简要介绍当前支持的数据集，并提供常用缩写和来源信息。
+
+说明：
+- "我们构造的版本"指论文实验中所使用的版本，即对原始数据集进行采样/过滤后的版本（例如采样 10,000 条样本）。
+- 关于数据文件的下载和放置方式，请参照项目的数据准备脚本或仓库说明。本页面主要提供背景信息和数据来源。
+
+## 1. 数据集列表（按论文描述整理）
+
+1) 20NG (20 Newsgroups)
+- YAML 名称：`20NG`
+- 描述：约 20,000 篇新闻组帖子，大致均匀分布在 20 个类别中。
+- 我们构造的版本：采样 10,000 条文本用于实验。
+- 来源：https://people.csail.mit.edu/jrennie/20Newsgroups/
+
+2) THUCNews
+- YAML 名称：`thucnews`
+- 描述：大规模中文新闻分类语料库，采集自新浪新闻 2005 至 2011 年间的 RSS 历史数据。
+- 我们构造的版本：采样 10,000 条文本用于实验。
+- 来源：http://thuctc.thunlp.org/
+
+3) Yahoo (Yahoo! Answers Topic Classification)
+- YAML 名称：`Yahoo`
+- 描述：来自 Yahoo! Answers 的主题分类数据集，包含 10 个粗粒度主题类别。
+- 我们构造的版本：采样 10,000 条文本用于实验。
+- 来源：https://www.kaggle.com/datasets/bhavikardeshna/yahoo-email-classification/data
+
+4) BANKING77
+- YAML 名称：`banking`
+- 描述：英文银行客服意图数据集，包含 13,083 条标注了 77 个细粒度意图类别的语句。
+- 来源：https://huggingface.co/datasets/PolyAI/banking77
+
+5) StackOverflow
+- YAML 名称：`stackoverflow`
+- 描述：来自 Stack Overflow 的短文本标题数据集，包含 20,000 条样本，标注了 20 个技术主题标签。
+- 来源：https://github.com/jacoxu/StackOverflow
+
+6) CLINC150
+- YAML 名称：`clinc`
+- 描述：意图分类数据集，涵盖 150 个域内意图，常用于评估域外/开放集场景。
+- 来源：https://archive.ics.uci.edu/dataset/570/clinc150
+
+7) HWU-64
+- YAML 名称：`hwu`
+- 描述：英文多领域意图检测数据集（如新闻、IoT 等），涵盖 64 个意图，常用于对话系统研究。
+- 来源：https://service.tib.eu/ldmservice/en/dataset/hwu64
+
+8) SMP-ECDT
+- YAML 名称：`ecdt`
+- 描述：中文意图分类数据集（SMP-ECDT），在论文中用于中文意图识别场景。
+- 来源：https://arxiv.org/pdf/1709.10217
+
+9) TREC
+- YAML 名称：`TREC`
+- 描述：开放领域事实型问题分类数据集（Question Classification）。
+- 来源：https://huggingface.co/datasets/CogComp/trec
+
+10) M-CID
+- YAML 名称：`mcid`
+- 描述：多语言 COVID-19 意图检测数据集，包含 6,871 条语句和 16 个意图。在本工作中，我们仅使用英文语句构建实验版本。
+- 来源：https://openreview.net/pdf?id=Ku-nv600bNM
+
+11) DBpedia
+- YAML 名称：`DBPedia`
+- 描述：与 DBpedia（从维基百科提取的结构化知识库）中的本体/类别相关的文本分类数据集。论文构造了一个采样版本用于对比。
+- 我们构造的版本：采样 10,000 条文本用于实验。
+- 来源：https://huggingface.co/datasets/DeveloperOats/DBPedia_Classes
+
+12) X-Topic
+- YAML 名称：`X-Topic`
+- 描述：跨主题文本分类数据集，用于广义类别发现评估。
+
+## 2. 配置文件中的常见用法
+
+在 YAML 中，使用上面列出的精确 YAML 名称来指定数据集。例如：
+```yaml
+datasets: [banking, clinc, stackoverflow, hwu, mcid, 20NG, DBPedia, TREC, Yahoo, thucnews, ecdt, X-Topic]
+```
+
+注意：数据集名称**区分大小写**。请使用上面所示的精确 YAML 名称。例如，使用 `banking`（而非 `BANK`）、`clinc`（而非 `CLINC`）、`thucnews`（而非 `THUCNews`）。
+
+中文数据集（`ecdt`、`thucnews`）会自动使用 `bert-base-chinese` 作为骨干模型；其他所有数据集使用 `bert-base-uncased`。

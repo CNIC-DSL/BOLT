@@ -26,7 +26,7 @@ per_method_extra:
 - The field will be recorded in `ARGS_JSON` in logs for reproducibility
 
 Advantages:
-- No need to change the combo-generation logic in `run_grid.py`
+- No need to change the combo-generation logic in `configs/base.py`
 - Does not affect other methods
 
 ## II. Path B: Add a Real Grid Dimension (Code Changes Required)
@@ -45,15 +45,15 @@ grid:
   ...
   backbone: ["bert-base-uncased", "bert-base-chinese"]
 
-### Step 2: Modify the combo-expansion logic in `run_grid.py`
+### Step 2: Modify the combo-expansion logic in `configs/base.py`
 
-Currently, `run_grid.py` explicitly reads and expands fixed dimensions (`known_cls_ratio`, `labeled_ratio`, `fold_*`, `seeds`, `cluster_num_factor`).
+Combo expansion uses `itertools.product` inside `GridConfig.iter_experiments()` in `configs/base.py`. The runner in `cli.py` iterates over these experiment objects.
 Therefore you need to:
-- read `grid["backbone"]` into a local variable
-- add a `backbone` layer into the nested loops
-- include `backbone` as part of the combo tuple and pass it into `worker` / `run_combo`
+- Add the new dimension as a field on `GridConfig`
+- Include it in the `itertools.product` call inside `GridConfig.iter_experiments()`
+- Ensure the yielded experiment object carries the new value so `cli.py` can pass it into `worker` / `run_combo`
 
-### Step 3: Write the new dimension into `args_json` in `utils.make_base_args`
+### Step 3: Write the new dimension into `args_json` in `core.make_base_args`
 
 Example:
 args_json["backbone"] = backbone
@@ -86,8 +86,8 @@ Ensure the combo count and summary records match expectations
 ## IV. Common Issues
 
 1) Combo count is not as expected
-- Check whether the new dimension actually enters the nested loops in `run_grid.py`
-- Check whether the combo tuple carries this value and passes it into `run_combo`
+- Check whether the new dimension actually enters the `itertools.product` call in `GridConfig.iter_experiments()` (`configs/base.py`)
+- Check whether the experiment object carries this value and passes it into `run_combo` in `cli.py`
 
 2) Parameter passing is missing
 - Check whether `ARGS_JSON` at the beginning of stage logs includes the field
