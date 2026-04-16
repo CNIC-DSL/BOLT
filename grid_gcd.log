@@ -1,4 +1,0 @@
-nohup: ignoring input
-[SCHED] GPU tokens: 3 | gpus=[0, 1, 2] | slots_per_gpu=1
-[INFO] 组合数=288 | methods=['alup', 'deepaligned', 'dpn', 'geoid', 'loop', 'plm_gcd', 'sdc', 'tan'] | datasets=['X-Topic']
-[DONE] 汇总文件： results/summary_summary_gcd.csv
