@@ -135,3 +135,17 @@ The rendered documentation is already included in this repository.
 |---|---|
 | ![Documentation page 1](assets/docs_preview/1.png) | ![Documentation page 2](assets/docs_preview/2.png) |
 | ![Documentation page 3](assets/docs_preview/3.png) | ![Documentation page 4](assets/docs_preview/4.png) |
+
+
+## 📖 Citation
+
+If you find BOLT useful in your research, please cite our paper:
+
+```bibtex
+@inproceedings{qin-etal-2026-bolt,
+  title     = {BOLT: Benchmarking Open-World Learning for Text Classification},
+  author    = {Qin, Chuan and Chen, Xi and Li, Jinpeng and Zhu, Hengshu},
+  booktitle = {Findings of the Association for Computational Linguistics: ACL 2026},
+  year      = {2026}
+}
+```
